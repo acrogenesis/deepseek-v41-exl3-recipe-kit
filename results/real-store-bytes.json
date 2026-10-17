@@ -1,0 +1,42 @@
+{
+  "gpu_used": false,
+  "experts": [
+    "0:0",
+    "0:1"
+  ],
+  "all_tensor_bytes_equal": true,
+  "cache_capacity_bytes": 13320192,
+  "stats": {
+    "hits": 0,
+    "misses": 4,
+    "evictions": 3,
+    "read_bytes": 53460992,
+    "peak_resident_bytes": 13320192
+  },
+  "tensor_sha256": {
+    "0:0/w1.suh": "b3156fbe30fa1448c9169aa9c0906229be8105fe233e3278dae55568c43349c0",
+    "0:0/w1.svh": "a27fe47db81a114d9a1b3ee9fadd47416a9734d8ed51a02097d6e161f190b190",
+    "0:0/w1.mul1": "20feb8ff6dbb9b28746f70893914cd343f8a92629ad812923fb29772030dd082",
+    "0:0/w1.trellis": "d19ed7297b265961eb463fe8f5a9390ab72fe7598b6d7b9aa41b5dc2c55ce2e0",
+    "0:0/w2.suh": "c26e11d82738fb9172d20b093ed897b4fe39e5fe47aa22931c256a26671fac2c",
+    "0:0/w2.svh": "2e32a654ab27e5f0e989a4c9beb879c8272257001caefb679ec29bcec3754e36",
+    "0:0/w2.mul1": "20feb8ff6dbb9b28746f70893914cd343f8a92629ad812923fb29772030dd082",
+    "0:0/w2.trellis": "77ebc6c9203974b2ebeaee42c797454428be0fcba875fca304affe358d967986",
+    "0:0/w3.suh": "76fc08020253408aa8e0daf583293dfb8ab452340f4fb932ec47156e9306608b",
+    "0:0/w3.svh": "1b787e94a820aa84cb5c06cc6fb09b7ea5db34c97006abc84b5a3818332f6cca",
+    "0:0/w3.mul1": "20feb8ff6dbb9b28746f70893914cd343f8a92629ad812923fb29772030dd082",
+    "0:0/w3.trellis": "21cfb22e386b8c400485a805ac4ce59fbea790cae45e8b336af03be76fecf977",
+    "0:1/w1.suh": "378b558f2936dbcb29c0952cec7bf1417840b401468a59da92c5bee26b1b06e9",
+    "0:1/w1.svh": "a03ce97cc3d13454494ae9ae363cc6f5992cff15efa5ae2690ba55fd1ca7abcd",
+    "0:1/w1.mul1": "20feb8ff6dbb9b28746f70893914cd343f8a92629ad812923fb29772030dd082",
+    "0:1/w1.trellis": "100c04edc13b0c3d864c6df1f2d6bb229362062ecccaffc04946c7868ee80afd",
+    "0:1/w2.suh": "5e0c2a4f773bd582865b5b23834d6eaf85efbc258763f37681618be51cec846b",
+    "0:1/w2.svh": "5dc52e564a60231608146272e655a3b9394e2ec0c88dc8c685caac99ac4cab12",
+    "0:1/w2.mul1": "20feb8ff6dbb9b28746f70893914cd343f8a92629ad812923fb29772030dd082",
+    "0:1/w2.trellis": "501acdf81a7532972c1f0f7dfc2495866656b6564ec25a3256233eb721b851c3",
+    "0:1/w3.suh": "50a453ca1d078af809584fb4def78a6908b1a74388dc2c8f5121fc70104e3dfc",
+    "0:1/w3.svh": "bdec3fe433ea93fe9a02334e77c0d50dd38b2fac6f5c7423705371647e5be7ac",
+    "0:1/w3.mul1": "20feb8ff6dbb9b28746f70893914cd343f8a92629ad812923fb29772030dd082",
+    "0:1/w3.trellis": "e5abe6b569ee920961f7f5698b47217b273d460ce274c51863cdb6df78aab394"
+  }
+}

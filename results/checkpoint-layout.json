@@ -1,0 +1,11 @@
+{
+  "bytes": {
+    "routed": 196034088960,
+    "main_nonrouted": 6332840312,
+    "mtp": 7384371008,
+    "vision": 823685120,
+    "other": 146851840
+  },
+  "gpu_used": false,
+  "note": "Stored tensor bytes, not a measured runtime memory footprint"
+}

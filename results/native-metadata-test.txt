@@ -1,0 +1,12 @@
+W1017 22:36:19.422000 1 torch/utils/cpp_extension.py:178] No CUDA runtime is found, using CUDA_HOME='/usr/local/cuda'
+{
+  "gpu_devices_exposed": false,
+  "cuda_initialized": false,
+  "native_model_constructed": true,
+  "moe_blocks": 40,
+  "resident_routed_linears": 0,
+  "paired_prompt_tokenization_passed": 11,
+  "engram_tables_attached_without_overrides": 4,
+  "cache_constructed_context": 8192,
+  "note": "Metadata construction only; forward/weight loading not tested"
+}

@@ -1,0 +1,15 @@
+{
+  "model": "LibertAIDAI/DeepSeek-V4.1-Flash-1017-EXL3-2.9bpw",
+  "revision": "c178a01284fc5c0e859d8668cffaac81ca8f4042",
+  "experts": 15360,
+  "tensor_count": 184320,
+  "projection_K_counts": {
+    "3": 40320,
+    "2": 5760
+  },
+  "packed_record_bytes": 196104683520,
+  "largest_record_bytes": 13320192,
+  "payload_verified": false,
+  "header_source": "range_download",
+  "gpu_used": false
+}

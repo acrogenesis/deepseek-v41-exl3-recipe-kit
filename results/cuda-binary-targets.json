@@ -1,0 +1,8 @@
+{
+  "extension": "/opt/sglang/lib/python3.12/site-packages/exllamav3_ext.cpython-312-x86_64-linux-gnu.so",
+  "embedded_cuda_architectures": [
+    "sm_120"
+  ],
+  "elf_entries": 131,
+  "gpu_used": false
+}

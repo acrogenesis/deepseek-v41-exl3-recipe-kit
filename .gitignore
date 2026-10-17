@@ -1,0 +1,5 @@
+work/
+.venv/
+__pycache__/
+*.pyc
+STATUS.md

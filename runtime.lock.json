@@ -1,0 +1,21 @@
+{
+  "schema": 1,
+  "exllamav3": {
+    "repo": "https://github.com/vcruz305/exllamav3.git",
+    "revision": "954a8ca6e59d48c3e3462068ecf083fe9990f4dc"
+  },
+  "cache_components": {
+    "repo": "https://github.com/vcruz305/vllm-exl3.git",
+    "revision": "2a740a3773601c994072295fde45738ef8cea55e",
+    "files": {
+      "expert_store.py": "05a8d337f3eda5a4d451216ba69294c14f0d58211c91c0ec802f5646f45d156b",
+      "expert_cache.py": "688d64d3ea80232415165603a21e00f9fcae93645506c986de4bf80baf9bad84"
+    }
+  },
+  "base_image": {
+    "local_tag": "localhost/glm53-sm120:20261001",
+    "id": "801524faa7a980a44e912d17073210c86d9d4233152d8a295d1949296c75f5db"
+  },
+  "cuda_arch": "12.0",
+  "gpu_validation": "pending_user_release"
+}

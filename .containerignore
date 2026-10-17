@@ -1,0 +1,8 @@
+**
+!Containerfile
+!work/
+!work/exllamav3/
+!work/exllamav3/**
+work/exllamav3/.git
+work/exllamav3/build
+work/exllamav3/*.egg-info
