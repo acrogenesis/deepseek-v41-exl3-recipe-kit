@@ -2,7 +2,9 @@
 
 An experimental SSD-streaming recipe for one RTX 5090 (32 GB), a Ryzen 9950X3D,
 128 GB RAM, and a Samsung 990 PRO NVMe. It is staged for this machine.
-**GPU inference and throughput have not been validated.** Nothing starts automatically.
+**Real-model generation and throughput are still pending the Engram download.**
+Expert kernels and GPU allocation have passed initial checks. Downloads alone never
+start inference; the separate GPU campaign requires explicit authorization.
 
 The original [Sybil offload recipe](https://github.com/sybil-solutions/dsv41-flash-offload)
 keeps every expert in pinned RAM. This recipe uses a bounded RAM cache and reads
@@ -16,7 +18,7 @@ misses from the original safetensors files. It does not create another 196 GB ex
   pinned to `1bae0e1088993b9b82de08f59de5be5a34e42170`, shards 47 and 48.
 - About **414 GB** of downloads. SHA-256 verification for weights; Git blob verification for small metadata.
 - Proposed cache limits: **64 GiB RAM + 16 GiB VRAM**, allocated on demand within a 96 GiB no-swap container.
-- Initial benchmark: **8,192-token context**, one sequence, 128-token prefill chunks,
+- Initial benchmark: **8,192-token context**, one sequence, 256-token prefill chunks,
   greedy sampling, no drafter, text only. This is a validation profile, not a measured maximum context.
 
 All 384 experts in all 40 layers remain available. Actual header inspection found
@@ -60,6 +62,13 @@ bash scripts/run.sh --gpu-is-free smoke
 bash scripts/run.sh --gpu-is-free bench
 ```
 
+Use `--gpu-cache-gib 22` to test the larger cache without changing the default.
+`python scripts/campaign.py --allow-gpu` waits for verified downloads, checks a smoke
+response at 16 and 22 GiB, then benchmarks both. If 22 GiB runs out of memory during
+the smoke test, it tries 20 GiB. Results include a recommendation; defaults are not
+changed automatically. The campaign waits for at least 30,000 MiB free GPU memory
+before each run and stops if `work/GPU_HOLD` appears.
+
 The first command loads the model and checks a short extraction answer. The second
 runs the same eight functional checks and three fresh/repeated prompts as the GGUF
 recipe, with identical prompt token IDs and context size. Every request gets fresh KV
@@ -86,10 +95,26 @@ and retains hot experts in a capped RAM LRU. CUDA cache entries use stream-ownin
 leases and synchronize before eviction. Missing experts fail instead of being skipped.
 The memory guard checks this process's cgroup; it does not require clearing desktop swap.
 
-Current validation: successful CPU compilation, 11 storage and memory-budget tests, byte-for-byte
+Current validation: successful CPU compilation, 13 storage, memory-budget and comparison tests, byte-for-byte
 reads of two real experts, and CPU construction of the full native model plus its 8K
 cache. All 11 prompts tokenize identically to the paired GGUF fixture. See `results/`.
-These checks do not prove that GPU kernels or full-model serving work together.
+GPU checks also passed for K3 layer 0 and K2 layer 18 against the engine's resident
+MoE implementation, including cache hits and eviction: relative L2 error below
+0.00077 with cosine similarity above 0.9999996. This measures the paging adapter's
+arithmetic, not quantization loss versus the original model.
+
+| Expert cache | PyTorch allocation after load | Device memory still free |
+|---|---:|---:|
+| 16 GiB | 20.84 GiB | 8.93 GiB |
+| 22 GiB | 26.84 GiB | 2.94 GiB |
+
+Those load checks include the 8K KV cache but do not read Engram payloads. A separate
+three-token graph diagnostic using **synthetic zero Engram rows** passed at 22 GiB,
+with 27.29 GiB peak PyTorch allocation and 2.43 GiB device headroom. It caught a
+scheduler issue with 128-token chunks; the profile now uses the native 256-token
+page size. Synthetic outputs are excluded from all model quality and speed results.
+See `results/gpu-moe-parity.json`, `results/gpu-load-*.json`, and
+`results/gpu-graph-diagnostic.json`.
 
 The initial cache uses demand reads and sequential expert dispatch. Its performance
 on this machine is unknown; prefetch or fused dispatch should follow measurements.

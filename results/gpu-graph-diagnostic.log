@@ -1,0 +1,27 @@
+Graph diagnostic emitted 1 tokens (synthetic Engram)
+Graph diagnostic emitted 2 tokens (synthetic Engram)
+Graph diagnostic emitted 3 tokens (synthetic Engram)
+{
+  "status": "passed",
+  "synthetic_engram": true,
+  "gpu_cache_gib": 22,
+  "scope": "Graph diagnostic only: zero Engram rows; no quality or speed measurement",
+  "generated_tokens": 3,
+  "torch_peak_allocated_bytes": 29302711808,
+  "torch_peak_reserved_bytes": 29330767872,
+  "device_free_bytes": 2613510144,
+  "gpu_cache": {
+    "hits": 404,
+    "misses": 2950,
+    "evictions": 1122,
+    "failures": 0,
+    "peak_resident_bytes": 22942580736
+  },
+  "ram_cache": {
+    "hits": 126,
+    "misses": 2824,
+    "evictions": 119,
+    "read_bytes": 36069867520,
+    "peak_resident_bytes": 34358968320
+  }
+}

@@ -1,3 +1,5 @@
+test_larger_cache_requires_unchanged_output (test_campaign.ComparisonTests.test_larger_cache_requires_unchanged_output) ... ok
+test_small_or_negative_change_does_not_change_recommendation (test_campaign.ComparisonTests.test_small_or_negative_change_does_not_change_recommendation) ... ok
 test_buffered_roundtrip_eviction (test_indexed_store.StoreTests.test_buffered_roundtrip_eviction) ... ok
 test_cancel (test_indexed_store.StoreTests.test_cancel) ... ok
 test_changed_file (test_indexed_store.StoreTests.test_changed_file) ... ok
@@ -11,6 +13,6 @@ test_host_reserve (test_memory_budget.BudgetTests.test_host_reserve) ... ok
 test_zero_process_swap_and_reserve (test_memory_budget.BudgetTests.test_zero_process_swap_and_reserve) ... ok
 
 ----------------------------------------------------------------------
-Ran 11 tests in 0.005s
+Ran 13 tests in 0.005s
 
 OK

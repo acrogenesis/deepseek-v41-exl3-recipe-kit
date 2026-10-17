@@ -6,7 +6,7 @@
   "container_memory": "96g",
   "container_memory_swap": "96g",
   "context_tokens": 8192,
-  "prefill_chunk_tokens": 128,
+  "prefill_chunk_tokens": 256,
   "max_batch_size": 1,
   "draft": false,
   "text_only": true,

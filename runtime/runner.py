@@ -16,6 +16,8 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("mode", choices=["smoke", "bench"])
     parser.add_argument("--allow-gpu", action="store_true")
+    parser.add_argument("--gpu-cache-gib", type=int, choices=range(1, 25))
+    parser.add_argument("--output", type=Path)
     args = parser.parse_args()
     if not args.allow_gpu:
         raise SystemExit("GPU work is on hold. Run scripts/run.sh only after the GPU is free.")
@@ -23,6 +25,10 @@ def main():
     report = check()
     if not report["ready_for_gpu_validation"]:
         raise SystemExit(json.dumps(report, indent=2))
+    profile = json.loads((ROOT / "profiles/5090.json").read_text())
+    # Native prefill rounds its end down to a complete 256-token page.
+    if profile["prefill_chunk_tokens"] < 256 or profile["prefill_chunk_tokens"] % 256:
+        raise ValueError("Prefill chunks must be positive multiples of the native 256-token page")
     for name in ("EXL3_ATS_MMAP", "EXL3_ENGRAM_ATS", "EXL3_MOE_CPU_SPLIT", "EXL3_MOE_CPU_OFFLOAD"):
         os.environ[name] = "0"
     # Keep the first validation on the ordinary EXL3 arithmetic path.
@@ -36,7 +42,8 @@ def main():
     from .cache import ExpertCache
     from .native_adapter import attach_engram, build_model
     from .memory_budget import guard_memory
-    profile = json.loads((ROOT / "profiles/5090.json").read_text())
+    if args.gpu_cache_gib is not None:
+        profile["gpu_expert_cache_bytes"] = args.gpu_cache_gib * 2**30
     guard_memory(profile["host_reserve_bytes"])
     if torch.cuda.get_device_capability(0) != (12, 0):
         raise RuntimeError("This build/profile targets the SM120 RTX 5090")
@@ -49,7 +56,11 @@ def main():
     quotas[39] += capacity - sum(quotas.values())
     experts = ExpertCache(store, capacity, layer_quotas=quotas, reserve_bytes=profile["host_reserve_bytes"])
     stamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
-    output = ROOT / "results" / f"{stamp}-{args.mode}.json"
+    output = args.output or ROOT / "results" / f"{stamp}-{args.mode}.json"
+    output.resolve().relative_to((ROOT / "results").resolve())
+    if output.exists():
+        raise FileExistsError(output)
+    output.parent.mkdir(parents=True, exist_ok=True)
     result = {"status": "loading", "profile": profile, "inventory": inv, "runs": [],
         "runtime_lock": json.loads((ROOT / "runtime.lock.json").read_text()),
         "gpu": torch.cuda.get_device_name(0), "torch": torch.__version__, "cuda": torch.version.cuda,
@@ -71,6 +82,9 @@ def main():
         started = time.perf_counter()
         model.load("cuda:0", progressbar=False)
         result["load_seconds"] = time.perf_counter() - started
+        free, total = torch.cuda.mem_get_info()
+        result["memory_after_load"] = {"device_free_bytes": free, "device_total_bytes": total,
+            "torch_allocated_bytes": torch.cuda.memory_allocated(), "torch_reserved_bytes": torch.cuda.memory_reserved()}
         tokenizer = Tokenizer.from_config(config)
         fixture_path = ROOT / "fixtures/paired-gguf.json"
         fixture = json.loads(fixture_path.read_text())
@@ -85,7 +99,7 @@ def main():
         def run(case, phase, cap):
             # A new generator creates a fresh page table and resets recurrent state.
             generator = Generator(model=model, cache=kv, tokenizer=tokenizer,
-                max_batch_size=1, max_chunk_size=profile["prefill_chunk_tokens"], recurrent_cache_size=0)
+                max_batch_size=1, max_chunk_size=profile["prefill_chunk_tokens"], recurrent_cache_size=512 * 2**20)
             ids = torch.tensor([case["input_ids"]], dtype=torch.long)
             job = Job(input_ids=ids, max_new_tokens=cap, sampler=GreedySampler(),
                 stop_conditions=config.eos_token_id_list)
@@ -94,6 +108,8 @@ def main():
             start = time.perf_counter()
             first = last = None
             first_count = 0
+            previous_progress = None
+            last_progress_at = time.monotonic()
             while generator.num_remaining_jobs():
                 for event in generator.iterate():
                     if event.get("stage") == "error":
@@ -113,6 +129,11 @@ def main():
                     token_ids = emitted.flatten().tolist()
                     tokens.extend(token_ids)
                     events.append({"seconds": now, "tokens": token_ids})
+                progress = (tuple(s.kv_position for s in job.sequences), len(tokens))
+                if progress != previous_progress:
+                    previous_progress, last_progress_at = progress, time.monotonic()
+                elif time.monotonic() - last_progress_at > 120:
+                    raise RuntimeError("Generation made no progress for 120 seconds")
             duration = time.perf_counter() - start
             rate = (len(tokens) - first_count) / (last - first) if first is not None and last > first else None
             row = {"id": case["id"], "phase": phase, "input_tokens": len(case["input_ids"]),
@@ -120,6 +141,8 @@ def main():
                 "ttft_seconds": first, "seconds": duration, "decode_tok_s": rate, "events": events,
                 "ram_cache": dict(store.stats), "gpu_cache": dict(experts.stats),
                 "gpu_peak_allocated_bytes": torch.cuda.max_memory_allocated()}
+            row["gpu_peak_reserved_bytes"] = torch.cuda.max_memory_reserved()
+            row["device_free_bytes_after_request"] = torch.cuda.mem_get_info()[0]
             if "expected" in case:
                 actual = row["text"].strip()
                 expected = case["expected"]

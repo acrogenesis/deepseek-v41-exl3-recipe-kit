@@ -1,0 +1,12 @@
+{
+  "status": "passed",
+  "gpu_cache_gib": 22,
+  "context_tokens": 8192,
+  "scope": "Actual GPU load of all main-model weights and KV state; Engram table headers only; no forward pass",
+  "load_seconds": 2.628787340996496,
+  "torch_allocated_bytes": 28823432704,
+  "torch_reserved_bytes": 28846325760,
+  "torch_peak_allocated_bytes": 28823432704,
+  "device_free_bytes": 3161653248,
+  "device_total_bytes": 33708376064
+}
