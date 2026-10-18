@@ -1,0 +1,199 @@
+{
+  "workloads": {
+    "original": {
+      "GGUF": {
+        "fresh": {
+          "median_tok_s": 27.95194648443391,
+          "median_ttft_seconds": 0.7593387874985638,
+          "requests": 6
+        },
+        "repeat": {
+          "median_tok_s": 36.03673995935783,
+          "median_ttft_seconds": 0.6770936585016898,
+          "requests": 6
+        },
+        "exact_checks": {
+          "passed": 10,
+          "total": 16
+        }
+      },
+      "EXL3": {
+        "fresh": {
+          "median_tok_s": 15.955247073221773,
+          "median_ttft_seconds": 1.3803932084992994,
+          "requests": 6
+        },
+        "repeat": {
+          "median_tok_s": 30.676093072200878,
+          "median_ttft_seconds": 0.7705333935009548,
+          "requests": 6
+        },
+        "exact_checks": {
+          "passed": 16,
+          "total": 16
+        }
+      }
+    },
+    "matched-cache": {
+      "GGUF": {
+        "fresh": {
+          "median_tok_s": 27.95194648443391,
+          "median_ttft_seconds": 0.7593387874985638,
+          "requests": 6
+        },
+        "repeat": {
+          "median_tok_s": 36.03673995935783,
+          "median_ttft_seconds": 0.6770936585016898,
+          "requests": 6
+        },
+        "exact_checks": {
+          "passed": 10,
+          "total": 16
+        }
+      },
+      "EXL3": {
+        "fresh": {
+          "median_tok_s": 14.854693272996288,
+          "median_ttft_seconds": 1.4108781890099635,
+          "requests": 3
+        },
+        "repeat": {
+          "median_tok_s": 19.642025878631134,
+          "median_ttft_seconds": 1.151087253994774,
+          "requests": 3
+        },
+        "exact_checks": {
+          "passed": 8,
+          "total": 8
+        }
+      }
+    },
+    "additional": {
+      "GGUF": {
+        "fresh": {
+          "median_tok_s": 24.081342325251114,
+          "median_ttft_seconds": 0.9475375230031204,
+          "requests": 6
+        },
+        "repeat": {
+          "median_tok_s": 29.885556871161626,
+          "median_ttft_seconds": 0.7495828425016953,
+          "requests": 6
+        },
+        "exact_checks": {
+          "passed": 11,
+          "total": 24
+        }
+      },
+      "EXL3": {
+        "fresh": {
+          "median_tok_s": 15.762623984040776,
+          "median_ttft_seconds": 1.370033435501682,
+          "requests": 6
+        },
+        "repeat": {
+          "median_tok_s": 17.376637553756474,
+          "median_ttft_seconds": 1.3174379394986317,
+          "requests": 6
+        },
+        "exact_checks": {
+          "passed": 20,
+          "total": 24
+        }
+      }
+    },
+    "long": {
+      "GGUF": {
+        "fresh": {
+          "median_tok_s": 21.130554539618917,
+          "median_ttft_seconds": 37.8844480905027,
+          "requests": 2
+        },
+        "repeat": {
+          "median_tok_s": 32.184578561555725,
+          "median_ttft_seconds": 30.52351151300536,
+          "requests": 2
+        },
+        "exact_checks": {
+          "passed": 0,
+          "total": 0
+        }
+      },
+      "EXL3": {
+        "fresh": {
+          "median_tok_s": 11.630734237713856,
+          "median_ttft_seconds": 61.49680125550367,
+          "requests": 2
+        },
+        "repeat": {
+          "median_tok_s": 12.381441902636762,
+          "median_ttft_seconds": 45.40105266900355,
+          "requests": 2
+        },
+        "exact_checks": {
+          "passed": 0,
+          "total": 0
+        }
+      }
+    },
+    "512-output": {
+      "GGUF": {
+        "fresh": {
+          "median_tok_s": 27.352210461353597,
+          "median_ttft_seconds": 0.896160634001717,
+          "requests": 6
+        },
+        "repeat": {
+          "median_tok_s": 30.051319386190336,
+          "median_ttft_seconds": 0.8109254480004893,
+          "requests": 6
+        },
+        "exact_checks": {
+          "passed": 10,
+          "total": 16
+        }
+      },
+      "EXL3": {
+        "fresh": {
+          "median_tok_s": 14.002490145689967,
+          "median_ttft_seconds": 2.7361193210090278,
+          "requests": 3
+        },
+        "repeat": {
+          "median_tok_s": 17.314015176876627,
+          "median_ttft_seconds": 3.1057827089971397,
+          "requests": 3
+        },
+        "exact_checks": {
+          "passed": 8,
+          "total": 8
+        }
+      }
+    }
+  },
+  "quality": {
+    "GGUF": {
+      "ppl": 7.520919,
+      "reference_ppl": 6.335829,
+      "mean_kl": 0.362934,
+      "top1_agreement_percent": 77.549,
+      "scored_positions": 2040,
+      "context": 512,
+      "corpus_sha256": "3dc6d7e7174c78dbe9844befc30b86cd3141b1a3c42f23d66477b7f6ace1fc70",
+      "path": "results/20261018T074208Z-gguf30-final-quality/quality.json",
+      "sha256": "72ba3055c12da2ab53a342341e50e69c5d9ee1bd3d1489bc1559bfa9ae81bae8"
+    },
+    "EXL3": {
+      "ppl": 6.4051239806451505,
+      "reference_ppl": 6.335829369772994,
+      "mean_kl": 0.13009404318858278,
+      "top1_agreement_percent": 85.63725490196077,
+      "scored_positions": 2040,
+      "context": 512,
+      "corpus_sha256": "3dc6d7e7174c78dbe9844befc30b86cd3141b1a3c42f23d66477b7f6ace1fc70",
+      "path": "results/20261018-gguf30/exl3-evidence/quality.json",
+      "sha256": "6fa057b6ed12994883783a7eb0ed51fb7de5b1685894a91693e7db976397e6cb"
+    }
+  },
+  "note": "Original checks repeat across sweeps; 10/16 and 16/16 are repeated 5/8 and 8/8, not sixteen distinct tasks. Long-input medians combine different lengths; use per-length comparison.json/COMPARISON.md."
+}

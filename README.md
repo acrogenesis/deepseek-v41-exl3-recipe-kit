@@ -1,5 +1,13 @@
 # DeepSeek V4.1 Flash 1017 EXL3 on an RTX 5090
 
+**30.68 tok/s on repeated prompts; 15.96 tok/s on fresh prompts**, pooled across
+two complete sweeps with 128 output tokens and an 8K context allocation.
+The [Hugging Face bundle](https://huggingface.co/acrogenesis/DeepSeek-V4.1-Flash-1017-EXL3-2.9bpw-5090)
+contains LibertAIDAI's unchanged quant and the required original 1017 Engram
+tables. Our contribution is the bounded streaming runtime and measurements.
+
+![Measured generation speed](results/20261018-gguf-comparison/charts/original-speed.png)
+
 An experimental SSD-streaming recipe for one RTX 5090 (32 GB), a Ryzen 9950X3D,
 128 GB RAM, and a Samsung 990 PRO NVMe. It is staged for this machine.
 **Real-model generation is verified.** All 414 GB of model files are downloaded
@@ -101,6 +109,20 @@ python scripts/preflight.py
 ```
 
 ## When the GPU is free
+
+To reproduce the measured 30+ tok/s repeated-prompt configuration on this PC:
+
+```sh
+bash scripts/run.sh --gpu-is-free bench --gpu-cache-gib 24 \
+  --grouped-dispatch --hc-graphs --gpu-policy lfu --victim-cache \
+  --gpu-only-gib 20 --fast-guard --fused-reduce \
+  --overlap-loads --overlap-shared --engram-cache-rows 65536 \
+  --output /recipe/results/my-fast-benchmark.json
+```
+
+The 24 GiB expert cache leaves very little desktop VRAM. Expanded tests used
+`--gpu-cache-gib 23 --gpu-only-gib 19`; their rates are reported separately.
+The repository currently requires the pinned local base image described above.
 
 These commands explicitly release the GPU hold for that invocation:
 
@@ -277,7 +299,7 @@ Pristine copies, copyright notices, and licenses are retained in `runtime/vendor
 `runtime/cache.py` adds the desktop memory guard, exact expert ownership, pinned
 transfers and single-token dispatch. ExLlamaV3 retains its MIT license. Model weights retain their own licenses.
 
-The existing GGUF quant, reference logits, calibration, benchmark evidence, public Q2
-comparison, and unrelated models were preserved. The 508 GB converted MXFP4/Q8
-reference was deleted with the owner's approval and can be downloaded again through
-the separate GGUF recipe.
+The EXL3 checkpoint is LibertAIDAI's unchanged quant; the Engram tables are from
+DeepSeek's exact 1017 release. The Hugging Face bundle preserves both sources'
+MIT license and records their revisions and hashes. Our changes are in the
+streaming runtime and benchmark harness.
