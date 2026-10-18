@@ -5,6 +5,8 @@ two complete sweeps with 128 output tokens and an 8K context allocation.
 The [Hugging Face bundle](https://huggingface.co/acrogenesis/DeepSeek-V4.1-Flash-1017-EXL3-2.9bpw-5090)
 contains LibertAIDAI's unchanged quant and the required original 1017 Engram
 tables. Our contribution is the bounded streaming runtime and measurements.
+[Publication verification](results/publication.json) records the model revision,
+remote size/hash checks and anonymous downloads.
 
 ![Measured generation speed](results/20261018-gguf-comparison/charts/original-speed.png)
 
