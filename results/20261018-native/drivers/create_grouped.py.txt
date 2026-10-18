@@ -1,0 +1,80 @@
+from pathlib import Path
+root=Path('.')
+src=(root/'work/exllamav3/exllamav3/exllamav3_ext/quant/exl3_gemv_kernel.cuh').read_text()
+# Keep the upstream MMA, trellis decoding, folding and reduction body unchanged.
+src=src[src.index('template <int bits, bool c_fp32'):]
+src=src.replace('void exl3_gemv_kernel(EXL3_GEMM_ARGS)', '''void grouped_gemv_kernel(const half* A, float* output, half* A_had,
+    int size_k, int size_n, int input_stride, GroupedPointers pointers)''')
+src=src.replace('    static_assert(bits', '    constexpr int size_m = 1;\n    static_assert(bits',1)
+src=src.replace('int total_warps = size_m * size_k / 128;', 'int total_warps = pointers.count * size_k / 128;')
+start=src.index('        for(; this_warp < total_warps;')
+end=src.index('\n        grid.sync();',start)
+src=src[:start]+'''        for(; this_warp < total_warps; this_warp += warps_grid)
+        {
+            const int e = this_warp / (size_k / 128);
+            const int w = this_warp % (size_k / 128);
+            had_hf_r_128_inner<true, false>(
+                A + e * input_stride + w * 128,
+                A_had + e * size_k + w * 128,
+                pointers.suh[e] + w * 128,
+                0.088388347648f);
+        }
+''' +src[end:]
+src=src.replace('        A = A_had;','')
+src=src.replace('    const uint32_t* B32 = (const uint32_t*) B;\n','')
+src=src.replace('    const half2* A2 = (const half2*) A;\n','')
+src=src.replace('for (int group = blockIdx.x; group < num_groups; group += gridDim.x)\n    {', '''for (int item = blockIdx.x; item < pointers.count * num_groups; item += gridDim.x)
+    {
+        const int e = item / num_groups;
+        const int group = item % num_groups;
+        const uint32_t* B32 = (const uint32_t*) pointers.trellis[e];
+        const half2* A2 = (const half2*) (A_had + e * size_k);
+        void* C = output + e * size_n;''')
+src=src.replace('int total_warps = size_m * size_n / 128;', 'int total_warps = pointers.count * size_n / 128;')
+start=src.index('        for(; this_warp < total_warps;',src.index('// Output scales'))
+src=src[:start]+'''        for(; this_warp < total_warps; this_warp += warps_grid)
+        {
+            const int e = this_warp / (size_n / 128);
+            const int w = this_warp % (size_n / 128);
+            had_ff_r_128_inner<false, true>(
+                output + e * size_n + w * 128,
+                output + e * size_n + w * 128,
+                pointers.svh[e] + w * 128,
+                0.088388347648f);
+        }
+    }
+}
+'''
+prefix='''// Adapted from ExLlamaV3 exl3_gemv_kernel.cuh at 954a8ca6e59d48c3e3462068ecf083fe9990f4dc.
+// Copyright (c) 2025 Turboderp. MIT; see vendor/THIRD_PARTY_NOTICES.md.
+// Scheduling only: spread independent expert/column groups over one cooperative
+// grid. Preserve CFG=0 MMA, fp16 folding, fp32 reduction and both Hadamard stages.
+// The worklist design also appears in vcruz305/vllm-exl3 p2b_batched.cu.
+#include <cuda_fp16.h>
+#include <ATen/cuda/CUDAContext.h>
+#include <c10/cuda/CUDAException.h>
+#include "util.h"
+#include "util.cuh"
+#include "quant/exl3_gemv_kernel.cuh"
+#include "grouped_dispatch.h"
+
+'''
+suffix='''
+void launch_grouped(const void* input, void* output, void* had, int k, int n,
+                    int input_stride, int bits, const GroupedPointers& ptrs)
+{
+    void* kernel = bits == 2
+        ? (void*) grouped_gemv_kernel<2, true, 2, 0, 0, false>
+        : (void*) grouped_gemv_kernel<3, true, 2, 0, 0, false>;
+    int device, sms, resident;
+    C10_CUDA_CHECK(cudaGetDevice(&device));
+    C10_CUDA_CHECK(cudaDeviceGetAttribute(&sms, cudaDevAttrMultiProcessorCount, device));
+    C10_CUDA_CHECK(cudaOccupancyMaxActiveBlocksPerMultiprocessor(&resident, kernel, 512, 0));
+    const int blocks = std::min(ptrs.count * n / 32, resident * sms);
+    void* args[] = {&input, &output, &had, &k, &n, &input_stride, (void*)&ptrs};
+    C10_CUDA_CHECK(cudaLaunchCooperativeKernel(kernel, dim3(blocks), dim3(512), args, 0,
+        at::cuda::getCurrentCUDAStream().stream()));
+    C10_CUDA_KERNEL_LAUNCH_CHECK();
+}
+'''
+(root/'runtime/grouped_dispatch.cu').write_text(prefix+src+suffix)

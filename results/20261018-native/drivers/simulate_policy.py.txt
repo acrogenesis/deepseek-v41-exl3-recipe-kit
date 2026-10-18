@@ -1,0 +1,41 @@
+import json,sys
+from pathlib import Path
+from collections import OrderedDict,defaultdict
+sys.path.insert(0,str(Path.cwd()))
+from runtime.indexed_store import inventory
+records,_=inventory(Path.cwd(),cached_headers=True)
+d=json.load(open('results/20261018-native/grouped-diagnostic/result.json'))
+steps=d['passes'][0]['step_trace']
+capacity=22*2**30
+per=capacity//(40*4096)*4096
+sizes={layer:records[f'{layer}:0']['bytes'] for layer in range(40)}
+quotas={i:per for i in range(40)}; quotas[39]+=capacity-sum(quotas.values())
+rows=[]
+for policy in ['lru','lfu','decay16','decay64','decay256']:
+ cache={i:OrderedDict() for i in range(40)}; counts=defaultdict(float); last=defaultdict(int); counter=defaultdict(int)
+ totals=[]
+ for phase in range(2):
+  misses=0; transferred=0
+  for step in steps:
+   for key in step['requested_experts']:
+    layer=int(key.split(':')[0]); counter[layer]+=1
+    if policy.startswith('decay'):
+     half=int(policy[5:])*6
+     counts[key]*=2**(-(counter[layer]-last[key])/half)
+    counts[key]+=1; last[key]=counter[layer]
+    lru=cache[layer]
+    if key in lru:
+     lru.move_to_end(key); continue
+    if step['position']:
+     misses+=1; transferred+=sizes[layer]
+    while (len(lru)+1)*sizes[layer]>quotas[layer]:
+     if policy=='lru': victim=next(iter(lru))
+     elif policy=='lfu': victim=min(lru,key=lambda k:counts[k])
+     else:
+      half=int(policy[5:])*6
+      victim=min(lru,key=lambda k:counts[k]*2**(-(counter[layer]-last[k])/half))
+     del lru[victim]
+    lru[key]=None
+  totals.append({'misses_per_token':misses/63,'MB_per_token':transferred/63/1e6})
+ row={'policy':policy,'passes':totals}; rows.append(row); print(json.dumps(row))
+Path('results/20261018-native/policy-simulation.json').write_text(json.dumps(rows,indent=2)+'\n')

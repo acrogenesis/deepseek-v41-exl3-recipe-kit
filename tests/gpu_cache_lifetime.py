@@ -11,6 +11,7 @@ parser = argparse.ArgumentParser()
 parser.add_argument('--allow-gpu', action='store_true')
 parser.add_argument('--output', type=Path, required=True)
 parser.add_argument('--pinned-ram', action='store_true')
+parser.add_argument('--gpu-policy', choices=('lru', 'lfu'), default='lru')
 args = parser.parse_args()
 if not args.allow_gpu:
     raise SystemExit('Explicit GPU authorization required')
@@ -28,10 +29,11 @@ records = {key: records[key] for key in keys}
 store = IndexedExpertStore(ROOT / 'work/models/exl3', records,
     2 * max(r['bytes'] for r in records.values()), pinned=args.pinned_ram)
 quotas = {layer: max(r['bytes'] for key, r in records.items() if key.startswith(f'{layer}:')) for layer in (0, 18)}
-cache = ExpertCache(store, sum(quotas.values()), layer_quotas=quotas)
+cache = ExpertCache(store, sum(quotas.values()), layer_quotas=quotas, policy=args.gpu_policy)
 streams = [torch.cuda.Stream() for _ in range(2)]
 copies, expected = [], {}
 result = {'status': 'running', 'cases': [], 'gpu': torch.cuda.get_device_name(), 'pinned_ram': args.pinned_ram}
+result['gpu_policy'] = args.gpu_policy
 try:
     for key in keys:
         with store.read(key) as data:

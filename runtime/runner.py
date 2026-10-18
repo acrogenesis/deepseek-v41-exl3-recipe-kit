@@ -20,6 +20,10 @@ def main():
     parser.add_argument("--gpu-cache-gib", type=int, choices=range(1, 25))
     parser.add_argument("--ram-cache-gib", type=int, choices=range(16, 85))
     parser.add_argument("--pinned-ram", action=argparse.BooleanOptionalAction, default=None)
+    parser.add_argument("--grouped-dispatch", action="store_true", help="Experimental grouped K2/K3 expert GEMV")
+    parser.add_argument("--hc-graphs", action="store_true")
+    parser.add_argument("--trace-routes", action="store_true")
+    parser.add_argument("--gpu-policy", choices=('lru', 'lfu'), default='lru')
     parser.add_argument("--output", type=Path)
     args = parser.parse_args()
     if not args.allow_gpu:
@@ -61,7 +65,8 @@ def main():
     per_layer = capacity // (40 * 4096) * 4096
     quotas = {l: per_layer for l in range(40)}
     quotas[39] += capacity - sum(quotas.values())
-    experts = ExpertCache(store, capacity, layer_quotas=quotas, reserve_bytes=profile["host_reserve_bytes"])
+    experts = ExpertCache(store, capacity, layer_quotas=quotas, reserve_bytes=profile["host_reserve_bytes"],
+        grouped_dispatch=args.grouped_dispatch, route_trace=args.trace_routes, policy=args.gpu_policy)
     stamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
     output = args.output or ROOT / "results" / f"{stamp}-{args.mode}.json"
     output.resolve().relative_to((ROOT / "results").resolve())
@@ -73,6 +78,12 @@ def main():
         "gpu": torch.cuda.get_device_name(0), "torch": torch.__version__, "cuda": torch.version.cuda,
         "metric": "Streamed output tokens after first token / elapsed time after first token; fresh KV state each request"}
     result['runtime_sources'] = {}
+    result['grouped_dispatch'] = args.grouped_dispatch
+    result['hc_graphs'] = args.hc_graphs
+    result['gpu_policy'] = args.gpu_policy
+    if args.grouped_dispatch:
+        result['grouped_source_sha256'] = {name: hashlib.sha256((ROOT/'runtime'/name).read_bytes()).hexdigest()
+            for name in ('native_dispatch.cpp', 'native_dispatch.py', 'grouped_dispatch.cu', 'grouped_dispatch.h', 'hc_graphs.py')}
     for cls in (ExpertCache, IndexedExpertStore):
         path = Path(inspect.getfile(cls))
         result['runtime_sources'][cls.__name__] = {'path': str(path.relative_to(ROOT)),
@@ -96,6 +107,9 @@ def main():
         kv = Cache(model, max_num_tokens=profile["context_tokens"], max_batch_size=1)
         started = time.perf_counter()
         model.load("cuda:0", progressbar=False)
+        if args.hc_graphs:
+            from .hc_graphs import configure
+            configure(model, True)
         result["load_seconds"] = time.perf_counter() - started
         free, total = torch.cuda.mem_get_info()
         result["memory_after_load"] = {"device_free_bytes": free, "device_total_bytes": total,
@@ -179,6 +193,9 @@ def main():
                     except (InvalidOperation, TypeError):
                         passed = False
                 row.update(passed=passed, expected=expected)
+            if experts.route_trace is not None:
+                row['route_trace'] = experts.route_trace
+                experts.route_trace = []
             result["runs"].append(row)
             save()
             print(json.dumps({k: row[k] for k in ("id", "phase", "decode_tok_s", "ttft_seconds", "text")}), flush=True)

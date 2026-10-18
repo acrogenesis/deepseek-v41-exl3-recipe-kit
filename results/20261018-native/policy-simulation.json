@@ -1,0 +1,67 @@
+[
+  {
+    "policy": "lru",
+    "passes": [
+      {
+        "misses_per_token": 66.7936507936508,
+        "MB_per_token": 856.7724129523809
+      },
+      {
+        "misses_per_token": 66.58730158730158,
+        "MB_per_token": 854.1642361904762
+      }
+    ]
+  },
+  {
+    "policy": "lfu",
+    "passes": [
+      {
+        "misses_per_token": 67.66666666666667,
+        "MB_per_token": 868.9628891428572
+      },
+      {
+        "misses_per_token": 46.698412698412696,
+        "MB_per_token": 603.9158003809523
+      }
+    ]
+  },
+  {
+    "policy": "decay16",
+    "passes": [
+      {
+        "misses_per_token": 66.31746031746032,
+        "MB_per_token": 850.4294643809524
+      },
+      {
+        "misses_per_token": 57.93650793650794,
+        "MB_per_token": 744.4109409523809
+      }
+    ]
+  },
+  {
+    "policy": "decay64",
+    "passes": [
+      {
+        "misses_per_token": 67.80952380952381,
+        "MB_per_token": 870.5849051428572
+      },
+      {
+        "misses_per_token": 49.22222222222222,
+        "MB_per_token": 636.6908220952381
+      }
+    ]
+  },
+  {
+    "policy": "decay256",
+    "passes": [
+      {
+        "misses_per_token": 68.03174603174604,
+        "MB_per_token": 873.6853820952381
+      },
+      {
+        "misses_per_token": 48.07936507936508,
+        "MB_per_token": 622.0294826666666
+      }
+    ]
+  }
+]

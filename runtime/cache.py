@@ -6,7 +6,7 @@ buffers, layer-local LRU lookup, and single-row dispatch without GPU nonzero.
 Experimental C1/eager path. It never allocates the full expert checkpoint.
 """
 from collections import OrderedDict
-from contextlib import contextmanager
+from contextlib import contextmanager, ExitStack
 from dataclasses import dataclass, field
 from pathlib import Path
 import threading
@@ -39,10 +39,15 @@ class Entry:
 
 
 class ExpertCache:
-    def __init__(self, store, capacity_bytes, *, layer_quotas=None, device='cuda:0', reserve_bytes=8*2**30):
+    def __init__(self, store, capacity_bytes, *, layer_quotas=None, device='cuda:0', reserve_bytes=8*2**30, native_dispatch=False, grouped_dispatch=False, route_trace=False, policy='lru'):
         if capacity_bytes <= 0 or capacity_bytes % ALIGN:
             raise ValueError('Cache capacity must be aligned')
         self.store = store
+        if policy not in ('lru', 'lfu'):
+            raise ValueError('Unknown expert eviction policy')
+        self.policy = policy
+        self.frequencies = {}
+        self.route_trace = [] if route_trace else None
         self.device = torch.device(device)
         self.reserve = reserve_bytes
         guard_memory(reserve_bytes)
@@ -60,6 +65,8 @@ class ExpertCache:
             largest = max(r['bytes'] for key,r in store.records.items() if int(key.split(':')[0]) == layer)
             if largest > size:
                 raise ValueError('Layer quota cannot fit its largest expert')
+            if (native_dispatch or grouped_dispatch) and 6 * largest > size:
+                raise ValueError('Grouped dispatch needs room for six experts per layer')
             base += size
         self.arena = torch.empty(capacity_bytes, dtype=torch.uint8, device=self.device)
         self.entries = OrderedDict()
@@ -86,6 +93,11 @@ class ExpertCache:
             layouts[int(key.split(':')[0])].add(layout)
         self.reusable_layers = {layer for layer, options in layouts.items() if len(options) == 1}
         self.slot_projections = {}
+        self.native_dispatch = None
+        self.grouped_dispatch = grouped_dispatch
+        if native_dispatch or grouped_dispatch:
+            from .native_dispatch import load_dispatch
+            self.native_dispatch = load_dispatch()
 
     def _guard(self):
         guard_memory(self.reserve)
@@ -112,7 +124,9 @@ class ExpertCache:
         region = self.regions[layer]
         offset = region.allocate(record['bytes'])
         while offset is None:
-            candidate = next((k for k in self.layer_lru[layer] if self.entries[k].users == 0), None)
+            candidates = (k for k in self.layer_lru[layer] if self.entries[k].users == 0)
+            candidate = (next(candidates, None) if self.policy == 'lru'
+                else min(candidates, key=self.frequencies.__getitem__, default=None))
             if candidate is None:
                 raise CacheBusy('All eviction candidates are in use')
             self._evict(candidate)
@@ -210,6 +224,8 @@ class ExpertCache:
                 raise KeyError(key)
             if cancel is not None and cancel.is_set():
                 raise InterruptedError('Expert lease cancelled')
+            if self.policy != 'lru':
+                self.frequencies[key] = self.frequencies.get(key, 0) + 1
             entry = self.entries.get(key)
             if entry is None:
                 self.stats['misses'] += 1
@@ -245,6 +261,16 @@ class ExpertCache:
         if single and len(set(routes)) != len(routes):
             raise ValueError('Duplicate experts in a routing row')
         ordered = sorted(enumerate(routes), key=lambda pair: pair[1]) if single else [(None, eid) for eid in torch.unique(ids).tolist()]
+        if self.route_trace is not None:
+            self.route_trace.append([layer, [int(eid) for _, eid in ordered]])
+        if single and self.native_dispatch is not None:
+            with ExitStack() as leases:
+                projections = [leases.enter_context(self.lease(f'{layer}:{eid}')).projections for _, eid in ordered]
+                dispatch = self.native_dispatch.grouped_experts if self.grouped_dispatch else self.native_dispatch.exact_experts
+                return dispatch(x.half().contiguous(), weights,
+                    [position for position, _ in ordered],
+                    [p['w1'].bc for p in projections], [p['w3'].bc for p in projections],
+                    [p['w2'].bc for p in projections], limit)
         for position, eid in ordered:
             key = f'{layer}:{int(eid)}'
             if key not in self.store.records:

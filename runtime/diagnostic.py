@@ -21,6 +21,10 @@ def main():
     parser.add_argument('--tokens', type=int, default=20)
     parser.add_argument('--trace', action='store_true', help='Record expert traffic separately for each token')
     parser.add_argument('--no-profile', action='store_true')
+    parser.add_argument('--cuda-profile', action='store_true', help='Profile eight warm decode steps in the last pass')
+    parser.add_argument('--native-dispatch', action='store_true')
+    parser.add_argument('--grouped-dispatch', action='store_true')
+    parser.add_argument('--hc-graphs', action='store_true')
     parser.add_argument('--ram-cache-gib', type=int, choices=range(16, 85))
     parser.add_argument('--pinned-ram', action='store_true')
     parser.add_argument('--threads', type=int, choices=range(1, 33), nargs='+', help='One CPU thread count per pass')
@@ -66,12 +70,16 @@ def main():
     forced = next(r['token_ids'] for r in reference['runs'] if r['id'] == fixture['id'] and r['phase'] == 'fresh')[:args.tokens]
     assert len(forced) == args.tokens
     result = {'status': 'running', 'diagnostic_only': True, 'case': fixture['id'], 'forced_tokens': forced, 'passes': [],
+        'native_dispatch': args.native_dispatch, 'grouped_dispatch': args.grouped_dispatch, 'hc_graphs': args.hc_graphs,
         'pinned_ram': args.pinned_ram, 'ram_cache_gib': profile['ram_expert_cache_bytes'] / 2**30,
         'runtime_sha256': {name: hashlib.sha256((ROOT / 'runtime' / name).read_bytes()).hexdigest()
             for name in ('cache.py', 'indexed_store.py', 'diagnostic.py')},
         'tune_cache_path': os.environ.get('EXLLAMAV3_TUNE_CACHE')}
     if args.baseline_cache:
         result['baseline_cache_sha256'] = hashlib.sha256(args.baseline_cache.read_bytes()).hexdigest()
+    if args.native_dispatch or args.grouped_dispatch or args.hc_graphs:
+        result['extension_source_sha256'] = {name: hashlib.sha256((ROOT/'runtime'/name).read_bytes()).hexdigest()
+            for name in ('native_dispatch.cpp', 'native_dispatch.py', 'grouped_dispatch.cu', 'grouped_dispatch.h', 'hc_graphs.py')}
     cache = model = None
     first_logits = None
 
@@ -108,6 +116,15 @@ def main():
             quotas[39] += size - sum(quotas.values())
             is_baseline = bool(args.baseline_cache) and (index == 0 or args.baseline_final and index == len(args.caches) - 1)
             cache_class = baseline_class if is_baseline else ExpertCache
+            if args.cuda_profile:
+                class ProfileCache(cache_class):
+                    def apply(self, *a, **kw):
+                        with torch.profiler.record_function('paged_experts'):
+                            return super().apply(*a, **kw)
+                    def _load(self, *a, **kw):
+                        with torch.profiler.record_function('expert_miss'):
+                            return super()._load(*a, **kw)
+                cache_class = ProfileCache
             if args.trace:
                 class TracedCache(cache_class):
                     h2d_bytes = 0
@@ -122,7 +139,10 @@ def main():
                         self.requests.append(key)
                         return super().lease(key, **kw)
                 cache_class = TracedCache
-            cache = cache_class(store, size, layer_quotas=quotas, reserve_bytes=profile['host_reserve_bytes'])
+            options = {'native_dispatch': True} if args.native_dispatch and not is_baseline else {}
+            if args.grouped_dispatch and not is_baseline:
+                options['grouped_dispatch'] = True
+            cache = cache_class(store, size, layer_quotas=quotas, reserve_bytes=profile['host_reserve_bytes'], **options)
             if model is None:
                 config = Config.from_directory(str(ROOT / 'work/models/exl3'))
                 config.infer_params.no_reconstruct = True
@@ -135,6 +155,9 @@ def main():
                 for module in model:
                     if hasattr(module, 'expert_cache'):
                         module.expert_cache = cache
+            if args.hc_graphs:
+                from .hc_graphs import configure
+                configure(model, not is_baseline)
             generator = Generator(model=model, cache=kv, tokenizer=tokenizer,
                 max_batch_size=1, max_chunk_size=256, recurrent_cache_size=512 * 2**20)
             sampler = CaptureSampler()
@@ -142,6 +165,12 @@ def main():
                 max_new_tokens=len(forced), sampler=sampler, stop_conditions=[])
             generator.enqueue(job)
             profiler = cProfile.Profile()
+            cuda_profiler = None
+            if args.cuda_profile and index == len(args.caches) - 1:
+                cuda_profiler = torch.profiler.profile(
+                    activities=[torch.profiler.ProfilerActivity.CPU, torch.profiler.ProfilerActivity.CUDA],
+                    schedule=torch.profiler.schedule(wait=2, warmup=1, active=8, repeat=1))
+                cuda_profiler.start()
             started = time.perf_counter()
             with torch.inference_mode():
                 if not args.no_profile:
@@ -156,9 +185,16 @@ def main():
                     for event in events:
                         if event.get('stage') == 'error':
                             raise RuntimeError(str(event))
+                    if cuda_profiler is not None:
+                        cuda_profiler.step()
                 profiler.disable()
             torch.cuda.synchronize()
             duration = time.perf_counter() - started
+            if cuda_profiler is not None:
+                cuda_profiler.stop()
+                cuda_profiler.export_chrome_trace(str(args.output / 'cuda-trace.json'))
+                (args.output / 'cuda-profile.txt').write_text(cuda_profiler.key_averages().table(
+                    sort_by='self_device_time_total', row_limit=45))
             logits = np.stack(sampler.rows)
             assert logits.shape[0] == len(forced)
             assert np.isfinite(logits[:, :config.vocab_size]).all()

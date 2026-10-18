@@ -1,0 +1,12 @@
+{
+  "ready_for_gpu_validation": true,
+  "gpu_used": false,
+  "download_status": "complete",
+  "verified_bytes": 413905629467,
+  "total_bytes": 413905629467,
+  "pending": []
+}
+{"pass": 0, "cache": 22, "seconds": 28.259774844002095, "max_logit_difference": 0.0, "same_argmax": true}
+USDT:2026-10-18 04:54:32 1:1 SyncActivityProfilerHandler.cpp:52] profiler_start
+USDT:2026-10-18 04:54:33 1:1 SyncActivityProfilerHandler.cpp:59] profiler_stop
+{"pass": 1, "cache": 22, "seconds": 5.487827279997873, "max_logit_difference": 0.0, "same_argmax": true}

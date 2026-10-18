@@ -1,0 +1,40 @@
+from pathlib import Path
+import json,hashlib,re,shutil
+root=Path.cwd(); out=root/'results/20261018-native'
+base=json.loads((root/'results/20261018-target30/selected-84g.json').read_text())
+summary={'goal':'Over 30 single-stream output tokens/s on the same EXL3 checkpoint','goal_achieved':False,'full_runs':[], 'diagnostics':[], 'default_changed':False}
+for name in ('grouped-full','hc-full','lfu-full','lfu-no-hc-full'):
+ p=out/(name+'.json');d=json.loads(p.read_text());assert d['status']=='complete'
+ assert len(d['runs'])==14 and all(a['token_ids']==b['token_ids'] for a,b in zip(d['runs'],base['runs']))
+ assert all(r['passed'] for r in d['runs'] if r['phase']=='check')
+ assert max(r['cgroup_swap_current'] for r in d['runs'])==0
+ row={'file':p.name,'fresh_tok_s':d['fresh_median_tok_s'],'repeat_tok_s':d['repeat_median_tok_s'],'identical_tokens':sum(len(r['token_ids']) for r in d['runs']),'exact_checks_passed':8,
+ 'peak_container_gib':max(r['cgroup_memory_peak'] for r in d['runs'])/2**30,
+ 'minimum_sampled_host_available_gib':min(r['host_available_bytes'] for r in d['runs'])/2**30,
+ 'peak_torch_gpu_gib':max(r['gpu_peak_allocated_bytes'] for r in d['runs'])/2**30,
+ 'minimum_sampled_gpu_free_gib':min(r['device_free_bytes_after_request'] for r in d['runs'])/2**30,
+ 'process_swap_bytes':0}
+ summary['full_runs'].append(row)
+for name in ('native-dispatch','grouped-diagnostic','hc-diagnostic'):
+ d=json.loads((out/name/'result.json').read_text());rows=[]
+ for p in d['passes']:
+  t=p['step_trace'];assert max(p['max_absolute_error_by_position'])==0
+  rows.append({'implementation':p['implementation'],'decode_tok_s':63/(t[-1]['seconds']-t[0]['seconds']),'max_absolute_score_error':0})
+ hashes={p.name:hashlib.sha256(p.read_bytes()).hexdigest() for p in sorted((out/name).glob('*.npy'))}
+ assert len(set(hashes.values()))==1
+ summary['diagnostics'].append({'directory':name,'passes':rows,'score_sha256':hashes})
+summary['grouped_unit']=json.loads((out/'grouped-unit.json').read_text())['timings']
+summary['lifetimes']={'gpu_policy':'lfu','cases':len(json.loads((out/'lfu-lifetime.json').read_text())['cases']),'status':json.loads((out/'lfu-lifetime.json').read_text())['status']}
+(out/'summary.json').write_text(json.dumps(summary,indent=2)+'\n')
+# Format long recorded routes compactly without changing any JSON data.
+for p in out.rglob('*.json'):
+ before=json.loads(p.read_text()); s=p.read_text()
+ s=re.sub(r'("requested_experts": )\[\s*((?:"[^"\n]+"\s*,?\s*)+)\]',lambda m:m[1]+json.dumps(json.loads('['+m[2]+']')),s)
+ # Each route record is [layer, [expert IDs]].
+ s=re.sub(r'\[\s*(\d+),\s*\[\s*((?:\d+\s*,?\s*)+)\]\s*\]',lambda m:json.dumps([int(m[1]),json.loads('['+m[2]+']')]),s)
+ assert json.loads(s)==before
+ p.write_text(s)
+(out/'drivers').mkdir(exist_ok=True)
+for name in ('create_grouped.py','grouped-campaign.py','hc-campaign.py','lfu-validation.py','simulate_policy.py','simulate_full.py','finalize-native.py'):
+ shutil.copyfile(root/'work'/name,out/'drivers'/(name+'.txt'))
+print(json.dumps(summary['full_runs'],indent=2))

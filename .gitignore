@@ -5,3 +5,4 @@ __pycache__/
 STATUS.md
 results/**/*.npy
 results/**/*.pstats
+results/**/cuda-trace.json

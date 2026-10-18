@@ -1,0 +1,110 @@
+// Same ATen operations and expert order as ExpertCache.apply, in one native call.
+#include <torch/extension.h>
+#include <c10/cuda/CUDAGuard.h>
+#include "libtorch/linear.h"
+#include "grouped_dispatch.h"
+
+at::Tensor grouped_linear(const at::Tensor& x,
+    const std::vector<std::shared_ptr<BC_LinearEXL3>>& layers)
+{
+    c10::cuda::CUDAGuard guard(x.device());
+    TORCH_CHECK(x.is_cuda() && x.dim() == 2 && x.is_contiguous()
+        && x.scalar_type() == at::kHalf, "Expected contiguous fp16 CUDA rows");
+    TORCH_CHECK(!layers.empty() && layers.size() <= 12, "Expected 1..12 projections");
+    const int e = layers.size(), k = x.size(1), n = layers[0]->svh.numel();
+    const int bits = layers[0]->K;
+    TORCH_CHECK(x.size(0) == 1 || x.size(0) == e, "Expected broadcast or one row per projection");
+    TORCH_CHECK((bits == 2 || bits == 3) && k % 128 == 0 && n % 128 == 0, "Unsupported geometry");
+    GroupedPointers ptrs{};
+    ptrs.count = e;
+    for (int i = 0; i < e; ++i) {
+        const auto& p = layers[i];
+        TORCH_CHECK(p->K == bits && p->mul1 && !p->mcg && !p->bias
+            && p->suh.numel() == k && p->svh.numel() == n,
+            "Grouped dispatch requires homogeneous MUL1 K2/K3 projections without bias");
+        TORCH_CHECK(p->trellis.device() == x.device() && p->suh.device() == x.device()
+            && p->svh.device() == x.device(), "Projection device mismatch");
+        ptrs.trellis[i] = reinterpret_cast<const uint16_t*>(p->trellis.data_ptr<int16_t>());
+        ptrs.suh[i] = reinterpret_cast<const half*>(p->suh.data_ptr<at::Half>());
+        ptrs.svh[i] = reinterpret_cast<const half*>(p->svh.data_ptr<at::Half>());
+    }
+    auto out = at::empty({e, n}, x.options().dtype(at::kFloat));
+    auto had = at::empty({e, k}, x.options());
+    launch_grouped(x.data_ptr(), out.data_ptr(), had.data_ptr(), k, n,
+        x.size(0) == 1 ? 0 : k, bits, ptrs);
+    return out;
+}
+
+at::Tensor grouped_experts(const at::Tensor& x, const at::Tensor& weights,
+    const std::vector<int64_t>& positions,
+    const std::vector<std::shared_ptr<BC_LinearEXL3>>& gates,
+    const std::vector<std::shared_ptr<BC_LinearEXL3>>& ups,
+    const std::vector<std::shared_ptr<BC_LinearEXL3>>& downs,
+    c10::optional<double> limit)
+{
+    const auto n = gates.size();
+    TORCH_CHECK(n > 0 && n <= 6 && ups.size() == n && downs.size() == n
+        && positions.size() == n && x.size(0) == 1, "Invalid expert batch");
+    TORCH_CHECK(weights.device() == x.device() && weights.dim() == 2
+        && weights.size(0) == 1 && weights.size(1) == n, "Invalid weights");
+    auto projections = gates;
+    projections.insert(projections.end(), ups.begin(), ups.end());
+    auto gu = grouped_linear(x, projections);
+    auto gate = gu.slice(0, 0, n), up = gu.slice(0, n, 2*n);
+    if (limit) {
+        gate = gate.clamp_max(*limit);
+        up = up.clamp(-*limit, *limit);
+    }
+    auto act = (at::silu(gate) * up).to(at::kHalf).contiguous();
+    auto down = grouped_linear(act, downs);
+    auto result = at::zeros_like(x, x.options().dtype(at::kFloat));
+    for (size_t i = 0; i < n; ++i) {
+        TORCH_CHECK(positions[i] >= 0 && positions[i] < n, "Invalid weight index");
+        auto weight = weights.slice(1, positions[i], positions[i] + 1).to(at::kFloat);
+        result.add_(down.slice(0, i, i + 1) * weight);
+    }
+    return result;
+}
+
+at::Tensor exact_experts(
+    const at::Tensor& x,
+    const at::Tensor& weights,
+    const std::vector<int64_t>& positions,
+    const std::vector<std::shared_ptr<BC_LinearEXL3>>& gates,
+    const std::vector<std::shared_ptr<BC_LinearEXL3>>& ups,
+    const std::vector<std::shared_ptr<BC_LinearEXL3>>& downs,
+    c10::optional<double> limit)
+{
+    c10::cuda::CUDAGuard guard(x.device());
+    TORCH_CHECK(x.is_cuda() && x.dim() == 2 && x.size(0) == 1 && x.is_contiguous()
+        && x.scalar_type() == at::kHalf, "Expected one contiguous fp16 CUDA row");
+    const auto n = gates.size();
+    TORCH_CHECK(n > 0 && n == ups.size() && n == downs.size() && n == positions.size(),
+        "Expert lists differ");
+    TORCH_CHECK(weights.device() == x.device() && weights.dim() == 2
+        && weights.size(0) == 1 && weights.size(1) == n, "Invalid routing weights");
+    auto result = at::zeros_like(x, x.options().dtype(at::kFloat));
+    for (size_t i = 0; i < n; ++i)
+    {
+        TORCH_CHECK(positions[i] >= 0 && positions[i] < n, "Invalid weight index");
+        auto gate = gates[i]->run_alloc(x, gates[i]->svh.numel(), true);
+        auto up = ups[i]->run_alloc(x, ups[i]->svh.numel(), true);
+        if (limit)
+        {
+            gate = gate.clamp_max(*limit);
+            up = up.clamp(-*limit, *limit);
+        }
+        auto act = (at::silu(gate) * up).to(at::kHalf).contiguous();
+        auto down = downs[i]->run_alloc(act, downs[i]->svh.numel(), true);
+        auto weight = weights.slice(1, positions[i], positions[i] + 1).to(at::kFloat);
+        result.add_(down * weight);
+    }
+    return result;
+}
+
+PYBIND11_MODULE(TORCH_EXTENSION_NAME, m)
+{
+    m.def("exact_experts", &exact_experts, py::call_guard<py::gil_scoped_release>());
+    m.def("grouped_linear", &grouped_linear, py::call_guard<py::gil_scoped_release>());
+    m.def("grouped_experts", &grouped_experts, py::call_guard<py::gil_scoped_release>());
+}

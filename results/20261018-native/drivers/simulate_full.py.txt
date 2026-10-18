@@ -1,0 +1,52 @@
+import json,sys,heapq
+from pathlib import Path
+from collections import OrderedDict,defaultdict
+sys.path.insert(0,str(Path.cwd()))
+from runtime.indexed_store import inventory
+records,_=inventory(Path.cwd(),cached_headers=True)
+d=json.load(open(sys.argv[1]))
+capacity=22*2**30
+per=capacity//(40*4096)*4096
+sizes={key:r['bytes'] for key,r in records.items()}
+quotas={i:per for i in range(40)}; quotas[39]+=capacity-sum(quotas.values())
+output=[]
+for gp in ['lru','lfu','decay64']:
+ for rp in ['lru','lfu','decay64']:
+  cache={i:OrderedDict() for i in range(40)}; counts=defaultdict(float); ticks=defaultdict(int)
+  ram=OrderedDict(); rf=defaultdict(float); heap=[]; rt=0; ram_used=0; cap=84*2**30
+  rows=[]
+  for run in d['runs']:
+   gm=rm=rb=0
+   for layer, routes in run['route_trace']:
+    held=set()
+    for eid in routes:
+     key=f'{layer}:{eid}'; ticks[layer]+=1
+     counts[key]+=2**(ticks[layer]/384) if gp=='decay64' else 1
+     lru=cache[layer]
+     if key in lru: lru.move_to_end(key)
+     else:
+      gm+=1
+      while (len(lru)+1)*sizes[key]>quotas[layer]:
+       candidates=(k for k in lru if k not in held)
+       victim=next(candidates) if gp=='lru' else min(candidates,key=lambda k:counts[k])
+       del lru[victim]
+      lru[key]=None
+      rt+=1; rf[key]+=2**(rt/(64*40*6)) if rp=='decay64' else 1
+      if key in ram:
+       ram.move_to_end(key)
+      else:
+       rm+=1;rb+=sizes[key]
+       while ram_used+sizes[key]>cap:
+        if rp=='lru': victim=next(iter(ram))
+        else:
+         while heap:
+          score,victim=heapq.heappop(heap)
+          if victim in ram and rf[victim]==score:break
+         else: raise RuntimeError('empty heap')
+        ram_used-=sizes[victim];del ram[victim]
+       ram[key]=None;ram_used+=sizes[key]
+      if rp!='lru':heapq.heappush(heap,(rf[key],key))
+     if len(routes)==6: held.add(key)
+   if run['phase']!='check':rows.append({'id':run['id'],'phase':run['phase'],'GPU_misses':gm,'RAM_misses':rm,'SSD_MB_per_output':round(rb/run['output_tokens']/1e6,2)})
+  row={'GPU':gp,'RAM':rp,'runs':rows};output.append(row);print(json.dumps(row),flush=True)
+Path(sys.argv[2]).write_text(json.dumps(output,indent=2)+'\n')

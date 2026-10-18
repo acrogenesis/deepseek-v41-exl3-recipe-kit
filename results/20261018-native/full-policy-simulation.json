@@ -1,0 +1,434 @@
+[
+  {
+    "GPU": "lru",
+    "RAM": "lru",
+    "runs": [
+      {
+        "id": "fresh-0",
+        "phase": "fresh",
+        "GPU_misses": 11752,
+        "RAM_misses": 3235,
+        "SSD_MB_per_output": 321.61
+      },
+      {
+        "id": "fresh-1",
+        "phase": "fresh",
+        "GPU_misses": 11651,
+        "RAM_misses": 1441,
+        "SSD_MB_per_output": 145.46
+      },
+      {
+        "id": "fresh-2",
+        "phase": "fresh",
+        "GPU_misses": 11166,
+        "RAM_misses": 1272,
+        "SSD_MB_per_output": 127.15
+      },
+      {
+        "id": "fresh-0",
+        "phase": "repeat",
+        "GPU_misses": 11510,
+        "RAM_misses": 1479,
+        "SSD_MB_per_output": 147.62
+      },
+      {
+        "id": "fresh-1",
+        "phase": "repeat",
+        "GPU_misses": 11651,
+        "RAM_misses": 1389,
+        "SSD_MB_per_output": 140.43
+      },
+      {
+        "id": "fresh-2",
+        "phase": "repeat",
+        "GPU_misses": 11166,
+        "RAM_misses": 1272,
+        "SSD_MB_per_output": 127.15
+      }
+    ]
+  },
+  {
+    "GPU": "lru",
+    "RAM": "lfu",
+    "runs": [
+      {
+        "id": "fresh-0",
+        "phase": "fresh",
+        "GPU_misses": 11752,
+        "RAM_misses": 3622,
+        "SSD_MB_per_output": 357.77
+      },
+      {
+        "id": "fresh-1",
+        "phase": "fresh",
+        "GPU_misses": 11651,
+        "RAM_misses": 2178,
+        "SSD_MB_per_output": 216.32
+      },
+      {
+        "id": "fresh-2",
+        "phase": "fresh",
+        "GPU_misses": 11166,
+        "RAM_misses": 1693,
+        "SSD_MB_per_output": 167.82
+      },
+      {
+        "id": "fresh-0",
+        "phase": "repeat",
+        "GPU_misses": 11510,
+        "RAM_misses": 1001,
+        "SSD_MB_per_output": 98.78
+      },
+      {
+        "id": "fresh-1",
+        "phase": "repeat",
+        "GPU_misses": 11651,
+        "RAM_misses": 943,
+        "SSD_MB_per_output": 94.26
+      },
+      {
+        "id": "fresh-2",
+        "phase": "repeat",
+        "GPU_misses": 11166,
+        "RAM_misses": 994,
+        "SSD_MB_per_output": 98.88
+      }
+    ]
+  },
+  {
+    "GPU": "lru",
+    "RAM": "decay64",
+    "runs": [
+      {
+        "id": "fresh-0",
+        "phase": "fresh",
+        "GPU_misses": 11752,
+        "RAM_misses": 3347,
+        "SSD_MB_per_output": 331.64
+      },
+      {
+        "id": "fresh-1",
+        "phase": "fresh",
+        "GPU_misses": 11651,
+        "RAM_misses": 1862,
+        "SSD_MB_per_output": 185.23
+      },
+      {
+        "id": "fresh-2",
+        "phase": "fresh",
+        "GPU_misses": 11166,
+        "RAM_misses": 1322,
+        "SSD_MB_per_output": 131.9
+      },
+      {
+        "id": "fresh-0",
+        "phase": "repeat",
+        "GPU_misses": 11510,
+        "RAM_misses": 1040,
+        "SSD_MB_per_output": 103.25
+      },
+      {
+        "id": "fresh-1",
+        "phase": "repeat",
+        "GPU_misses": 11651,
+        "RAM_misses": 1015,
+        "SSD_MB_per_output": 102.45
+      },
+      {
+        "id": "fresh-2",
+        "phase": "repeat",
+        "GPU_misses": 11166,
+        "RAM_misses": 932,
+        "SSD_MB_per_output": 92.49
+      }
+    ]
+  },
+  {
+    "GPU": "lfu",
+    "RAM": "lru",
+    "runs": [
+      {
+        "id": "fresh-0",
+        "phase": "fresh",
+        "GPU_misses": 15280,
+        "RAM_misses": 2726,
+        "SSD_MB_per_output": 271.44
+      },
+      {
+        "id": "fresh-1",
+        "phase": "fresh",
+        "GPU_misses": 12526,
+        "RAM_misses": 1587,
+        "SSD_MB_per_output": 160.69
+      },
+      {
+        "id": "fresh-2",
+        "phase": "fresh",
+        "GPU_misses": 11284,
+        "RAM_misses": 1128,
+        "SSD_MB_per_output": 112.17
+      },
+      {
+        "id": "fresh-0",
+        "phase": "repeat",
+        "GPU_misses": 10164,
+        "RAM_misses": 987,
+        "SSD_MB_per_output": 98.46
+      },
+      {
+        "id": "fresh-1",
+        "phase": "repeat",
+        "GPU_misses": 10284,
+        "RAM_misses": 718,
+        "SSD_MB_per_output": 72.61
+      },
+      {
+        "id": "fresh-2",
+        "phase": "repeat",
+        "GPU_misses": 9760,
+        "RAM_misses": 597,
+        "SSD_MB_per_output": 59.74
+      }
+    ]
+  },
+  {
+    "GPU": "lfu",
+    "RAM": "lfu",
+    "runs": [
+      {
+        "id": "fresh-0",
+        "phase": "fresh",
+        "GPU_misses": 15280,
+        "RAM_misses": 3744,
+        "SSD_MB_per_output": 368.33
+      },
+      {
+        "id": "fresh-1",
+        "phase": "fresh",
+        "GPU_misses": 12526,
+        "RAM_misses": 2022,
+        "SSD_MB_per_output": 202.75
+      },
+      {
+        "id": "fresh-2",
+        "phase": "fresh",
+        "GPU_misses": 11284,
+        "RAM_misses": 1766,
+        "SSD_MB_per_output": 175.34
+      },
+      {
+        "id": "fresh-0",
+        "phase": "repeat",
+        "GPU_misses": 10164,
+        "RAM_misses": 868,
+        "SSD_MB_per_output": 85.42
+      },
+      {
+        "id": "fresh-1",
+        "phase": "repeat",
+        "GPU_misses": 10284,
+        "RAM_misses": 884,
+        "SSD_MB_per_output": 87.71
+      },
+      {
+        "id": "fresh-2",
+        "phase": "repeat",
+        "GPU_misses": 9760,
+        "RAM_misses": 860,
+        "SSD_MB_per_output": 85.49
+      }
+    ]
+  },
+  {
+    "GPU": "lfu",
+    "RAM": "decay64",
+    "runs": [
+      {
+        "id": "fresh-0",
+        "phase": "fresh",
+        "GPU_misses": 15280,
+        "RAM_misses": 2915,
+        "SSD_MB_per_output": 290.14
+      },
+      {
+        "id": "fresh-1",
+        "phase": "fresh",
+        "GPU_misses": 12526,
+        "RAM_misses": 1721,
+        "SSD_MB_per_output": 173.46
+      },
+      {
+        "id": "fresh-2",
+        "phase": "fresh",
+        "GPU_misses": 11284,
+        "RAM_misses": 1270,
+        "SSD_MB_per_output": 126.53
+      },
+      {
+        "id": "fresh-0",
+        "phase": "repeat",
+        "GPU_misses": 10164,
+        "RAM_misses": 819,
+        "SSD_MB_per_output": 81.63
+      },
+      {
+        "id": "fresh-1",
+        "phase": "repeat",
+        "GPU_misses": 10284,
+        "RAM_misses": 685,
+        "SSD_MB_per_output": 69.35
+      },
+      {
+        "id": "fresh-2",
+        "phase": "repeat",
+        "GPU_misses": 9760,
+        "RAM_misses": 594,
+        "SSD_MB_per_output": 59.36
+      }
+    ]
+  },
+  {
+    "GPU": "decay64",
+    "RAM": "lru",
+    "runs": [
+      {
+        "id": "fresh-0",
+        "phase": "fresh",
+        "GPU_misses": 12852,
+        "RAM_misses": 2906,
+        "SSD_MB_per_output": 289.21
+      },
+      {
+        "id": "fresh-1",
+        "phase": "fresh",
+        "GPU_misses": 10802,
+        "RAM_misses": 1929,
+        "SSD_MB_per_output": 194.1
+      },
+      {
+        "id": "fresh-2",
+        "phase": "fresh",
+        "GPU_misses": 10027,
+        "RAM_misses": 1251,
+        "SSD_MB_per_output": 124.41
+      },
+      {
+        "id": "fresh-0",
+        "phase": "repeat",
+        "GPU_misses": 10418,
+        "RAM_misses": 1270,
+        "SSD_MB_per_output": 126.63
+      },
+      {
+        "id": "fresh-1",
+        "phase": "repeat",
+        "GPU_misses": 10656,
+        "RAM_misses": 1126,
+        "SSD_MB_per_output": 113.55
+      },
+      {
+        "id": "fresh-2",
+        "phase": "repeat",
+        "GPU_misses": 9909,
+        "RAM_misses": 1117,
+        "SSD_MB_per_output": 111.19
+      }
+    ]
+  },
+  {
+    "GPU": "decay64",
+    "RAM": "lfu",
+    "runs": [
+      {
+        "id": "fresh-0",
+        "phase": "fresh",
+        "GPU_misses": 12852,
+        "RAM_misses": 3759,
+        "SSD_MB_per_output": 369.68
+      },
+      {
+        "id": "fresh-1",
+        "phase": "fresh",
+        "GPU_misses": 10802,
+        "RAM_misses": 2309,
+        "SSD_MB_per_output": 229.95
+      },
+      {
+        "id": "fresh-2",
+        "phase": "fresh",
+        "GPU_misses": 10027,
+        "RAM_misses": 1947,
+        "SSD_MB_per_output": 193.52
+      },
+      {
+        "id": "fresh-0",
+        "phase": "repeat",
+        "GPU_misses": 10418,
+        "RAM_misses": 938,
+        "SSD_MB_per_output": 92.12
+      },
+      {
+        "id": "fresh-1",
+        "phase": "repeat",
+        "GPU_misses": 10656,
+        "RAM_misses": 852,
+        "SSD_MB_per_output": 85.24
+      },
+      {
+        "id": "fresh-2",
+        "phase": "repeat",
+        "GPU_misses": 9909,
+        "RAM_misses": 854,
+        "SSD_MB_per_output": 84.83
+      }
+    ]
+  },
+  {
+    "GPU": "decay64",
+    "RAM": "decay64",
+    "runs": [
+      {
+        "id": "fresh-0",
+        "phase": "fresh",
+        "GPU_misses": 12852,
+        "RAM_misses": 2965,
+        "SSD_MB_per_output": 294.93
+      },
+      {
+        "id": "fresh-1",
+        "phase": "fresh",
+        "GPU_misses": 10802,
+        "RAM_misses": 2077,
+        "SSD_MB_per_output": 208.19
+      },
+      {
+        "id": "fresh-2",
+        "phase": "fresh",
+        "GPU_misses": 10027,
+        "RAM_misses": 1434,
+        "SSD_MB_per_output": 142.38
+      },
+      {
+        "id": "fresh-0",
+        "phase": "repeat",
+        "GPU_misses": 10418,
+        "RAM_misses": 886,
+        "SSD_MB_per_output": 87.81
+      },
+      {
+        "id": "fresh-1",
+        "phase": "repeat",
+        "GPU_misses": 10656,
+        "RAM_misses": 775,
+        "SSD_MB_per_output": 78.37
+      },
+      {
+        "id": "fresh-2",
+        "phase": "repeat",
+        "GPU_misses": 9909,
+        "RAM_misses": 686,
+        "SSD_MB_per_output": 68.07
+      }
+    ]
+  }
+]

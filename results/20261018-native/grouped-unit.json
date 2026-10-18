@@ -1,0 +1,389 @@
+{
+  "status": "passed",
+  "cases": [
+    {
+      "case": "0/17/0.1/gate-up-1",
+      "bit_exact": true,
+      "max_error": 0.0
+    },
+    {
+      "case": "0/17/0.1/gate-up-6",
+      "bit_exact": true,
+      "max_error": 0.0
+    },
+    {
+      "case": "0/17/0.1/gate-up-12",
+      "bit_exact": true,
+      "max_error": 0.0
+    },
+    {
+      "case": "0/17/0.1/down",
+      "bit_exact": true,
+      "max_error": 0.0
+    },
+    {
+      "case": "0/17/0.1/moe-None",
+      "bit_exact": true,
+      "max_error": 0.0
+    },
+    {
+      "case": "0/17/0.1/moe-10.0",
+      "bit_exact": true,
+      "max_error": 0.0
+    },
+    {
+      "case": "0/17/1.0/gate-up-1",
+      "bit_exact": true,
+      "max_error": 0.0
+    },
+    {
+      "case": "0/17/1.0/gate-up-6",
+      "bit_exact": true,
+      "max_error": 0.0
+    },
+    {
+      "case": "0/17/1.0/gate-up-12",
+      "bit_exact": true,
+      "max_error": 0.0
+    },
+    {
+      "case": "0/17/1.0/down",
+      "bit_exact": true,
+      "max_error": 0.0
+    },
+    {
+      "case": "0/17/1.0/moe-None",
+      "bit_exact": true,
+      "max_error": 0.0
+    },
+    {
+      "case": "0/17/1.0/moe-10.0",
+      "bit_exact": true,
+      "max_error": 0.0
+    },
+    {
+      "case": "0/17/10.0/gate-up-1",
+      "bit_exact": true,
+      "max_error": 0.0
+    },
+    {
+      "case": "0/17/10.0/gate-up-6",
+      "bit_exact": true,
+      "max_error": 0.0
+    },
+    {
+      "case": "0/17/10.0/gate-up-12",
+      "bit_exact": true,
+      "max_error": 0.0
+    },
+    {
+      "case": "0/17/10.0/down",
+      "bit_exact": true,
+      "max_error": 0.0
+    },
+    {
+      "case": "0/17/10.0/moe-None",
+      "bit_exact": true,
+      "max_error": 0.0
+    },
+    {
+      "case": "0/17/10.0/moe-10.0",
+      "bit_exact": true,
+      "max_error": 0.0
+    },
+    {
+      "case": "0/1017/0.1/gate-up-1",
+      "bit_exact": true,
+      "max_error": 0.0
+    },
+    {
+      "case": "0/1017/0.1/gate-up-6",
+      "bit_exact": true,
+      "max_error": 0.0
+    },
+    {
+      "case": "0/1017/0.1/gate-up-12",
+      "bit_exact": true,
+      "max_error": 0.0
+    },
+    {
+      "case": "0/1017/0.1/down",
+      "bit_exact": true,
+      "max_error": 0.0
+    },
+    {
+      "case": "0/1017/0.1/moe-None",
+      "bit_exact": true,
+      "max_error": 0.0
+    },
+    {
+      "case": "0/1017/0.1/moe-10.0",
+      "bit_exact": true,
+      "max_error": 0.0
+    },
+    {
+      "case": "0/1017/1.0/gate-up-1",
+      "bit_exact": true,
+      "max_error": 0.0
+    },
+    {
+      "case": "0/1017/1.0/gate-up-6",
+      "bit_exact": true,
+      "max_error": 0.0
+    },
+    {
+      "case": "0/1017/1.0/gate-up-12",
+      "bit_exact": true,
+      "max_error": 0.0
+    },
+    {
+      "case": "0/1017/1.0/down",
+      "bit_exact": true,
+      "max_error": 0.0
+    },
+    {
+      "case": "0/1017/1.0/moe-None",
+      "bit_exact": true,
+      "max_error": 0.0
+    },
+    {
+      "case": "0/1017/1.0/moe-10.0",
+      "bit_exact": true,
+      "max_error": 0.0
+    },
+    {
+      "case": "0/1017/10.0/gate-up-1",
+      "bit_exact": true,
+      "max_error": 0.0
+    },
+    {
+      "case": "0/1017/10.0/gate-up-6",
+      "bit_exact": true,
+      "max_error": 0.0
+    },
+    {
+      "case": "0/1017/10.0/gate-up-12",
+      "bit_exact": true,
+      "max_error": 0.0
+    },
+    {
+      "case": "0/1017/10.0/down",
+      "bit_exact": true,
+      "max_error": 0.0
+    },
+    {
+      "case": "0/1017/10.0/moe-None",
+      "bit_exact": true,
+      "max_error": 0.0
+    },
+    {
+      "case": "0/1017/10.0/moe-10.0",
+      "bit_exact": true,
+      "max_error": 0.0
+    },
+    {
+      "case": "18/17/0.1/gate-up-1",
+      "bit_exact": true,
+      "max_error": 0.0
+    },
+    {
+      "case": "18/17/0.1/gate-up-6",
+      "bit_exact": true,
+      "max_error": 0.0
+    },
+    {
+      "case": "18/17/0.1/gate-up-12",
+      "bit_exact": true,
+      "max_error": 0.0
+    },
+    {
+      "case": "18/17/0.1/down",
+      "bit_exact": true,
+      "max_error": 0.0
+    },
+    {
+      "case": "18/17/0.1/moe-None",
+      "bit_exact": true,
+      "max_error": 0.0
+    },
+    {
+      "case": "18/17/0.1/moe-10.0",
+      "bit_exact": true,
+      "max_error": 0.0
+    },
+    {
+      "case": "18/17/1.0/gate-up-1",
+      "bit_exact": true,
+      "max_error": 0.0
+    },
+    {
+      "case": "18/17/1.0/gate-up-6",
+      "bit_exact": true,
+      "max_error": 0.0
+    },
+    {
+      "case": "18/17/1.0/gate-up-12",
+      "bit_exact": true,
+      "max_error": 0.0
+    },
+    {
+      "case": "18/17/1.0/down",
+      "bit_exact": true,
+      "max_error": 0.0
+    },
+    {
+      "case": "18/17/1.0/moe-None",
+      "bit_exact": true,
+      "max_error": 0.0
+    },
+    {
+      "case": "18/17/1.0/moe-10.0",
+      "bit_exact": true,
+      "max_error": 0.0
+    },
+    {
+      "case": "18/17/10.0/gate-up-1",
+      "bit_exact": true,
+      "max_error": 0.0
+    },
+    {
+      "case": "18/17/10.0/gate-up-6",
+      "bit_exact": true,
+      "max_error": 0.0
+    },
+    {
+      "case": "18/17/10.0/gate-up-12",
+      "bit_exact": true,
+      "max_error": 0.0
+    },
+    {
+      "case": "18/17/10.0/down",
+      "bit_exact": true,
+      "max_error": 0.0
+    },
+    {
+      "case": "18/17/10.0/moe-None",
+      "bit_exact": true,
+      "max_error": 0.0
+    },
+    {
+      "case": "18/17/10.0/moe-10.0",
+      "bit_exact": true,
+      "max_error": 0.0
+    },
+    {
+      "case": "18/1017/0.1/gate-up-1",
+      "bit_exact": true,
+      "max_error": 0.0
+    },
+    {
+      "case": "18/1017/0.1/gate-up-6",
+      "bit_exact": true,
+      "max_error": 0.0
+    },
+    {
+      "case": "18/1017/0.1/gate-up-12",
+      "bit_exact": true,
+      "max_error": 0.0
+    },
+    {
+      "case": "18/1017/0.1/down",
+      "bit_exact": true,
+      "max_error": 0.0
+    },
+    {
+      "case": "18/1017/0.1/moe-None",
+      "bit_exact": true,
+      "max_error": 0.0
+    },
+    {
+      "case": "18/1017/0.1/moe-10.0",
+      "bit_exact": true,
+      "max_error": 0.0
+    },
+    {
+      "case": "18/1017/1.0/gate-up-1",
+      "bit_exact": true,
+      "max_error": 0.0
+    },
+    {
+      "case": "18/1017/1.0/gate-up-6",
+      "bit_exact": true,
+      "max_error": 0.0
+    },
+    {
+      "case": "18/1017/1.0/gate-up-12",
+      "bit_exact": true,
+      "max_error": 0.0
+    },
+    {
+      "case": "18/1017/1.0/down",
+      "bit_exact": true,
+      "max_error": 0.0
+    },
+    {
+      "case": "18/1017/1.0/moe-None",
+      "bit_exact": true,
+      "max_error": 0.0
+    },
+    {
+      "case": "18/1017/1.0/moe-10.0",
+      "bit_exact": true,
+      "max_error": 0.0
+    },
+    {
+      "case": "18/1017/10.0/gate-up-1",
+      "bit_exact": true,
+      "max_error": 0.0
+    },
+    {
+      "case": "18/1017/10.0/gate-up-6",
+      "bit_exact": true,
+      "max_error": 0.0
+    },
+    {
+      "case": "18/1017/10.0/gate-up-12",
+      "bit_exact": true,
+      "max_error": 0.0
+    },
+    {
+      "case": "18/1017/10.0/down",
+      "bit_exact": true,
+      "max_error": 0.0
+    },
+    {
+      "case": "18/1017/10.0/moe-None",
+      "bit_exact": true,
+      "max_error": 0.0
+    },
+    {
+      "case": "18/1017/10.0/moe-10.0",
+      "bit_exact": true,
+      "max_error": 0.0
+    }
+  ],
+  "timings": [
+    {
+      "layer": 0,
+      "eager": {
+        "wall_us": 338.91582999785896,
+        "device_us": 338.8902282714844
+      },
+      "grouped": {
+        "wall_us": 109.83915002725553,
+        "device_us": 109.80352401733398
+      }
+    },
+    {
+      "layer": 18,
+      "eager": {
+        "wall_us": 309.47035003919154,
+        "device_us": 309.43775177001953
+      },
+      "grouped": {
+        "wall_us": 99.7841500065988,
+        "device_us": 99.76032257080078
+      }
+    }
+  ]
+}

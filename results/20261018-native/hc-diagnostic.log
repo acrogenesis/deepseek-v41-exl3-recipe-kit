@@ -1,0 +1,4 @@
+{"pass": 0, "cache": 22, "seconds": 28.099737693999487, "max_logit_difference": 0.0, "same_argmax": true}
+ninja: no work to do.
+{"pass": 1, "cache": 22, "seconds": 3.7316621639984078, "max_logit_difference": 0.0, "same_argmax": true}
+{"pass": 2, "cache": 22, "seconds": 4.202901163000206, "max_logit_difference": 0.0, "same_argmax": true}
