@@ -19,10 +19,18 @@ def main():
     parser.add_argument('--output', type=Path, required=True)
     parser.add_argument('--caches', type=int, nargs='+', default=[16, 22, 16])
     parser.add_argument('--tokens', type=int, default=20)
+    parser.add_argument('--trace', action='store_true', help='Record expert traffic separately for each token')
+    parser.add_argument('--no-profile', action='store_true')
+    parser.add_argument('--ram-cache-gib', type=int, choices=range(16, 85))
+    parser.add_argument('--pinned-ram', action='store_true')
+    parser.add_argument('--threads', type=int, choices=range(1, 33), nargs='+', help='One CPU thread count per pass')
     parser.add_argument('--baseline-cache', type=Path,
         help='Use this older cache.py for the first pass, then the current cache')
+    parser.add_argument('--baseline-final', action='store_true', help='Also use the baseline for the last pass')
     parser.add_argument('--reference', type=Path, default=ROOT / 'results/20261017T232708Z-cache-campaign/bench-16g.json')
     args = parser.parse_args()
+    if args.threads and len(args.threads) != len(args.caches):
+        parser.error('--threads needs one value per cache pass')
     if not args.allow_gpu:
         raise SystemExit('Explicit GPU authorization required')
     args.output.resolve().relative_to((ROOT / 'results').resolve())
@@ -48,14 +56,17 @@ def main():
         baseline_class = module.ExpertCache
     from .native_adapter import attach_engram, build_model
     profile = json.loads((ROOT / 'profiles/5090.json').read_text())
+    if args.ram_cache_gib is not None:
+        profile['ram_expert_cache_bytes'] = args.ram_cache_gib * 2**30
     records, _ = inventory(ROOT)
     store = IndexedExpertStore(ROOT / 'work/models/exl3', records, profile['ram_expert_cache_bytes'],
-        reserve_bytes=profile['host_reserve_bytes'])
+        reserve_bytes=profile['host_reserve_bytes'], pinned=args.pinned_ram)
     fixture = json.loads((ROOT / 'fixtures/paired-gguf.json').read_text())['speed'][0]
     reference = json.loads(args.reference.read_text())
     forced = next(r['token_ids'] for r in reference['runs'] if r['id'] == fixture['id'] and r['phase'] == 'fresh')[:args.tokens]
     assert len(forced) == args.tokens
     result = {'status': 'running', 'diagnostic_only': True, 'case': fixture['id'], 'forced_tokens': forced, 'passes': [],
+        'pinned_ram': args.pinned_ram, 'ram_cache_gib': profile['ram_expert_cache_bytes'] / 2**30,
         'runtime_sha256': {name: hashlib.sha256((ROOT / 'runtime' / name).read_bytes()).hexdigest()
             for name in ('cache.py', 'indexed_store.py', 'diagnostic.py')},
         'tune_cache_path': os.environ.get('EXLLAMAV3_TUNE_CACHE')}
@@ -68,11 +79,17 @@ def main():
         def __init__(self):
             super().__init__()
             self.rows = []
+            self.trace = []
 
         def forward(self, logits, *a, **kw):
             row = logits.detach().reshape(-1).float().cpu().clone()
             index = len(self.rows)
             self.rows.append(row.numpy())
+            if args.trace:
+                self.trace.append({'position': index, 'seconds': time.perf_counter(),
+                    'gpu': dict(cache.stats), 'ram': dict(store.stats),
+                    'h2d_bytes': cache.h2d_bytes, 'requested_experts': cache.requests})
+                cache.requests = []
             return torch.tensor([[forced[index]]], device=logits.device, dtype=torch.long)
 
     def save():
@@ -80,6 +97,8 @@ def main():
 
     try:
         for index, gib in enumerate(args.caches):
+            if args.threads:
+                torch.set_num_threads(args.threads[index])
             if cache is not None:
                 cache.close()
                 torch.cuda.empty_cache()
@@ -87,7 +106,22 @@ def main():
             per = size // (40 * 4096) * 4096
             quotas = {i: per for i in range(40)}
             quotas[39] += size - sum(quotas.values())
-            cache_class = baseline_class if index == 0 else ExpertCache
+            is_baseline = bool(args.baseline_cache) and (index == 0 or args.baseline_final and index == len(args.caches) - 1)
+            cache_class = baseline_class if is_baseline else ExpertCache
+            if args.trace:
+                class TracedCache(cache_class):
+                    h2d_bytes = 0
+                    def __init__(self, *a, **kw):
+                        super().__init__(*a, **kw)
+                        self.requests = []
+                    def _load(self, key, cancel):
+                        entry = super()._load(key, cancel)
+                        self.h2d_bytes += self.store.records[key]['bytes']
+                        return entry
+                    def lease(self, key, **kw):
+                        self.requests.append(key)
+                        return super().lease(key, **kw)
+                cache_class = TracedCache
             cache = cache_class(store, size, layer_quotas=quotas, reserve_bytes=profile['host_reserve_bytes'])
             if model is None:
                 config = Config.from_directory(str(ROOT / 'work/models/exl3'))
@@ -110,7 +144,8 @@ def main():
             profiler = cProfile.Profile()
             started = time.perf_counter()
             with torch.inference_mode():
-                profiler.enable()
+                if not args.no_profile:
+                    profiler.enable()
                 progress = time.monotonic()
                 while generator.num_remaining_jobs():
                     events = generator.iterate()
@@ -128,13 +163,19 @@ def main():
             assert logits.shape[0] == len(forced)
             assert np.isfinite(logits[:, :config.vocab_size]).all()
             np.save(args.output / f'pass-{index}-{gib}g-logits.npy', logits)
-            profiler.dump_stats(str(args.output / f'pass-{index}-{gib}g.pstats'))
-            with (args.output / f'pass-{index}-{gib}g-profile.txt').open('w') as f:
-                pstats.Stats(profiler, stream=f).sort_stats('cumulative').print_stats(55)
-                pstats.Stats(profiler, stream=f).sort_stats('tottime').print_stats(35)
-            row = {'cache_gib': gib, 'implementation': 'baseline' if args.baseline_cache and index == 0 else 'current',
+            if not args.no_profile:
+                profiler.dump_stats(str(args.output / f'pass-{index}-{gib}g.pstats'))
+                with (args.output / f'pass-{index}-{gib}g-profile.txt').open('w') as f:
+                    pstats.Stats(profiler, stream=f).sort_stats('cumulative').print_stats(55)
+                    pstats.Stats(profiler, stream=f).sort_stats('tottime').print_stats(35)
+            row = {'cache_gib': gib, 'implementation': 'baseline' if is_baseline else 'current',
+                'cpu_threads': torch.get_num_threads(),
                 'seconds': duration, 'ram': dict(store.stats), 'gpu': dict(cache.stats),
                 'argmax_tokens': logits.argmax(-1).tolist()}
+            if args.trace:
+                for step in sampler.trace:
+                    step['seconds'] -= started
+                row['step_trace'] = sampler.trace
             valid = logits[:, :config.vocab_size]
             if first_logits is None:
                 first_logits = valid.copy()

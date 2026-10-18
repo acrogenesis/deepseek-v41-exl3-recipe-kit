@@ -1,0 +1,14 @@
+from pathlib import Path
+import subprocess,json
+root=Path.cwd()
+base=['podman','--hooks-dir',str(root/'work/no-hooks'),'run','--rm','--name','deepseek41-exl3-5090','--network','none','--device','nvidia.com/gpu=all','--memory=96g','--memory-swap=96g','--shm-size=2g','-e','CUDA_VISIBLE_DEVICES=0','-e','NVIDIA_VISIBLE_DEVICES=void','-e','EXL3_INT8_GEMV=0','-e','EXLLAMAV3_TUNE_CACHE=/kernel-cache/coop_autotune_v1.bin','-e','TRITON_CACHE_DIR=/kernel-cache/triton','-v',str(root)+':/recipe:ro','-v',str(root/'results')+':/recipe/results:rw','-v',str(root/'work/kernel-cache')+':/kernel-cache:rw','-w','/recipe','localhost/deepseek41-exl3-5090:staged']
+out=root/'results/20261018-target30'
+for name,entry in [
+ ('pinned-lifetime',['tests/gpu_cache_lifetime.py','--pinned-ram']),
+ ('pinned-trace',['-m','runtime.diagnostic','--pinned-ram','--caches','22','22','22','--baseline-final','--trace','--no-profile','--tokens','64','--baseline-cache','/recipe/work/target30-copy-stream/cache.py','--reference','/recipe/results/20261018-clean-optimization/optimized-22g.json']),
+]:
+ assert not (root/'work/GPU_HOLD').exists()
+ with (out/(name+'.log')).open('w') as log:
+  path='/recipe/results/20261018-target30/'+name+('.json' if name.endswith('lifetime') else '')
+  subprocess.run(base+entry+['--allow-gpu','--output',path],stdout=log,stderr=subprocess.STDOUT,check=True)
+ print(name+' complete',flush=True)

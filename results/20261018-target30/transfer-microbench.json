@@ -1,0 +1,41 @@
+{
+  "record_bytes": 13320192,
+  "iterations": 80,
+  "discarded_warmup": 10,
+  "results": [
+    {
+      "method": "torch_copy",
+      "threads": 16,
+      "median_ms": 0.023455500922864303
+    },
+    {
+      "method": "torch_copy",
+      "threads": 8,
+      "median_ms": 0.02785600008792244
+    },
+    {
+      "method": "torch_copy",
+      "threads": 4,
+      "median_ms": 0.055775999499019235
+    },
+    {
+      "method": "torch_copy",
+      "threads": 2,
+      "median_ms": 0.11412749881856143
+    },
+    {
+      "method": "torch_copy",
+      "threads": 1,
+      "median_ms": 0.20623900491045788
+    },
+    {
+      "method": "memcpy",
+      "median_ms": 0.1843585014285054
+    },
+    {
+      "method": "pinned_h2d",
+      "median_ms": 0.39680749978288077,
+      "GB_s": 33.568397793107096
+    }
+  ]
+}

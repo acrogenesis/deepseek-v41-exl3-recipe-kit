@@ -1,0 +1,77 @@
+{
+  "status": "passed",
+  "cases": [
+    {
+      "expert": "0:0",
+      "byte_exact": true
+    },
+    {
+      "expert": "0:0",
+      "byte_exact": true
+    },
+    {
+      "expert": "0:1",
+      "byte_exact": true
+    },
+    {
+      "expert": "0:1",
+      "byte_exact": true
+    },
+    {
+      "expert": "18:0",
+      "byte_exact": true
+    },
+    {
+      "expert": "18:0",
+      "byte_exact": true
+    },
+    {
+      "expert": "18:1",
+      "byte_exact": true
+    },
+    {
+      "expert": "18:1",
+      "byte_exact": true
+    },
+    {
+      "expert": "0:0",
+      "byte_exact": true
+    },
+    {
+      "expert": "0:0",
+      "byte_exact": true
+    },
+    {
+      "expert": "0:1",
+      "byte_exact": true
+    },
+    {
+      "expert": "0:1",
+      "byte_exact": true
+    },
+    {
+      "expert": "18:0",
+      "byte_exact": true
+    },
+    {
+      "expert": "18:0",
+      "byte_exact": true
+    },
+    {
+      "expert": "18:1",
+      "byte_exact": true
+    },
+    {
+      "expert": "18:1",
+      "byte_exact": true
+    }
+  ],
+  "gpu": "NVIDIA GeForce RTX 5090",
+  "cache": {
+    "hits": 8,
+    "misses": 8,
+    "evictions": 8,
+    "failures": 0,
+    "peak_resident_bytes": 22216704
+  }
+}

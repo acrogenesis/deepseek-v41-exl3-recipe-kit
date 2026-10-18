@@ -18,6 +18,8 @@ def main():
     parser.add_argument("mode", choices=["smoke", "bench"])
     parser.add_argument("--allow-gpu", action="store_true")
     parser.add_argument("--gpu-cache-gib", type=int, choices=range(1, 25))
+    parser.add_argument("--ram-cache-gib", type=int, choices=range(16, 85))
+    parser.add_argument("--pinned-ram", action=argparse.BooleanOptionalAction, default=None)
     parser.add_argument("--output", type=Path)
     args = parser.parse_args()
     if not args.allow_gpu:
@@ -45,12 +47,16 @@ def main():
     from .memory_budget import guard_memory
     if args.gpu_cache_gib is not None:
         profile["gpu_expert_cache_bytes"] = args.gpu_cache_gib * 2**30
+    if args.ram_cache_gib is not None:
+        profile["ram_expert_cache_bytes"] = args.ram_cache_gib * 2**30
+    if args.pinned_ram is not None:
+        profile['pinned_ram'] = args.pinned_ram
     guard_memory(profile["host_reserve_bytes"])
     if torch.cuda.get_device_capability(0) != (12, 0):
         raise RuntimeError("This build/profile targets the SM120 RTX 5090")
     records, inv = inventory(ROOT)
     store = IndexedExpertStore(ROOT / "work/models/exl3", records, profile["ram_expert_cache_bytes"],
-        reserve_bytes=profile["host_reserve_bytes"])
+        reserve_bytes=profile["host_reserve_bytes"], pinned=profile.get('pinned_ram', False))
     capacity = profile["gpu_expert_cache_bytes"]
     per_layer = capacity // (40 * 4096) * 4096
     quotas = {l: per_layer for l in range(40)}
@@ -152,6 +158,12 @@ def main():
                 "gpu_peak_allocated_bytes": torch.cuda.max_memory_allocated()}
             row["gpu_peak_reserved_bytes"] = torch.cuda.max_memory_reserved()
             row["device_free_bytes_after_request"] = torch.cuda.mem_get_info()[0]
+            from .memory_budget import available_memory, cgroup_path
+            group = cgroup_path()
+            row['host_available_bytes'] = available_memory()
+            row['cgroup_memory_current'] = int((group / 'memory.current').read_text())
+            row['cgroup_memory_peak'] = int((group / 'memory.peak').read_text())
+            row['cgroup_swap_current'] = int((group / 'memory.swap.current').read_text())
             if "expected" in case:
                 actual = row["text"].strip()
                 expected = case["expected"]

@@ -1,0 +1,14 @@
+from pathlib import Path
+import subprocess,json
+root=Path.cwd()
+base=['podman','--hooks-dir',str(root/'work/no-hooks'),'run','--rm','--name','deepseek41-exl3-5090','--network','none','--device','nvidia.com/gpu=all','--memory=96g','--memory-swap=96g','--shm-size=2g','-e','CUDA_VISIBLE_DEVICES=0','-e','NVIDIA_VISIBLE_DEVICES=void','-e','EXL3_INT8_GEMV=0','-e','EXLLAMAV3_TUNE_CACHE=/kernel-cache/coop_autotune_v1.bin','-e','TRITON_CACHE_DIR=/kernel-cache/triton','-v',str(root)+':/recipe:ro','-v',str(root/'results')+':/recipe/results:rw','-v',str(root/'work/kernel-cache')+':/kernel-cache:rw','-w','/recipe','localhost/deepseek41-exl3-5090:staged']
+out=root/'results/20261018-target30'
+for name,entry in [
+ ('selected-lifetime',['tests/gpu_cache_lifetime.py','--pinned-ram']),
+ ('selected-parity',['tests/gpu_moe_parity.py','--pinned-ram']),
+ ('selected-84g',['-m','runtime.runner','bench','--ram-cache-gib','84','--pinned-ram']),
+]:
+ assert not (root/'work/GPU_HOLD').exists()
+ with (out/(name+'.log')).open('w') as log:
+  subprocess.run(base+entry+['--allow-gpu','--output','/recipe/results/20261018-target30/'+name+'.json'],stdout=log,stderr=subprocess.STDOUT,check=True)
+ print(name+' complete',flush=True)

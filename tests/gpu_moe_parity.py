@@ -10,6 +10,7 @@ sys.path.insert(0, str(ROOT))
 parser = argparse.ArgumentParser()
 parser.add_argument("--allow-gpu", action="store_true")
 parser.add_argument('--output', type=Path, default=ROOT / 'results/gpu-moe-parity.json')
+parser.add_argument('--pinned-ram', action='store_true')
 args = parser.parse_args()
 if not args.allow_gpu:
     raise SystemExit("Explicit --allow-gpu required")
@@ -21,7 +22,7 @@ from runtime.indexed_store import inventory, IndexedExpertStore
 from runtime.native_adapter import cached_moe_class
 
 records, _ = inventory(ROOT, cached_headers=True)
-store = IndexedExpertStore(ROOT / "work/models/exl3", records, 128 * 2**20)
+store = IndexedExpertStore(ROOT / "work/models/exl3", records, 128 * 2**20, pinned=args.pinned_ram)
 capacity = 4 * 2**30
 per = capacity // (40 * 4096) * 4096
 quotas = {i: per for i in range(40)}
@@ -32,6 +33,7 @@ config.infer_params.no_reconstruct = True
 model = Model.from_config(config)
 receipt = json.loads((ROOT / "work/download-state.json").read_text())["verified"]
 result = {"status": "running", "gpu": torch.cuda.get_device_name(), "cases": [],
+          "pinned_ram": args.pinned_ram,
           "comparison": "Same checkpoint, resident native MoE versus paged MoE; identical router and shared experts",
           "relative_l2_limit": 0.002, "cosine_minimum": 0.99999}
 output = args.output

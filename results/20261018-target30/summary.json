@@ -1,0 +1,347 @@
+{
+  "target_tok_s": 30,
+  "target_achieved_on_full_suite": false,
+  "benchmarks": [
+    {
+      "name": "larger-ram",
+      "fresh_median_tok_s": 7.669262753413785,
+      "repeat_median_tok_s": 9.092369665223675,
+      "checks_passed": 8,
+      "identical_output_tokens": 802,
+      "fresh_speedup_vs_previous": 1.7242951795593442,
+      "repeat_speedup_vs_previous": 1.9983547390028533
+    },
+    {
+      "name": "pinned-84g",
+      "fresh_median_tok_s": 7.581685165066427,
+      "repeat_median_tok_s": 8.645272631675484,
+      "checks_passed": 8,
+      "identical_output_tokens": 802,
+      "fresh_speedup_vs_previous": 1.7046049409692576,
+      "repeat_speedup_vs_previous": 1.9000900941762766,
+      "cgroup_memory_peak": 94998736896,
+      "minimum_sampled_host_available": 16135856128,
+      "maximum_cgroup_swap": 0,
+      "peak_gpu_allocation": 29160929792,
+      "minimum_sampled_gpu_free": 2366767104
+    },
+    {
+      "name": "reused-pinned-84g",
+      "fresh_median_tok_s": 8.983805531123487,
+      "repeat_median_tok_s": 12.337183004731765,
+      "checks_passed": 8,
+      "identical_output_tokens": 802,
+      "fresh_speedup_vs_previous": 2.019846375001232,
+      "repeat_speedup_vs_previous": 2.7115118534772735,
+      "cgroup_memory_peak": 94682828800,
+      "minimum_sampled_host_available": 15453085696,
+      "maximum_cgroup_swap": 0,
+      "peak_gpu_allocation": 29160929792,
+      "minimum_sampled_gpu_free": 2373058560
+    },
+    {
+      "name": "final-84g",
+      "fresh_median_tok_s": 8.404341925428715,
+      "repeat_median_tok_s": 11.305915043202901,
+      "checks_passed": 8,
+      "identical_output_tokens": 802,
+      "fresh_speedup_vs_previous": 1.8895644516723153,
+      "repeat_speedup_vs_previous": 2.484855954742175,
+      "cgroup_memory_peak": 94677229568,
+      "minimum_sampled_host_available": 16220381184,
+      "maximum_cgroup_swap": 0,
+      "peak_gpu_allocation": 29160929792,
+      "minimum_sampled_gpu_free": 2372730880
+    },
+    {
+      "name": "selected-84g",
+      "fresh_median_tok_s": 9.508732447692909,
+      "repeat_median_tok_s": 12.310874383728047,
+      "checks_passed": 8,
+      "identical_output_tokens": 802,
+      "fresh_speedup_vs_previous": 2.137866709023392,
+      "repeat_speedup_vs_previous": 2.705729647144364,
+      "cgroup_memory_peak": 95780401152,
+      "minimum_sampled_host_available": 15699664896,
+      "maximum_cgroup_swap": 0,
+      "peak_gpu_allocation": 29160929792,
+      "minimum_sampled_gpu_free": 2371747840
+    }
+  ],
+  "diagnostics": {
+    "traffic-v2": [
+      {
+        "pass": 0,
+        "implementation": "current",
+        "cpu_threads": 16,
+        "decode_tok_s": 2.6040044130374818,
+        "expert_ssd_bytes_per_token": 458656946.7936508,
+        "expert_h2d_bytes_per_token": 856772412.9523809,
+        "max_logit_difference": 0.0,
+        "argmax_differences": 0
+      },
+      {
+        "pass": 1,
+        "implementation": "current",
+        "cpu_threads": 16,
+        "decode_tok_s": 13.175262966718194,
+        "expert_ssd_bytes_per_token": 0.0,
+        "expert_h2d_bytes_per_token": 856772412.9523809,
+        "max_logit_difference": 0.0,
+        "argmax_differences": 0
+      }
+    ],
+    "copy-stream": [
+      {
+        "pass": 0,
+        "implementation": "baseline",
+        "cpu_threads": 16,
+        "decode_tok_s": 3.0976105786297525,
+        "expert_ssd_bytes_per_token": 458656946.7936508,
+        "expert_h2d_bytes_per_token": 856772412.9523809,
+        "max_logit_difference": 0.0,
+        "argmax_differences": 0
+      },
+      {
+        "pass": 1,
+        "implementation": "current",
+        "cpu_threads": 16,
+        "decode_tok_s": 12.902291810000532,
+        "expert_ssd_bytes_per_token": 0.0,
+        "expert_h2d_bytes_per_token": 856772412.9523809,
+        "max_logit_difference": 0.0,
+        "argmax_differences": 0
+      }
+    ],
+    "native-decode": [
+      {
+        "pass": 0,
+        "implementation": "baseline",
+        "cpu_threads": 16,
+        "decode_tok_s": 3.010270553602448,
+        "expert_ssd_bytes_per_token": 458656946.7936508,
+        "expert_h2d_bytes_per_token": 856772412.9523809,
+        "max_logit_difference": 0.0,
+        "argmax_differences": 0
+      },
+      {
+        "pass": 1,
+        "implementation": "current",
+        "cpu_threads": 16,
+        "decode_tok_s": 12.974445846760965,
+        "expert_ssd_bytes_per_token": 3946918.603174603,
+        "expert_h2d_bytes_per_token": 859943107.0476191,
+        "max_logit_difference": 2.47265625,
+        "argmax_differences": 1
+      },
+      {
+        "pass": 2,
+        "implementation": "baseline",
+        "cpu_threads": 16,
+        "decode_tok_s": 12.417568910578973,
+        "expert_ssd_bytes_per_token": 0.0,
+        "expert_h2d_bytes_per_token": 856772412.9523809,
+        "max_logit_difference": 0.0,
+        "argmax_differences": 0
+      }
+    ],
+    "pinned-trace": [
+      {
+        "pass": 0,
+        "implementation": "baseline",
+        "cpu_threads": 16,
+        "decode_tok_s": 3.7670244539814797,
+        "expert_ssd_bytes_per_token": 458656946.7936508,
+        "expert_h2d_bytes_per_token": 856772412.9523809,
+        "max_logit_difference": 0.0,
+        "argmax_differences": 0
+      },
+      {
+        "pass": 1,
+        "implementation": "current",
+        "cpu_threads": 16,
+        "decode_tok_s": 19.37359464673773,
+        "expert_ssd_bytes_per_token": 0.0,
+        "expert_h2d_bytes_per_token": 856772412.9523809,
+        "max_logit_difference": 0.0,
+        "argmax_differences": 0
+      },
+      {
+        "pass": 2,
+        "implementation": "baseline",
+        "cpu_threads": 16,
+        "decode_tok_s": 12.229403181748411,
+        "expert_ssd_bytes_per_token": 0.0,
+        "expert_h2d_bytes_per_token": 856772412.9523809,
+        "max_logit_difference": 0.0,
+        "argmax_differences": 0
+      }
+    ],
+    "slots-trace": [
+      {
+        "pass": 0,
+        "implementation": "baseline",
+        "cpu_threads": 16,
+        "decode_tok_s": 3.9402230263217177,
+        "expert_ssd_bytes_per_token": 458656946.7936508,
+        "expert_h2d_bytes_per_token": 856772412.9523809,
+        "max_logit_difference": 0.0,
+        "argmax_differences": 0
+      },
+      {
+        "pass": 1,
+        "implementation": "current",
+        "cpu_threads": 16,
+        "decode_tok_s": 15.274417289784479,
+        "expert_ssd_bytes_per_token": 0.0,
+        "expert_h2d_bytes_per_token": 856772412.9523809,
+        "max_logit_difference": 0.0,
+        "argmax_differences": 0
+      },
+      {
+        "pass": 2,
+        "implementation": "baseline",
+        "cpu_threads": 16,
+        "decode_tok_s": 19.471943173353246,
+        "expert_ssd_bytes_per_token": 0.0,
+        "expert_h2d_bytes_per_token": 856772412.9523809,
+        "max_logit_difference": 0.0,
+        "argmax_differences": 0
+      }
+    ],
+    "threads": [
+      {
+        "pass": 0,
+        "implementation": "current",
+        "cpu_threads": 16,
+        "decode_tok_s": 4.442440423998915,
+        "expert_ssd_bytes_per_token": 458656946.7936508,
+        "expert_h2d_bytes_per_token": 856772412.9523809,
+        "max_logit_difference": 0.0,
+        "argmax_differences": 0
+      },
+      {
+        "pass": 1,
+        "implementation": "current",
+        "cpu_threads": 1,
+        "decode_tok_s": 13.140910946516403,
+        "expert_ssd_bytes_per_token": 0.0,
+        "expert_h2d_bytes_per_token": 856772412.9523809,
+        "max_logit_difference": 0.0,
+        "argmax_differences": 0
+      },
+      {
+        "pass": 2,
+        "implementation": "current",
+        "cpu_threads": 4,
+        "decode_tok_s": 13.264142753152784,
+        "expert_ssd_bytes_per_token": 0.0,
+        "expert_h2d_bytes_per_token": 856772412.9523809,
+        "max_logit_difference": 0.0,
+        "argmax_differences": 0
+      },
+      {
+        "pass": 3,
+        "implementation": "current",
+        "cpu_threads": 16,
+        "decode_tok_s": 19.242990068428405,
+        "expert_ssd_bytes_per_token": 0.0,
+        "expert_h2d_bytes_per_token": 856772412.9523809,
+        "max_logit_difference": 0.0,
+        "argmax_differences": 0
+      }
+    ]
+  },
+  "logit_artifacts": [
+    {
+      "path": "copy-stream/pass-0-22g-logits.npy",
+      "bytes": 33095808,
+      "sha256": "c2ac87f25a1f3c632e76fed7e31586d4b4cccf073f2d58da49b0c91bff28e2e5"
+    },
+    {
+      "path": "copy-stream/pass-1-22g-logits.npy",
+      "bytes": 33095808,
+      "sha256": "c2ac87f25a1f3c632e76fed7e31586d4b4cccf073f2d58da49b0c91bff28e2e5"
+    },
+    {
+      "path": "native-decode/pass-0-22g-logits.npy",
+      "bytes": 33095808,
+      "sha256": "c2ac87f25a1f3c632e76fed7e31586d4b4cccf073f2d58da49b0c91bff28e2e5"
+    },
+    {
+      "path": "native-decode/pass-1-22g-logits.npy",
+      "bytes": 33095808,
+      "sha256": "2776aa9cba949d594bb134ab8c7a850b6b351e8384201df1795b8cd281e62ad4"
+    },
+    {
+      "path": "native-decode/pass-2-22g-logits.npy",
+      "bytes": 33095808,
+      "sha256": "c2ac87f25a1f3c632e76fed7e31586d4b4cccf073f2d58da49b0c91bff28e2e5"
+    },
+    {
+      "path": "pinned-trace/pass-0-22g-logits.npy",
+      "bytes": 33095808,
+      "sha256": "c2ac87f25a1f3c632e76fed7e31586d4b4cccf073f2d58da49b0c91bff28e2e5"
+    },
+    {
+      "path": "pinned-trace/pass-1-22g-logits.npy",
+      "bytes": 33095808,
+      "sha256": "c2ac87f25a1f3c632e76fed7e31586d4b4cccf073f2d58da49b0c91bff28e2e5"
+    },
+    {
+      "path": "pinned-trace/pass-2-22g-logits.npy",
+      "bytes": 33095808,
+      "sha256": "c2ac87f25a1f3c632e76fed7e31586d4b4cccf073f2d58da49b0c91bff28e2e5"
+    },
+    {
+      "path": "slots-trace/pass-0-22g-logits.npy",
+      "bytes": 33095808,
+      "sha256": "c2ac87f25a1f3c632e76fed7e31586d4b4cccf073f2d58da49b0c91bff28e2e5"
+    },
+    {
+      "path": "slots-trace/pass-1-22g-logits.npy",
+      "bytes": 33095808,
+      "sha256": "c2ac87f25a1f3c632e76fed7e31586d4b4cccf073f2d58da49b0c91bff28e2e5"
+    },
+    {
+      "path": "slots-trace/pass-2-22g-logits.npy",
+      "bytes": 33095808,
+      "sha256": "c2ac87f25a1f3c632e76fed7e31586d4b4cccf073f2d58da49b0c91bff28e2e5"
+    },
+    {
+      "path": "threads/pass-0-22g-logits.npy",
+      "bytes": 33095808,
+      "sha256": "c2ac87f25a1f3c632e76fed7e31586d4b4cccf073f2d58da49b0c91bff28e2e5"
+    },
+    {
+      "path": "threads/pass-1-22g-logits.npy",
+      "bytes": 33095808,
+      "sha256": "c2ac87f25a1f3c632e76fed7e31586d4b4cccf073f2d58da49b0c91bff28e2e5"
+    },
+    {
+      "path": "threads/pass-2-22g-logits.npy",
+      "bytes": 33095808,
+      "sha256": "c2ac87f25a1f3c632e76fed7e31586d4b4cccf073f2d58da49b0c91bff28e2e5"
+    },
+    {
+      "path": "threads/pass-3-22g-logits.npy",
+      "bytes": 33095808,
+      "sha256": "c2ac87f25a1f3c632e76fed7e31586d4b4cccf073f2d58da49b0c91bff28e2e5"
+    },
+    {
+      "path": "traffic/pass-0-22g-logits.npy",
+      "bytes": 33095808,
+      "sha256": "c2ac87f25a1f3c632e76fed7e31586d4b4cccf073f2d58da49b0c91bff28e2e5"
+    },
+    {
+      "path": "traffic-v2/pass-0-22g-logits.npy",
+      "bytes": 33095808,
+      "sha256": "c2ac87f25a1f3c632e76fed7e31586d4b4cccf073f2d58da49b0c91bff28e2e5"
+    },
+    {
+      "path": "traffic-v2/pass-1-22g-logits.npy",
+      "bytes": 33095808,
+      "sha256": "c2ac87f25a1f3c632e76fed7e31586d4b4cccf073f2d58da49b0c91bff28e2e5"
+    }
+  ]
+}

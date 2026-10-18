@@ -12,28 +12,32 @@ misses from the original safetensors files. It does not create another 196 GB ex
 
 ## Measured performance
 
-| Implementation | Expert VRAM | Fresh tok/s | Repeat tok/s |
-|---|---:|---:|---:|
-| Original cache | 16 GiB | 3.63 | 3.59 |
-| Optimized cache | 16 GiB | 4.21 | 4.31 |
-| Optimized cache (default) | 22 GiB | **4.45** | **4.55** |
+| Configuration | Expert VRAM / RAM | Fresh tok/s | Repeat tok/s |
+|---|---|---:|---:|
+| Previous default | 22 / 64 GiB | 4.45 | 4.55 |
+| Larger pageable cache | 22 / 84 GiB | 7.67 | 9.09 |
+| Registered RAM, buffer and GPU-handle reuse (default) | 22 / 84 GiB | **9.51** | **12.31** |
 
-Measured on the hardware above, without concurrent uploads/downloads. Medians of
-three 128-token generations per phase, an 8,192-token configured context and the
-same saved kernel tuning. Input prompts contain 30/31/31 tokens; this does not fill
-the context window. Each request resets KV/recurrent state. Full methods and raw
-runs: [comparison](results/20261018-clean-optimization/METHOD.md),
-[summary](results/20261018-clean-optimization/summary.json).
+The default improves this suite by **2.14x fresh / 2.71x repeat**.
+An earlier run of the same configuration measured 8.98 / 12.34 tok/s. All full runs
+passed **8/8 checks** and produced the **same 802 output tokens** across 14 requests.
+The 30 tok/s target has not been reached. A short request fitting entirely in the
+RAM cache reached about 19 tok/s in a separate instrumented diagnostic; that is
+not the full-suite result above.
 
-The cache changes alone improve the 16 GiB run by **16% fresh / 20% repeat**.
-Using 22 GiB adds about **6%** to both phases, for **23% / 27%** over the original.
-All three runs passed **8/8 checks** and produced the **same 802 output tokens**
-across all 14 requests. This is one paired sweep, not a general throughput guarantee.
+Same hardware and weights, no concurrent uploads/downloads, medians of three
+128-token generations per phase, and an 8,192-token configured context. Prompts
+contain 30/31/31 tokens; this does not fill the context window. Each request resets
+KV/recurrent state; RAM and Engram page caches can warm. These are individual
+sweeps, not confidence intervals. [Method](results/20261018-target30/METHOD.md),
+[raw run](results/20261018-target30/selected-84g.json),
+[summary](results/20261018-target30/summary.json).
 
-The optimized 22 GiB run peaked at **27.16 GiB** of PyTorch allocations and left
-at least **2.46 GiB** of device memory free after requests. At 16 GiB, the peak was
-21.16 GiB with at least 8.46 GiB free. The larger cache is the default for this
-measured 8K profile; longer inputs and other workloads still need validation.
+The selected run peaked at **89.20 GiB** of container RAM and **27.16 GiB** of
+PyTorch GPU allocations, with no process swap. Post-request samples left at least
+**14.62 GiB** available host RAM and **2.21 GiB** free GPU memory. A 12 GiB
+host reserve is enforced; other workloads may force cache eviction or stop a run.
+Long contexts and other workloads still need validation.
 
 ## Model and memory
 
@@ -42,7 +46,7 @@ measured 8K profile; longer inputs and other workloads still need validation.
 - The **1017** Engram tables from [DeepSeek's original release](https://huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash-1017),
   pinned to `1bae0e1088993b9b82de08f59de5be5a34e42170`, shards 47 and 48.
 - About **414 GB** of downloads. SHA-256 verification for weights; Git blob verification for small metadata.
-- Default cache limits: **64 GiB RAM + 22 GiB VRAM**, allocated on demand within a 96 GiB no-swap container.
+- Default cache limits: **84 GiB registered RAM + 22 GiB VRAM**, allocated on demand within a 96 GiB no-swap container.
 - Initial benchmark: **8,192-token context**, one sequence, 256-token prefill chunks,
   greedy sampling, no drafter, text only. This is a validation profile, not a measured maximum context.
 
@@ -88,7 +92,8 @@ bash scripts/run.sh --gpu-is-free bench
 ```
 
 The measured default is 22 GiB of expert VRAM. Use `--gpu-cache-gib 16` to leave
-more GPU memory free.
+more GPU memory free. Use `--ram-cache-gib 64` for a smaller RAM budget,
+and `--no-pinned-ram` to use pageable RAM with staged transfers.
 `python scripts/campaign.py --allow-gpu` waits for verified downloads, checks a smoke
 response at 16 and 22 GiB, then benchmarks both. If 22 GiB runs out of memory during
 the smoke test, it tries 20 GiB. Results include a recommendation; defaults are not
@@ -127,13 +132,14 @@ Validation after optimization:
 
 - 15 CPU tests: byte-exact direct/buffered reads, split shards, gaps, eviction,
   cancellation, truncated files, marker validation and memory guards.
-- 16 real-byte GPU cases: two CUDA streams, pinned-buffer reuse and eviction.
+- 24 real-byte GPU cases: two CUDA streams, delayed DMA, RAM and GPU eviction,
+  registered-buffer reuse, and failed-read cleanup.
 - Eight resident-native versus paged MoE cases, K3 layer 0 and K2 layer 18:
   relative L2 error below 0.00077, cosine similarity above 0.9999996.
-- Identical full-vocabulary scores at 20 teacher-forced positions: original versus
-  optimized cache, 16 versus 22 GiB, and a separate process using saved tuning.
-  Raw score arrays remain local; their hashes and profiles are in
-  [the diagnostic evidence](results/20261018-clean-optimization/logit-artifacts.json).
+- Identical full-vocabulary scores at 64 teacher-forced positions across retained
+  transfer paths, GPU-handle reuse, CPU thread counts and separate launches.
+  Raw score arrays remain local; their hashes are in
+  [the diagnostic evidence](results/20261018-target30/summary.json).
 
 The initial launcher discarded ExLlama's kernel-tuning choices whenever its temporary
 container exited. Separate launches could produce different tokens, including at
@@ -141,11 +147,16 @@ one fixed cache size. `run.sh` now persists cooperative-kernel and Triton caches
 `work/kernel-cache`. With saved tuning, the tested score arrays match byte for byte
 across processes. This cache is local hardware/runtime state, not model weights.
 
-The optimized store combines adjacent source tensors into one disk read per expert
-(all 15,360 experts in this checkpoint). The GPU cache stages transfers through two
-bounded pinned buffers, preserves CUDA stream lifetimes, validates MUL1 markers on
-the CPU, and avoids repeated GPU index discovery for single-token decoding.
-Expert selection and quantized tensor bytes are preserved.
+The store combines adjacent source tensors into one O_DIRECT read per expert and
+reuses its aligned read buffer. Registered RAM pages transfer directly to the GPU;
+evicted equal-size buffers are recycled only after their DMA events complete.
+GPU slots reuse quantized weight handles only for identical per-layer layouts.
+Pageable RAM remains available with two bounded pinned staging buffers. Expert
+selection and quantized tensor bytes are preserved.
+
+The native grouped-expert loop and the included DSpark drafter were tested but
+are disabled: neither met the speed/output criteria for this configuration.
+Details and reproducible experiments are in the measurement report.
 
 For a teacher-forced diagnostic and CPU profile:
 

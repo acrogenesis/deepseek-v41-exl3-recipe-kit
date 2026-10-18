@@ -1,0 +1,131 @@
+from pathlib import Path
+import json
+root=Path.cwd(); out=root/'results/20261018-target30'
+r=json.loads((out/'selected-84g.json').read_text())
+assert r['status']=='complete'
+b=json.loads((root/'results/20261018-clean-optimization/optimized-22g.json').read_text())
+assert len(r['runs'])==len(b['runs'])==14
+assert all(a['token_ids']==z['token_ids'] for a,z in zip(r['runs'],b['runs']))
+assert all(x['passed'] for x in r['runs'] if x['phase']=='check')
+f,rep=r['fresh_median_tok_s'],r['repeat_median_tok_s']
+peak=max(x['cgroup_memory_peak'] for x in r['runs'])/2**30
+available=min(x['host_available_bytes'] for x in r['runs'])/2**30
+vram=max(x['gpu_peak_allocated_bytes'] for x in r['runs'])/2**30
+free=min(x['device_free_bytes_after_request'] for x in r['runs'])/2**30
+profile=json.loads((root/'profiles/5090.json').read_text())
+profile['ram_expert_cache_bytes']=84*2**30
+profile['pinned_ram']=True
+(root/'profiles/5090.json').write_text(json.dumps(profile,indent=2)+'\n')
+lock=json.loads((root/'runtime.lock.json').read_text());lock['validation_report']='results/20261018-target30/summary.json'
+(root/'runtime.lock.json').write_text(json.dumps(lock,indent=2)+'\n')
+p=root/'README.md';s=p.read_text();before,rest=s.split('## Measured performance\n',1);_,after=rest.split('## Model and memory\n',1)
+section=f'''## Measured performance
+
+| Configuration | Expert VRAM / RAM | Fresh tok/s | Repeat tok/s |
+|---|---|---:|---:|
+| Previous default | 22 / 64 GiB | 4.45 | 4.55 |
+| Larger pageable cache | 22 / 84 GiB | 7.67 | 9.09 |
+| Registered RAM, buffer and GPU-handle reuse (default) | 22 / 84 GiB | **{f:.2f}** | **{rep:.2f}** |
+
+The default improves this suite by **{f/b['fresh_median_tok_s']:.2f}x fresh / {rep/b['repeat_median_tok_s']:.2f}x repeat**.
+An earlier run of the same configuration measured 8.98 / 12.34 tok/s. All runs
+passed **8/8 checks** and produced the **same 802 output tokens** across 14 requests.
+The 30 tok/s target has not been reached. A short request fitting entirely in the
+RAM cache reached about 19 tok/s in a separate instrumented diagnostic; that is
+not the full-suite result above.
+
+Same hardware and weights, no concurrent uploads/downloads, medians of three
+128-token generations per phase, and an 8,192-token configured context. Prompts
+contain 30/31/31 tokens; this does not fill the context window. Each request resets
+KV/recurrent state; RAM and Engram page caches can warm. These are individual
+sweeps, not confidence intervals. [Method](results/20261018-target30/METHOD.md),
+[raw run](results/20261018-target30/selected-84g.json),
+[summary](results/20261018-target30/summary.json).
+
+The selected run peaked at **{peak:.2f} GiB** of container RAM and **{vram:.2f} GiB** of
+PyTorch GPU allocations, with no process swap. Post-request samples left at least
+**{available:.2f} GiB** available host RAM and **{free:.2f} GiB** free GPU memory. A 12 GiB
+host reserve is enforced; other workloads may force cache eviction or stop a run.
+Long contexts and other workloads still need validation.
+
+## Model and memory
+'''
+s=before+section+after
+s=s.replace('**64 GiB RAM + 22 GiB VRAM**','**84 GiB registered RAM + 22 GiB VRAM**')
+s=s.replace('more GPU memory free.','more GPU memory free. Use `--ram-cache-gib 64` for a smaller RAM budget,\nand `--no-pinned-ram` to use pageable RAM with staged transfers.')
+s=s.replace('- 16 real-byte GPU cases: two CUDA streams, pinned-buffer reuse and eviction.', '- 24 real-byte GPU cases: two CUDA streams, delayed DMA, RAM and GPU eviction,\n  registered-buffer reuse, and failed-read cleanup.')
+start=s.index('- Identical full-vocabulary scores at 20 teacher-forced positions:')
+end=s.index('\n\nThe initial launcher',start)
+s=s[:start]+'''- Identical full-vocabulary scores at 64 teacher-forced positions across retained
+  transfer paths, GPU-handle reuse, CPU thread counts and separate launches.
+  Raw score arrays remain local; their hashes are in
+  [the diagnostic evidence](results/20261018-target30/summary.json).'''+s[end:]
+start=s.index('The optimized store combines adjacent source tensors')
+end=s.index('\nFor a teacher-forced diagnostic',start)
+s=s[:start]+'''The store combines adjacent source tensors into one O_DIRECT read per expert and
+reuses its aligned read buffer. Registered RAM pages transfer directly to the GPU;
+evicted equal-size buffers are recycled only after their DMA events complete.
+GPU slots reuse quantized weight handles only for identical per-layer layouts.
+Pageable RAM remains available with two bounded pinned staging buffers. Expert
+selection and quantized tensor bytes are preserved.
+
+The native grouped-expert loop and the included DSpark drafter were tested but
+are disabled: neither met the speed/output criteria for this configuration.
+Details and reproducible experiments are in the measurement report.
+''' + s[end:]
+p.write_text(s)
+(root/'STATUS.md').write_text(f'''# Current state — 2026-10-18 UTC
+
+User asked to target 30 tok/s. Investigation and bounded optimization completed;
+30 tok/s was not demonstrated. No weights, routing choices or quantization changed.
+
+## Selected configuration
+
+RTX 5090, 22 GiB expert VRAM, 84 GiB registered RAM, 96 GiB no-swap container,
+12 GiB host reserve, 8K configured context, one sequence, 16 CPU threads, no drafter.
+LibertAIDAI 1017 EXL3 2.9 bpw c178a01284fc5c0e859d8668cffaac81ca8f4042 plus original
+1017 Engram 1bae0e1088993b9b82de08f59de5be5a34e42170. Pinned ExLlama
+954a8ca6e59d48c3e3462068ecf083fe9990f4dc, unchanged image 42f5de08... .
+
+Full suite: {f:.4f} fresh / {rep:.4f} repeat tok/s; previous default 4.4478 / 4.5499.
+Same selected configuration earlier: 8.9838 / 12.3372. All 802 tokens identical,
+8/8 exact checks. Larger pageable cache alone: 7.6693 / 9.0924. Removing GPU-handle
+reuse: 8.4043 / 11.3059. Full evidence: results/20261018-target30/summary.json,
+selected-84g.json and METHOD.md. No uploads/downloads during these runs.
+
+## Changes and validation
+
+- Reuse aligned O_DIRECT read staging.
+- Optional direct DMA from bounded registered RAM; explicit per-buffer events
+  protect source memory through delayed DMA and eviction.
+- Recycle equal-size registered buffers, zero packed padding, retain no hidden
+  pinned allocator pool. Reserve-driven eviction really unregisters/unmaps memory.
+- Reuse GPU-slot quantized views/BC handles only when each layer's layouts match.
+- 15 CPU tests; 24 real-byte GPU lifetime/DMA/eviction cases plus failed-read
+  cleanup; 8 native-versus-paged K2/K3 MoE cases. All pass.
+- Retained 64-position x 129280-score arrays are byte-identical, SHA256
+  c2ac87f25a1f3c632e76fed7e31586d4b4cccf073f2d58da49b0c91bff28e2e5.
+- Grouped native loop changed scores/one argmax and was rejected. DSpark used
+  14 GiB target cache plus 6.88 GiB drafter: 5.08 tok/s vs 10.93/11.23 baseline,
+  first token difference at position 53, rejected. Neither is enabled.
+- Warm short diagnostic: direct DMA ~19.37 vs staged ~12.23 tok/s. Thread counts
+  1 and 4 were slower (~13 tok/s) than 16 (~19.24). Full suite remains headline.
+- Peak container {peak:.2f} GiB, sampled host available >= {available:.2f} GiB,
+  peak PyTorch GPU {vram:.2f} GiB, sampled device free >= {free:.2f} GiB, zero process swap.
+
+Run: bash scripts/run.sh --gpu-is-free bench
+Smaller RAM: add --ram-cache-gib 64. Pageable fallback: add --no-pinned-ram.
+The runtime remains an experimental recipe, not a running API server.
+
+## Publication
+
+No EXL3 remote is configured; this work is local. No model upload or new quant.
+GGUF publication remains separate and complete: github.com/acrogenesis/
+deepseek-v41-flash-recipe-kit and huggingface.co/acrogenesis/
+DeepSeek-V4.1-Flash-1017-IQ2_XXS-GGUF. No Strata changes this turn.
+
+All raw benchmarks and rejected experiments are retained; large NPY/profile files
+are local and ignored. Reproduction drivers/snapshots are in results/.../drivers
+and variants; work/target30-* also contains the original experiment drivers.
+''')
+print(json.dumps({'fresh':f,'repeat':rep,'container_peak_gib':peak,'host_available_gib':available,'gpu_peak_gib':vram,'gpu_free_gib':free},indent=2))

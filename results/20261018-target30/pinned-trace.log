@@ -1,0 +1,3 @@
+{"pass": 0, "cache": 22, "seconds": 31.5181608050043, "max_logit_difference": 0.0, "same_argmax": true}
+{"pass": 1, "cache": 22, "seconds": 4.472638630999427, "max_logit_difference": 0.0, "same_argmax": true}
+{"pass": 2, "cache": 22, "seconds": 7.5232540180004435, "max_logit_difference": 0.0, "same_argmax": true}

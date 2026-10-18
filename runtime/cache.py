@@ -75,6 +75,17 @@ class ExpertCache:
         self.staging = [torch.empty(largest, dtype=torch.uint8, pin_memory=True) for _ in range(2)]
         self.staging_events = [None, None]
         self.staging_index = 0
+        self.copy_stream = torch.cuda.Stream(device=self.device)
+        # A cache slot's GPU addresses stay fixed when its expert changes.
+        # Reuse the quantized views/BC handles where every expert in a layer
+        # has identical geometry. No reconstructed weight is retained.
+        layouts = {layer: set() for layer in layers}
+        for key, record in store.records.items():
+            layout = (record['bytes'], tuple((name, spec['offset'], spec['bytes'],
+                spec['dtype'], tuple(spec['shape'])) for name, spec in sorted(record['tensors'].items())))
+            layouts[int(key.split(':')[0])].add(layout)
+        self.reusable_layers = {layer for layer, options in layouts.items() if len(options) == 1}
+        self.slot_projections = {}
 
     def _guard(self):
         guard_memory(self.reserve)
@@ -87,7 +98,7 @@ class ExpertCache:
             event.synchronize()
         entry.events.clear()
         # Dropping handles is necessary: LinearEXL3.unload() is a no-op.
-        entry.projections.clear()
+        entry.projections = {}
         self.regions[int(key.split(':')[0])].release(entry.offset)
         self.resident_bytes -= entry.size
         del self.entries[key]
@@ -112,32 +123,57 @@ class ExpertCache:
                 for p in ('w1', 'w2', 'w3'):
                     if struct.unpack_from('<i', data, record['tensors'][f'{p}.mul1']['offset'])[0] != -2082680531:
                         raise ValueError('MUL1 marker mismatch')
-                slot = self.staging_index
-                self.staging_index = (slot + 1) % len(self.staging)
-                if self.staging_events[slot] is not None:
-                    self.staging_events[slot].synchronize()
                 cpu = torch.frombuffer(data, dtype=torch.uint8)
-                pinned = self.staging[slot][:record['bytes']]
-                pinned.copy_(cpu)
+                direct_dma = getattr(self.store, 'pinned', False)
+                if direct_dma:
+                    if not cpu.is_pinned():
+                        raise RuntimeError('RAM cache registration was lost')
+                    pinned = cpu
+                else:
+                    slot = self.staging_index
+                    self.staging_index = (slot + 1) % len(self.staging)
+                    if self.staging_events[slot] is not None:
+                        self.staging_events[slot].synchronize()
+                    pinned = self.staging[slot][:record['bytes']]
+                    pinned.copy_(cpu)
                 target = self.arena.narrow(0, offset, record['bytes'])
-                target.copy_(pinned, non_blocking=True)
-                ready = torch.cuda.Event()
-                ready.record(torch.cuda.current_stream(self.device))
-                self.staging_events[slot] = ready
-                del cpu
+                # Eviction waits for all old consumers before this slot is
+                # reused. A separate stream can copy the next expert while
+                # the owning stream is still computing the previous one.
+                try:
+                    with torch.cuda.stream(self.copy_stream):
+                        target.copy_(pinned, non_blocking=True)
+                        ready = torch.cuda.Event()
+                        ready.record(self.copy_stream)
+                    if direct_dma:
+                        self.store.protect_dma(key, ready)
+                    else:
+                        self.staging_events[slot] = ready
+                except BaseException:
+                    # Still holding the RAM lease: no other caller can unmap
+                    # a registered source before an exceptional DMA completes.
+                    self.copy_stream.synchronize()
+                    raise
+                finally:
+                    del cpu, pinned
             if cancel is not None and cancel.is_set():
                 raise InterruptedError('Expert load cancelled')
-            dtype = {'I16':torch.int16, 'F16':torch.float16, 'I32':torch.int32}
-            for p in ('w1','w2','w3'):
-                tensors = {}
-                for suffix in ('trellis','suh','svh','mul1'):
-                    spec = record['tensors'][f'{p}.{suffix}']
-                    tensors[suffix] = target.narrow(0,spec['offset'],spec['bytes']).view(dtype[spec['dtype']]).view(spec['shape'])
-                inner = LinearEXL3(config=None, in_features=tensors['suh'].numel(),
-                    out_features=tensors['svh'].numel(), out_dtype=torch.float16,
-                    transformers_fix=True, **tensors)
-                inner.config.infer_params.no_reconstruct = True
-                projections[p] = inner
+            slot_key = (layer, offset)
+            projections = self.slot_projections.get(slot_key, {}) if layer in self.reusable_layers else {}
+            if not projections:
+                dtype = {'I16':torch.int16, 'F16':torch.float16, 'I32':torch.int32}
+                for p in ('w1','w2','w3'):
+                    tensors = {}
+                    for suffix in ('trellis','suh','svh','mul1'):
+                        spec = record['tensors'][f'{p}.{suffix}']
+                        tensors[suffix] = target.narrow(0,spec['offset'],spec['bytes']).view(dtype[spec['dtype']]).view(spec['shape'])
+                    inner = LinearEXL3(config=None, in_features=tensors['suh'].numel(),
+                        out_features=tensors['svh'].numel(), out_dtype=torch.float16,
+                        transformers_fix=True, **tensors)
+                    inner.config.infer_params.no_reconstruct = True
+                    projections[p] = inner
+                if layer in self.reusable_layers:
+                    self.slot_projections[slot_key] = projections
             self.generation += 1
             entry = Entry(key,offset,record['bytes'],self.generation,projections,ready)
             self.entries[key] = entry
@@ -146,8 +182,9 @@ class ExpertCache:
             self.stats['peak_resident_bytes'] = max(self.stats['peak_resident_bytes'],self.resident_bytes)
             return entry
         except BaseException:
+            self.copy_stream.synchronize()
             torch.cuda.current_stream(self.device).synchronize()
-            projections.clear()
+            projections = {}
             region.release(offset)
             self.stats['failures'] += 1
             raise
@@ -236,6 +273,7 @@ class ExpertCache:
                 raise CacheBusy('Cache has active leases')
             for key in list(self.entries):
                 self._evict(key)
+            self.slot_projections.clear()
 
     def close(self):
         with self.lock:

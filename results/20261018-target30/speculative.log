@@ -1,0 +1,5 @@
+Target and DSpark loaded
+{"phase": "cold-baseline", "decode_tok_s": 3.5321261110160775, "identical_to_baseline": true, "first_difference": null, "accepted_draft_tokens": 0, "rejected_draft_tokens": 0}
+{"phase": "warm-baseline", "decode_tok_s": 10.927656643882715, "identical_to_baseline": true, "first_difference": null, "accepted_draft_tokens": 0, "rejected_draft_tokens": 0}
+{"phase": "warm-draft", "decode_tok_s": 5.080464927701152, "identical_to_baseline": false, "first_difference": 53, "accepted_draft_tokens": 24, "rejected_draft_tokens": 16}
+{"phase": "warm-baseline-again", "decode_tok_s": 11.22545136909718, "identical_to_baseline": true, "first_difference": null, "accepted_draft_tokens": 0, "rejected_draft_tokens": 0}

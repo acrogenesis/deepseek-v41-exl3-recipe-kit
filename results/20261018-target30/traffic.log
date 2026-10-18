@@ -1,0 +1,23 @@
+{
+  "ready_for_gpu_validation": true,
+  "gpu_used": false,
+  "download_status": "complete",
+  "verified_bytes": 413905629467,
+  "total_bytes": 413905629467,
+  "pending": []
+}
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/recipe/runtime/diagnostic.py", line 195, in <module>
+    main()
+  File "/recipe/runtime/diagnostic.py", line 159, in main
+    pstats.Stats(profiler, stream=f).sort_stats('cumulative').print_stats(55)
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/pstats.py", line 115, in __init__
+    self.init(arg)
+  File "/usr/lib/python3.12/pstats.py", line 129, in init
+    self.load_stats(arg)
+  File "/usr/lib/python3.12/pstats.py", line 155, in load_stats
+    raise TypeError("Cannot create or construct a %r object from %r"
+TypeError: Cannot create or construct a <class 'pstats.Stats'> object from <cProfile.Profile object at 0x721b1bb89550>

@@ -1,7 +1,7 @@
 """Bounded RAM LRU over original EXL3 safetensors; no duplicate expert bank.
 
 Metadata is CPU-only. Payload reads use aligned O_DIRECT on Linux by default,
-so the 64 GiB explicit cache does not also populate 64 GiB of file page cache.
+so the explicit cache does not also populate an equally large file page cache.
 """
 from collections import OrderedDict, Counter
 from contextlib import contextmanager
@@ -107,10 +107,12 @@ def inventory(root, *, cached_headers=False):
 class IndexedExpertStore:
     """C1/eager store. A read lease holds the lock until its consumer is done.
 
-    Cached bytearrays are private and must not escape read(). RAM is allocated
-    only on misses. One aligned I/O staging buffer lives alongside the LRU.
+    Cached buffers are private and must not escape read(). Optional CUDA-registered
+    mappings support direct DMA, protected until completion by protect_dma().
+    RAM is allocated on misses; equal-size registered buffers can be recycled.
+    One aligned I/O staging buffer lives alongside the LRU.
     """
-    def __init__(self, directory, records, capacity_bytes, *, direct=True, reserve_bytes=12 * 2**30):
+    def __init__(self, directory, records, capacity_bytes, *, direct=True, reserve_bytes=12 * 2**30, pinned=False):
         self.directory = Path(directory)
         self.records = records
         self.capacity = capacity_bytes
@@ -118,15 +120,20 @@ class IndexedExpertStore:
             raise ValueError("RAM cache must fit the largest expert")
         self.direct = direct
         self.reserve = reserve_bytes
+        self.pinned = pinned
+        self.registered = {}
+        self.pending_dma = {}
         self.cache = OrderedDict()
         self.lock = threading.RLock()
         self.resident = 0
         self.fds = {}
-        self.stats = dict(hits=0, misses=0, evictions=0, read_bytes=0, read_calls=0, peak_resident_bytes=0)
+        self.stats = dict(hits=0, misses=0, evictions=0, read_bytes=0, read_calls=0, peak_resident_bytes=0, buffer_reuses=0)
         # The checkpoint stores most experts as twelve adjacent tensors. Read
         # each contiguous source extent once, retaining the validated packed
         # layout and padding used by the GPU cache. Never read across a gap.
         self.extents = {}
+        self.io_staging = None
+        self.io_staging_size = 0
         for key, record in records.items():
             groups = []
             for name, spec in sorted(record['tensors'].items(),
@@ -161,7 +168,14 @@ class IndexedExpertStore:
         base = start // ALIGN * ALIGN if self.direct else start
         delta = start - base
         size = aligned(delta + length) if self.direct else length
-        with mmap.mmap(-1, size) as staging:
+        # The read lease serializes I/O. Reuse one aligned buffer instead of
+        # allocating, faulting in and unmapping thousands of pages per miss.
+        if size > self.io_staging_size:
+            if self.io_staging is not None:
+                self.io_staging.close()
+            self.io_staging = mmap.mmap(-1, size)
+            self.io_staging_size = size
+        with memoryview(self.io_staging)[:size] as staging:
             n = os.preadv(fd, [staging], base)
             self.stats['read_calls'] += 1
             if n < delta + length:
@@ -176,10 +190,55 @@ class IndexedExpertStore:
                         raise ValueError('Wrong MUL1 codebook marker')
                     target[spec['offset']:spec['offset'] + spec['bytes']] = source[begin:begin + spec['bytes']]
 
-    def _evict(self):
+    def _evict(self, recycle_bytes=0):
         _, value = self.cache.popitem(last=False)
         self.resident -= len(value)
         self.stats["evictions"] += 1
+        if self.pinned and len(value) == recycle_bytes:
+            self._wait_dma(value)
+            self.stats['buffer_reuses'] += 1
+            return value
+        self._release(value)
+        return None
+
+    def _allocate(self, size):
+        if not self.pinned:
+            return bytearray(size)
+        import ctypes
+        from exllamav3.ext import exllamav3_ext as ext
+        # Dedicated page-aligned mappings avoid registering overlapping malloc
+        # pages. Explicit unregister/unmap also makes reserve-driven eviction
+        # return memory immediately, without a pinned allocator's hidden pool.
+        data = mmap.mmap(-1, size)
+        pointer = ctypes.addressof(ctypes.c_char.from_buffer(data))
+        try:
+            ext.cuda_host_register(pointer, size, 0)
+        except BaseException:
+            data.close()
+            raise
+        self.registered[id(data)] = pointer
+        return data
+
+    def protect_dma(self, key, event):
+        """Called inside read(): keep registered pages alive until DMA completes."""
+        with self.lock:
+            data = self.cache[key]
+            if not self.pinned or id(data) not in self.registered:
+                raise RuntimeError('DMA protection requires registered cache memory')
+            pending = self.pending_dma.setdefault(id(data), [])
+            pending[:] = [e for e in pending if not e.query()]
+            pending.append(event)
+
+    def _wait_dma(self, data):
+        for event in self.pending_dma.pop(id(data), []):
+            event.synchronize()
+
+    def _release(self, data):
+        if self.pinned:
+            from exllamav3.ext import exllamav3_ext as ext
+            self._wait_dma(data)
+            ext.cuda_host_unregister(self.registered.pop(id(data)))
+            data.close()
 
     @contextmanager
     def read(self, key, cancel=None):
@@ -192,23 +251,47 @@ class IndexedExpertStore:
             else:
                 record = self.records[key]
                 self.stats["misses"] += 1
-                while self.resident + record["bytes"] > self.capacity:
-                    self._evict()
-                if self.reserve:
-                    from .memory_budget import available_memory
-                    while self.cache and available_memory() < self.reserve + 2 * record["bytes"]:
-                        self._evict()
-                    if available_memory() < self.reserve + 2 * record["bytes"]:
-                        raise MemoryError("RAM reserve reached")
-                data = bytearray(record["bytes"])
-                view = memoryview(data)
+                recycled = None
                 try:
+                    while self.resident + record["bytes"] > self.capacity:
+                        value = self._evict(recycle_bytes=record['bytes'] if recycled is None else 0)
+                        if value is not None:
+                            recycled = value
+                    if self.reserve:
+                        from .memory_budget import available_memory
+                        while self.cache and available_memory() < self.reserve + 2 * record["bytes"]:
+                            self._evict()
+                        if available_memory() < self.reserve + 2 * record["bytes"]:
+                            raise MemoryError("RAM reserve reached")
+                except BaseException:
+                    if recycled is not None:
+                        self._release(recycled)
+                    raise
+                data = recycled if recycled is not None else self._allocate(record["bytes"])
+                view = None
+                try:
+                    view = memoryview(data)
+                    if recycled is not None:
+                        # Tensor payloads are overwritten below. Clear only
+                        # alignment padding, including if equal-sized records
+                        # have different internal layouts.
+                        end = 0
+                        for spec in sorted(record['tensors'].values(), key=lambda s: s['offset']):
+                            view[end:spec['offset']] = b'\0' * (spec['offset'] - end)
+                            end = spec['offset'] + spec['bytes']
+                        view[end:] = b'\0' * (record['bytes'] - end)
                     for group in self.extents[key]:
                         if cancel is not None and cancel.is_set():
                             raise InterruptedError("Read cancelled")
                         self._read_extent(group, view, cancel)
+                except BaseException:
+                    if view is not None:
+                        view.release()
+                    self._release(data)
+                    raise
                 finally:
-                    view.release()
+                    if view is not None:
+                        view.release()
                 self.cache[key] = data
                 self.resident += len(data)
                 self.stats["peak_resident_bytes"] = max(self.stats["peak_resident_bytes"], self.resident)
@@ -223,5 +306,11 @@ class IndexedExpertStore:
             for fd, _ in self.fds.values():
                 os.close(fd)
             self.fds.clear()
+            for data in self.cache.values():
+                self._release(data)
             self.cache.clear()
             self.resident = 0
+            if self.io_staging is not None:
+                self.io_staging.close()
+                self.io_staging = None
+                self.io_staging_size = 0
