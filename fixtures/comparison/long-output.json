@@ -1,0 +1,499 @@
+{
+  "context": 8192,
+  "mode": "chat",
+  "temperature": 0,
+  "output_cap": 512,
+  "checks": [
+    {
+      "id": "multiply",
+      "expected": "3973",
+      "messages": [
+        {
+          "role": "user",
+          "content": "Compute 137 * 29. Return only the integer."
+        }
+      ],
+      "rendered_prompt": "<｜begin▁of▁sentence｜><｜User｜>Compute 137 * 29. Return only the integer.<｜Assistant｜></think>",
+      "input_ids": [
+        0,
+        128803,
+        109268,
+        223,
+        9559,
+        982,
+        223,
+        1557,
+        16,
+        20870,
+        1353,
+        270,
+        9132,
+        16,
+        128804,
+        128822
+      ],
+      "input_ids_sha256": "398729ba78a1451739cd52bd8d2714f39fbd0e1894a7c6fc736688f58e23656c"
+    },
+    {
+      "id": "remaining",
+      "expected": "30",
+      "messages": [
+        {
+          "role": "user",
+          "content": "There are 84 bolts. Six machines each use 9 bolts. How many bolts remain? Return only the integer."
+        }
+      ],
+      "rendered_prompt": "<｜begin▁of▁sentence｜><｜User｜>There are 84 bolts. Six machines each use 9 bolts. How many bolts remain? Return only the integer.<｜Assistant｜></think>",
+      "input_ids": [
+        0,
+        128803,
+        4246,
+        477,
+        223,
+        5844,
+        73099,
+        16,
+        20483,
+        17341,
+        1660,
+        1347,
+        223,
+        27,
+        73099,
+        16,
+        1730,
+        1623,
+        73099,
+        6645,
+        33,
+        20870,
+        1353,
+        270,
+        9132,
+        16,
+        128804,
+        128822
+      ],
+      "input_ids_sha256": "1411cd4f8c528f29385eb2ad21d3b50eeddcd535cd6593c0ee9f8830e24d50b6"
+    },
+    {
+      "id": "percentage",
+      "expected": "224.4",
+      "messages": [
+        {
+          "role": "user",
+          "content": "A price is 240. Apply a 15 percent discount, then add 10 percent tax. Return only the final decimal number."
+        }
+      ],
+      "rendered_prompt": "<｜begin▁of▁sentence｜><｜User｜>A price is 240. Apply a 15 percent discount, then add 10 percent tax. Return only the final decimal number.<｜Assistant｜></think>",
+      "input_ids": [
+        0,
+        128803,
+        35,
+        5220,
+        344,
+        223,
+        9186,
+        16,
+        36470,
+        260,
+        223,
+        856,
+        3416,
+        16110,
+        14,
+        1539,
+        1258,
+        223,
+        553,
+        3416,
+        4494,
+        16,
+        20870,
+        1353,
+        270,
+        4087,
+        7767,
+        1167,
+        16,
+        128804,
+        128822
+      ],
+      "input_ids_sha256": "0e3af6ad982c605e1edf65d93ba5753d0f3284ca821c88f7025a6baf78e8baae"
+    },
+    {
+      "id": "extract",
+      "expected": "K7N4",
+      "messages": [
+        {
+          "role": "user",
+          "content": "Record: order=K7N4; customer=Mara; status=packed. Return only the order identifier."
+        }
+      ],
+      "rendered_prompt": "<｜begin▁of▁sentence｜><｜User｜>Record: order=K7N4; customer=Mara; status=packed. Return only the order identifier.<｜Assistant｜></think>",
+      "input_ids": [
+        0,
+        128803,
+        24694,
+        28,
+        2496,
+        31,
+        45,
+        25,
+        48,
+        22,
+        29,
+        8619,
+        85030,
+        3444,
+        29,
+        6317,
+        31,
+        19653,
+        284,
+        16,
+        20870,
+        1353,
+        270,
+        2496,
+        34972,
+        16,
+        128804,
+        128822
+      ],
+      "input_ids_sha256": "c7d72304e02e5c7ec67a2a4b4e5e8dcf125eb98e01b89d978cbf06bb5faad034"
+    },
+    {
+      "id": "ordering",
+      "expected": "Pia",
+      "messages": [
+        {
+          "role": "user",
+          "content": "Lena finishes before Omar. Omar finishes before Pia. Who finishes last? Return only the name."
+        }
+      ],
+      "rendered_prompt": "<｜begin▁of▁sentence｜><｜User｜>Lena finishes before Omar. Omar finishes before Pia. Who finishes last? Return only the name.<｜Assistant｜></think>",
+      "input_ids": [
+        0,
+        128803,
+        46,
+        6848,
+        54726,
+        1936,
+        79755,
+        16,
+        79755,
+        54726,
+        1936,
+        380,
+        601,
+        16,
+        11780,
+        54726,
+        2336,
+        33,
+        20870,
+        1353,
+        270,
+        2329,
+        16,
+        128804,
+        128822
+      ],
+      "input_ids_sha256": "ae19af060d99b3e34935f063930bc55680aa1b7605965acc31dd908ab8652cba"
+    },
+    {
+      "id": "json",
+      "expected": {
+        "count": 3
+      },
+      "messages": [
+        {
+          "role": "user",
+          "content": "Return exactly this JSON object, without Markdown: a key \"count\" whose value is the number of odd integers in [2, 7, 9, 12, 15]."
+        }
+      ],
+      "rendered_prompt": "<｜begin▁of▁sentence｜><｜User｜>Return exactly this JSON object, without Markdown: a key \"count\" whose value is the number of odd integers in [2, 7, 9, 12, 15].<｜Assistant｜></think>",
+      "input_ids": [
+        0,
+        128803,
+        25529,
+        9045,
+        566,
+        26639,
+        2873,
+        14,
+        2503,
+        5101,
+        7919,
+        28,
+        260,
+        3077,
+        582,
+        10499,
+        4,
+        6501,
+        1990,
+        344,
+        270,
+        1167,
+        294,
+        12601,
+        18392,
+        295,
+        764,
+        20,
+        14,
+        223,
+        25,
+        14,
+        223,
+        27,
+        14,
+        223,
+        736,
+        14,
+        223,
+        856,
+        2655,
+        128804,
+        128822
+      ],
+      "input_ids_sha256": "d72c4821185d350b751aeceb57d3fad0fdc13342c267ed6186f87ef6a6fa30fb"
+    },
+    {
+      "id": "sort",
+      "expected": [
+        -3,
+        0,
+        8,
+        14,
+        14
+      ],
+      "messages": [
+        {
+          "role": "user",
+          "content": "Sort these integers ascending: 14, -3, 8, 0, 14. Return only a JSON array."
+        }
+      ],
+      "rendered_prompt": "<｜begin▁of▁sentence｜><｜User｜>Sort these integers ascending: 14, -3, 8, 0, 14. Return only a JSON array.<｜Assistant｜></think>",
+      "input_ids": [
+        0,
+        128803,
+        22156,
+        1305,
+        18392,
+        46237,
+        28,
+        223,
+        929,
+        14,
+        565,
+        21,
+        14,
+        223,
+        26,
+        14,
+        223,
+        18,
+        14,
+        223,
+        929,
+        16,
+        20870,
+        1353,
+        260,
+        26639,
+        5554,
+        16,
+        128804,
+        128822
+      ],
+      "input_ids_sha256": "bef0583859fc8f12bd1797daa690d078c1687471deacf5d924564768b41fe516"
+    },
+    {
+      "id": "python",
+      "expected": "35",
+      "messages": [
+        {
+          "role": "user",
+          "content": "What does this Python expression evaluate to: sum(x*x for x in range(1, 6) if x % 2)? Return only the integer."
+        }
+      ],
+      "rendered_prompt": "<｜begin▁of▁sentence｜><｜User｜>What does this Python expression evaluate to: sum(x*x for x in range(1, 6) if x % 2)? Return only the integer.<｜Assistant｜></think>",
+      "input_ids": [
+        0,
+        128803,
+        3085,
+        1918,
+        566,
+        15255,
+        5793,
+        12582,
+        304,
+        28,
+        2595,
+        4042,
+        13912,
+        362,
+        1527,
+        295,
+        3291,
+        10,
+        19,
+        14,
+        223,
+        24,
+        11,
+        855,
+        1527,
+        3104,
+        223,
+        20,
+        21881,
+        20870,
+        1353,
+        270,
+        9132,
+        16,
+        128804,
+        128822
+      ],
+      "input_ids_sha256": "8de70da6197b1cf47a1d38f908019cd2aba6d95fbc0adad67e811f5cb2de638b"
+    }
+  ],
+  "speed": [
+    {
+      "id": "fresh-0",
+      "messages": [
+        {
+          "role": "user",
+          "content": "Explain how database transactions recover after a power failure. Include concrete worked examples and discuss limitations. Write at least 1000 words."
+        }
+      ],
+      "rendered_prompt": "<｜begin▁of▁sentence｜><｜User｜>Explain how database transactions recover after a power failure. Include concrete worked examples and discuss limitations. Write at least 1000 words.<｜Assistant｜></think>",
+      "input_ids": [
+        0,
+        128803,
+        65106,
+        1192,
+        8476,
+        18061,
+        13272,
+        1561,
+        260,
+        2333,
+        8977,
+        16,
+        52480,
+        15360,
+        7911,
+        7165,
+        305,
+        3502,
+        15588,
+        16,
+        15361,
+        509,
+        3396,
+        223,
+        1457,
+        18,
+        3345,
+        16,
+        128804,
+        128822
+      ],
+      "input_ids_sha256": "b342f7a082c622f1eb9ffe4f14cb65f5f2c708c2ef9c538306880b9f56bb0468"
+    },
+    {
+      "id": "fresh-1",
+      "messages": [
+        {
+          "role": "user",
+          "content": "Explain how a compiler detects and optimizes repeated expressions. Include concrete worked examples and discuss limitations. Write at least 1000 words."
+        }
+      ],
+      "rendered_prompt": "<｜begin▁of▁sentence｜><｜User｜>Explain how a compiler detects and optimizes repeated expressions. Include concrete worked examples and discuss limitations. Write at least 1000 words.<｜Assistant｜></think>",
+      "input_ids": [
+        0,
+        128803,
+        65106,
+        1192,
+        260,
+        46144,
+        67411,
+        305,
+        7944,
+        6530,
+        12529,
+        18224,
+        16,
+        52480,
+        15360,
+        7911,
+        7165,
+        305,
+        3502,
+        15588,
+        16,
+        15361,
+        509,
+        3396,
+        223,
+        1457,
+        18,
+        3345,
+        16,
+        128804,
+        128822
+      ],
+      "input_ids_sha256": "f192575958771c81c66f9c5a03bffe2dc46947a9a419d2fdf5a9820ed64f0848"
+    },
+    {
+      "id": "fresh-2",
+      "messages": [
+        {
+          "role": "user",
+          "content": "Explain how TCP congestion control adapts to changing bandwidth. Include concrete worked examples and discuss limitations. Write at least 1000 words."
+        }
+      ],
+      "rendered_prompt": "<｜begin▁of▁sentence｜><｜User｜>Explain how TCP congestion control adapts to changing bandwidth. Include concrete worked examples and discuss limitations. Write at least 1000 words.<｜Assistant｜></think>",
+      "input_ids": [
+        0,
+        128803,
+        65106,
+        1192,
+        41689,
+        50997,
+        2703,
+        6708,
+        85,
+        304,
+        10046,
+        34393,
+        16,
+        52480,
+        15360,
+        7911,
+        7165,
+        305,
+        3502,
+        15588,
+        16,
+        15361,
+        509,
+        3396,
+        223,
+        1457,
+        18,
+        3345,
+        16,
+        128804,
+        128822
+      ],
+      "input_ids_sha256": "77b624b8d6fa2d6d2d24ada1cf37e1ad2074b3bbaf417e40bbfc0e72b1b9539e"
+    }
+  ],
+  "purpose": "Output-length comparison: same prompts and check cap, 512 output tokens; report separately from the original 128-token workload."
+}

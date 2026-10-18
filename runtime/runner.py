@@ -32,6 +32,7 @@ def main():
     parser.add_argument("--overlap-shared", action="store_true")
     parser.add_argument("--engram-cache-rows", type=int, choices=(0, 16384, 65536), default=0)
     parser.add_argument("--output", type=Path)
+    parser.add_argument("--fixture", type=Path, default=ROOT / 'fixtures/paired-gguf.json')
     args = parser.parse_args()
     if args.gpu_only_gib is not None and not args.victim_cache:
         parser.error('--gpu-only-gib requires --victim-cache')
@@ -140,7 +141,7 @@ def main():
         result["memory_after_load"] = {"device_free_bytes": free, "device_total_bytes": total,
             "torch_allocated_bytes": torch.cuda.memory_allocated(), "torch_reserved_bytes": torch.cuda.memory_reserved()}
         tokenizer = Tokenizer.from_config(config)
-        fixture_path = ROOT / "fixtures/paired-gguf.json"
+        fixture_path = args.fixture
         fixture = json.loads(fixture_path.read_text())
         if fixture["context"] != profile["context_tokens"]:
             raise RuntimeError("Context differs from paired GGUF fixture")
@@ -236,7 +237,7 @@ def main():
                     raise RuntimeError("First completion failed the exact extraction check")
             else:
                 for case in fixture["checks"]:
-                    run(case, "check", 64)
+                    run(case, "check", fixture.get('check_output_cap', 64))
                 for phase in ("fresh", "repeat"):
                     for case in fixture["speed"]:
                         run(case, phase, fixture["output_cap"])

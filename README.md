@@ -51,11 +51,11 @@ sweeps, not confidence intervals. [Method](results/20261018-target30/METHOD.md),
 [raw run](results/20261018-target30/selected-84g.json),
 [summary](results/20261018-target30/summary.json).
 
-The selected run peaked at **89.20 GiB** of container RAM and **27.16 GiB** of
+The default 22 GiB run peaked at **89.20 GiB** of container RAM and **27.16 GiB** of
 PyTorch GPU allocations, with no process swap. Post-request samples left at least
 **14.62 GiB** available host RAM and **2.21 GiB** free GPU memory. A 12 GiB
 host reserve is enforced; other workloads may force cache eviction or stop a run.
-Long contexts and other workloads still need validation.
+Contexts beyond the tested 8K allocation still need validation.
 
 ## Model and memory
 
@@ -130,6 +130,50 @@ prompts and eight checks do not establish broad model quality. The validation be
 compares full-vocabulary scores at fixed continuation tokens.
 It measures the adapter against the same EXL3 checkpoint, not quantization loss
 against unquantized DeepSeek.
+
+The separate held-out comparison against the GGUF recipe's saved MXFP4/Q8
+reference is in [results/20261018-gguf-comparison-quality/quality.json](results/20261018-gguf-comparison-quality/quality.json).
+On the same 2,040 positions, EXL3 measured **6.405124 perplexity**, **0.130094
+mean KL** and **85.637% top-token agreement**. The paired reference perplexity
+was 6.335829; our IQ2_XXS GGUF measured 7.520919. These compare the full
+quantized model/runtime packages with a converted reference, not an exact native
+forward pass or a percentage of intelligence.
+
+`scripts/run.sh --gpu-is-free quality` runs teacher-forced evaluation with a
+saved reference and the matching corpus. It verifies the tokenizer's input IDs
+and saves all scored logits, per-position losses and source hashes. Example for
+the locally staged evaluation files:
+
+```sh
+bash scripts/run.sh --gpu-is-free quality --gpu-cache-gib 22 \
+  --reference /recipe/work/evaluation/reference.logits \
+  --corpus /recipe/work/evaluation/heldout.txt \
+  --output /recipe/results/my-quality-check
+```
+
+Use a new output directory. `bench --fixture /recipe/fixtures/comparison/additional-short.json`
+selects the frozen additional task/speed panel; `long-inputs-page-reserve.json`
+selects the verified 2,048/8,063-token inputs. These retain the 8K allocation.
+The older `long-inputs.json` is preserved as rejected evidence: ExLlama reserves
+one extra scheduler token, so 8,064 inputs plus 128 outputs exceed 32 cache pages.
+Use a smaller GPU cache when the desktop needs additional VRAM.
+
+The expanded comparison uses 23 GiB of expert VRAM and 84 GiB RAM with the
+experimental Engram/overlap configuration:
+
+| Workload | EXL3 fresh / repeated tok/s | GGUF fresh / repeated tok/s |
+|---|---:|---:|
+| Six additional topics, 128 outputs | 15.76 / 17.38 | 24.08 / 29.89 |
+| Original prompts, 512 outputs | 14.00 / 17.31 | 27.35 / 30.05 |
+| 8,063 inputs, 128 outputs | 11.29 / 11.43 | 25.71 / 32.65 |
+
+EXL3 passed **20/24** additional exact-answer checks; GGUF passed **11/24**.
+The [raw runs](results/20261018-gguf-comparison/) retain every answer and timing.
+These workload-specific rates include fresh KV state on every request, with
+weight caches allowed to warm. GGUF uses 18 GiB GPU / 84 GiB RAM throughout;
+its 512-output row pools two sweeps, while EXL3 uses one. The long-input row is
+one request per phase. With matched 18/84 GiB caches, EXL3's original short
+workload measured 14.85 fresh / 19.64 repeated tok/s.
 
 ## What changed
 

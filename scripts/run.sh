@@ -12,7 +12,8 @@ entry=runtime.runner
 case "$mode" in
   smoke|bench) runner_args=("$mode") ;;
   diagnose) entry=runtime.diagnostic; runner_args=() ;;
-  *) echo 'Use smoke, bench or diagnose' >&2; exit 2;;
+  quality) entry=runtime.quality; runner_args=() ;;
+  *) echo 'Use smoke, bench, diagnose or quality' >&2; exit 2;;
 esac
 python scripts/preflight.py
 expected="$(python -c 'import json; print(json.load(open("results/runtime-image.json"))[0]["Id"])')"
