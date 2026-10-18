@@ -1,7 +1,8 @@
 """Demand-only packed EXL3 cache with explicit CUDA lifetimes.
 
 Derived from vcruz305/vllm-exl3 experiments/dsv41_nvme, pinned in runtime.lock.json.
-Local changes: desktop cgroup guard, imports, and fail-closed TP1 ownership.
+Local changes: desktop cgroup guard, fail-closed TP1 ownership, pinned transfer
+buffers, layer-local LRU lookup, and single-row dispatch without GPU nonzero.
 Experimental C1/eager path. It never allocates the full expert checkpoint.
 """
 from collections import OrderedDict
@@ -9,6 +10,7 @@ from contextlib import contextmanager
 from dataclasses import dataclass, field
 from pathlib import Path
 import threading
+import struct
 import torch
 from exllamav3.modules.quant.exl3 import LinearEXL3
 from .vendor.expert_store import ALIGN, Regions
@@ -31,6 +33,7 @@ class Entry:
     size: int
     generation: int
     projections: dict
+    ready: object = None
     users: int = 0
     events: list = field(default_factory=list)
 
@@ -60,11 +63,18 @@ class ExpertCache:
             base += size
         self.arena = torch.empty(capacity_bytes, dtype=torch.uint8, device=self.device)
         self.entries = OrderedDict()
+        self.layer_lru = {layer: OrderedDict() for layer in layers}
         self.lock = threading.RLock()
         self.generation = 0
         self.stats = dict(hits=0, misses=0, evictions=0, failures=0, peak_resident_bytes=0)
         self.resident_bytes = 0
         self.closed = False
+        # Two bounded pinned buffers let disk/RAM staging overlap queued GPU
+        # work. An event protects each buffer until its DMA read has finished.
+        largest = max(r['bytes'] for r in store.records.values())
+        self.staging = [torch.empty(largest, dtype=torch.uint8, pin_memory=True) for _ in range(2)]
+        self.staging_events = [None, None]
+        self.staging_index = 0
 
     def _guard(self):
         guard_memory(self.reserve)
@@ -81,6 +91,7 @@ class ExpertCache:
         self.regions[int(key.split(':')[0])].release(entry.offset)
         self.resident_bytes -= entry.size
         del self.entries[key]
+        del self.layer_lru[int(key.split(':')[0])][key]
         self.stats['evictions'] += 1
 
     def _load(self, key, cancel):
@@ -90,8 +101,7 @@ class ExpertCache:
         region = self.regions[layer]
         offset = region.allocate(record['bytes'])
         while offset is None:
-            candidate = next((k for k,e in self.entries.items()
-                              if int(k.split(':')[0]) == layer and e.users == 0), None)
+            candidate = next((k for k in self.layer_lru[layer] if self.entries[k].users == 0), None)
             if candidate is None:
                 raise CacheBusy('All eviction candidates are in use')
             self._evict(candidate)
@@ -99,10 +109,21 @@ class ExpertCache:
         projections = {}
         try:
             with self.store.read(key, cancel=cancel) as data:
+                for p in ('w1', 'w2', 'w3'):
+                    if struct.unpack_from('<i', data, record['tensors'][f'{p}.mul1']['offset'])[0] != -2082680531:
+                        raise ValueError('MUL1 marker mismatch')
+                slot = self.staging_index
+                self.staging_index = (slot + 1) % len(self.staging)
+                if self.staging_events[slot] is not None:
+                    self.staging_events[slot].synchronize()
                 cpu = torch.frombuffer(data, dtype=torch.uint8)
+                pinned = self.staging[slot][:record['bytes']]
+                pinned.copy_(cpu)
                 target = self.arena.narrow(0, offset, record['bytes'])
-                target.copy_(cpu, non_blocking=False)
-                torch.cuda.current_stream(self.device).synchronize()
+                target.copy_(pinned, non_blocking=True)
+                ready = torch.cuda.Event()
+                ready.record(torch.cuda.current_stream(self.device))
+                self.staging_events[slot] = ready
                 del cpu
             if cancel is not None and cancel.is_set():
                 raise InterruptedError('Expert load cancelled')
@@ -112,16 +133,15 @@ class ExpertCache:
                 for suffix in ('trellis','suh','svh','mul1'):
                     spec = record['tensors'][f'{p}.{suffix}']
                     tensors[suffix] = target.narrow(0,spec['offset'],spec['bytes']).view(dtype[spec['dtype']]).view(spec['shape'])
-                if tensors['mul1'].item() != -2082680531:
-                    raise ValueError('MUL1 marker mismatch')
                 inner = LinearEXL3(config=None, in_features=tensors['suh'].numel(),
                     out_features=tensors['svh'].numel(), out_dtype=torch.float16,
                     transformers_fix=True, **tensors)
                 inner.config.infer_params.no_reconstruct = True
                 projections[p] = inner
             self.generation += 1
-            entry = Entry(key,offset,record['bytes'],self.generation,projections)
+            entry = Entry(key,offset,record['bytes'],self.generation,projections,ready)
             self.entries[key] = entry
+            self.layer_lru[layer][key] = None
             self.resident_bytes += record['bytes']
             self.stats['peak_resident_bytes'] = max(self.stats['peak_resident_bytes'],self.resident_bytes)
             return entry
@@ -161,8 +181,10 @@ class ExpertCache:
                 self.stats['hits'] += 1
                 entry.events[:] = [e for e in entry.events if not e.query()]
                 self.entries.move_to_end(key)
+                self.layer_lru[int(key.split(':')[0])].move_to_end(key)
             entry.users += 1
             owning_stream = torch.cuda.current_stream(self.device)
+            owning_stream.wait_event(entry.ready)
         try:
             yield entry
         finally:
@@ -179,13 +201,21 @@ class ExpertCache:
         if x.device != self.device or ids.device != self.device or weights.device != self.device:
             raise ValueError('Routing and activations must use the cache device')
         result = torch.zeros_like(x,dtype=torch.float32)
-        for eid in torch.unique(ids).tolist():
+        # Decode routes one row. Copy its six IDs once and preserve the old
+        # sorted expert order without six GPU nonzero/index_select operations.
+        single = x.shape[0] == 1
+        routes = ids[0].tolist() if single else None
+        if single and len(set(routes)) != len(routes):
+            raise ValueError('Duplicate experts in a routing row')
+        ordered = sorted(enumerate(routes), key=lambda pair: pair[1]) if single else [(None, eid) for eid in torch.unique(ids).tolist()]
+        for position, eid in ordered:
             key = f'{layer}:{int(eid)}'
             if key not in self.store.records:
                 raise ValueError(f"Unowned routed expert: {key}")
-            rows, positions = (ids == eid).nonzero(as_tuple=True)
+            if not single:
+                rows, positions = (ids == eid).nonzero(as_tuple=True)
             with self.lease(key) as entry:
-                h = x.index_select(0,rows).half().contiguous()
+                h = (x if single else x.index_select(0,rows)).half().contiguous()
                 p = entry.projections
                 gate = p['w1'].forward(h,{},out_dtype=torch.float32)
                 up = p['w3'].forward(h,{},out_dtype=torch.float32)
@@ -194,7 +224,10 @@ class ExpertCache:
                     up = up.clamp(-limit,limit)
                 act = (torch.nn.functional.silu(gate)*up).half().contiguous()
                 down = p['w2'].forward(act,{},out_dtype=torch.float32)
-                result.index_add_(0,rows,down*weights[rows,positions,None].float())
+                if single:
+                    result.add_(down * weights[:, position:position + 1].float())
+                else:
+                    result.index_add_(0,rows,down*weights[rows,positions,None].float())
         return result
 
     def clear(self):
@@ -207,5 +240,10 @@ class ExpertCache:
     def close(self):
         with self.lock:
             self.clear()
+            for event in self.staging_events:
+                if event is not None:
+                    event.synchronize()
+            self.staging.clear()
+            self.staging_events.clear()
             self.arena = None
             self.closed = True

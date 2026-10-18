@@ -57,6 +57,7 @@ class StoreTests(unittest.TestCase):
             self.assertEqual(store.stats["hits"], 1)
             self.assertEqual(store.stats["misses"], 4)
             self.assertEqual(store.stats["evictions"], 3)
+            self.assertEqual(store.stats["read_calls"], 4)
         finally:
             store.close()
 
@@ -65,6 +66,45 @@ class StoreTests(unittest.TestCase):
 
     def test_direct_roundtrip_eviction(self):
         self.exercise(True)
+
+    def test_split_shard_and_noncontiguous_extent(self):
+        records = copy.deepcopy(self.records)
+        tensors = records['0:0']['tensors']
+        original = self.path.read_bytes()
+        second = self.root / 'second.safetensors'
+        payload = bytearray(b'padding' * 1024)
+        for name in ('w1.trellis', 'w2.mul1'):
+            spec = tensors[name]
+            start = spec['source_offset']
+            value = original[start:start + spec['bytes']]
+            spec['source_file'] = second.name
+            spec['source_offset'] = len(payload)
+            payload.extend(value)
+            payload.extend(b'gap' * 2048)
+        second.write_bytes(payload)
+        store = IndexedExpertStore(self.root, records, self.capacity, reserve_bytes=0)
+        try:
+            with store.read('0:0') as data:
+                for name, spec in tensors.items():
+                    self.assertEqual(bytes(data[spec['offset']:spec['offset'] + spec['bytes']]),
+                        self.values[f'layers.0.ffn.experts.0.{name}'])
+            self.assertEqual(store.stats['read_calls'], 4)
+        finally:
+            store.close()
+
+    def test_truncated_payload_is_not_cached(self):
+        end = max(s['source_offset'] + s['bytes'] for s in self.records['0:0']['tensors'].values())
+        with self.path.open('r+b') as f:
+            f.truncate(end - 1)
+        store = IndexedExpertStore(self.root, self.records, self.capacity, reserve_bytes=0)
+        try:
+            with self.assertRaisesRegex(OSError, 'Truncated'):
+                with store.read('0:0'):
+                    pass
+            self.assertEqual(store.resident, 0)
+            self.assertFalse(store.cache)
+        finally:
+            store.close()
 
     def test_missing_expert(self):
         weights = {k: v for k, v in self.weights.items() if ".experts.1." not in k}

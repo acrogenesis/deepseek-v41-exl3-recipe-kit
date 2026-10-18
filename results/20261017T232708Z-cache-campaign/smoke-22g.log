@@ -1,0 +1,10 @@
+{
+  "ready_for_gpu_validation": true,
+  "gpu_used": false,
+  "download_status": "complete",
+  "verified_bytes": 413905629467,
+  "total_bytes": 413905629467,
+  "pending": []
+}
+{"id": "extract", "phase": "smoke", "decode_tok_s": 1.6635582655343886, "ttft_seconds": 40.39714670799731, "text": "K7N4"}
+Saved /recipe/results/20261017T232708Z-cache-campaign/smoke-22g.json

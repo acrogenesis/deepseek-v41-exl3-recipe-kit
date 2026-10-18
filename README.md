@@ -2,13 +2,38 @@
 
 An experimental SSD-streaming recipe for one RTX 5090 (32 GB), a Ryzen 9950X3D,
 128 GB RAM, and a Samsung 990 PRO NVMe. It is staged for this machine.
-**Real-model generation and throughput are still pending the Engram download.**
-Expert kernels and GPU allocation have passed initial checks. Downloads alone never
-start inference; the separate GPU campaign requires explicit authorization.
+**Real-model generation is verified.** All 414 GB of model files are downloaded
+and hash-checked. The recipe uses bounded CPU/GPU expert caches; starting GPU work
+requires an explicit command.
 
 The original [Sybil offload recipe](https://github.com/sybil-solutions/dsv41-flash-offload)
 keeps every expert in pinned RAM. This recipe uses a bounded RAM cache and reads
 misses from the original safetensors files. It does not create another 196 GB expert bank.
+
+## Measured performance
+
+| Implementation | Expert VRAM | Fresh tok/s | Repeat tok/s |
+|---|---:|---:|---:|
+| Original cache | 16 GiB | 3.63 | 3.59 |
+| Optimized cache | 16 GiB | 4.21 | 4.31 |
+| Optimized cache (default) | 22 GiB | **4.45** | **4.55** |
+
+Measured on the hardware above, without concurrent uploads/downloads. Medians of
+three 128-token generations per phase, an 8,192-token configured context and the
+same saved kernel tuning. Input prompts contain 30/31/31 tokens; this does not fill
+the context window. Each request resets KV/recurrent state. Full methods and raw
+runs: [comparison](results/20261018-clean-optimization/METHOD.md),
+[summary](results/20261018-clean-optimization/summary.json).
+
+The cache changes alone improve the 16 GiB run by **16% fresh / 20% repeat**.
+Using 22 GiB adds about **6%** to both phases, for **23% / 27%** over the original.
+All three runs passed **8/8 checks** and produced the **same 802 output tokens**
+across all 14 requests. This is one paired sweep, not a general throughput guarantee.
+
+The optimized 22 GiB run peaked at **27.16 GiB** of PyTorch allocations and left
+at least **2.46 GiB** of device memory free after requests. At 16 GiB, the peak was
+21.16 GiB with at least 8.46 GiB free. The larger cache is the default for this
+measured 8K profile; longer inputs and other workloads still need validation.
 
 ## Model and memory
 
@@ -17,13 +42,13 @@ misses from the original safetensors files. It does not create another 196 GB ex
 - The **1017** Engram tables from [DeepSeek's original release](https://huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash-1017),
   pinned to `1bae0e1088993b9b82de08f59de5be5a34e42170`, shards 47 and 48.
 - About **414 GB** of downloads. SHA-256 verification for weights; Git blob verification for small metadata.
-- Proposed cache limits: **64 GiB RAM + 16 GiB VRAM**, allocated on demand within a 96 GiB no-swap container.
+- Default cache limits: **64 GiB RAM + 22 GiB VRAM**, allocated on demand within a 96 GiB no-swap container.
 - Initial benchmark: **8,192-token context**, one sequence, 256-token prefill chunks,
   greedy sampling, no drafter, text only. This is a validation profile, not a measured maximum context.
 
 All 384 experts in all 40 layers remain available. Actual header inspection found
 40,320 K3 and 5,760 K2 routed projection tensors. Stored main-model weights outside
-the routed experts occupy about 6 GiB; this is **not** a measured runtime footprint.
+the routed experts occupy about 6 GiB. Runtime memory measurements are below.
 See [the inventory](results/expert-inventory.json) and [layout](results/checkpoint-layout.json).
 
 ## Preparation (CPU only)
@@ -62,7 +87,8 @@ bash scripts/run.sh --gpu-is-free smoke
 bash scripts/run.sh --gpu-is-free bench
 ```
 
-Use `--gpu-cache-gib 22` to test the larger cache without changing the default.
+The measured default is 22 GiB of expert VRAM. Use `--gpu-cache-gib 16` to leave
+more GPU memory free.
 `python scripts/campaign.py --allow-gpu` waits for verified downloads, checks a smoke
 response at 16 and 22 GiB, then benchmarks both. If 22 GiB runs out of memory during
 the smoke test, it tries 20 GiB. Results include a recommendation; defaults are not
@@ -77,8 +103,10 @@ cache counters, runtime pins, and exact-check results under `results/`.
 
 The EXL3 timer measures delivered tokens after the first token. Compare it with the
 GGUF reports' **`client_decode_tok_s`**, not their internal server timer. Short capped
-prompts and eight checks do not establish broad model quality. Full-model numerical
-comparison and longer workloads remain part of GPU qualification.
+prompts and eight checks do not establish broad model quality. The validation below
+compares full-vocabulary scores at fixed continuation tokens.
+It measures the adapter against the same EXL3 checkpoint, not quantization loss
+against unquantized DeepSeek.
 
 ## What changed
 
@@ -95,37 +123,52 @@ and retains hot experts in a capped RAM LRU. CUDA cache entries use stream-ownin
 leases and synchronize before eviction. Missing experts fail instead of being skipped.
 The memory guard checks this process's cgroup; it does not require clearing desktop swap.
 
-Current validation: successful CPU compilation, 13 storage, memory-budget and comparison tests, byte-for-byte
-reads of two real experts, and CPU construction of the full native model plus its 8K
-cache. All 11 prompts tokenize identically to the paired GGUF fixture. See `results/`.
-GPU checks also passed for K3 layer 0 and K2 layer 18 against the engine's resident
-MoE implementation, including cache hits and eviction: relative L2 error below
-0.00077 with cosine similarity above 0.9999996. This measures the paging adapter's
-arithmetic, not quantization loss versus the original model.
+Validation after optimization:
 
-| Expert cache | PyTorch allocation after load | Device memory still free |
-|---|---:|---:|
-| 16 GiB | 20.84 GiB | 8.93 GiB |
-| 22 GiB | 26.84 GiB | 2.94 GiB |
+- 15 CPU tests: byte-exact direct/buffered reads, split shards, gaps, eviction,
+  cancellation, truncated files, marker validation and memory guards.
+- 16 real-byte GPU cases: two CUDA streams, pinned-buffer reuse and eviction.
+- Eight resident-native versus paged MoE cases, K3 layer 0 and K2 layer 18:
+  relative L2 error below 0.00077, cosine similarity above 0.9999996.
+- Identical full-vocabulary scores at 20 teacher-forced positions: original versus
+  optimized cache, 16 versus 22 GiB, and a separate process using saved tuning.
+  Raw score arrays remain local; their hashes and profiles are in
+  [the diagnostic evidence](results/20261018-clean-optimization/logit-artifacts.json).
 
-Those load checks include the 8K KV cache but do not read Engram payloads. A separate
-three-token graph diagnostic using **synthetic zero Engram rows** passed at 22 GiB,
-with 27.29 GiB peak PyTorch allocation and 2.43 GiB device headroom. It caught a
-scheduler issue with 128-token chunks; the profile now uses the native 256-token
-page size. Synthetic outputs are excluded from all model quality and speed results.
-See `results/gpu-moe-parity.json`, `results/gpu-load-*.json`, and
-`results/gpu-graph-diagnostic.json`.
+The initial launcher discarded ExLlama's kernel-tuning choices whenever its temporary
+container exited. Separate launches could produce different tokens, including at
+one fixed cache size. `run.sh` now persists cooperative-kernel and Triton caches in
+`work/kernel-cache`. With saved tuning, the tested score arrays match byte for byte
+across processes. This cache is local hardware/runtime state, not model weights.
 
-The initial cache uses demand reads and sequential expert dispatch. Its performance
-on this machine is unknown; prefetch or fused dispatch should follow measurements.
+The optimized store combines adjacent source tensors into one disk read per expert
+(all 15,360 experts in this checkpoint). The GPU cache stages transfers through two
+bounded pinned buffers, preserves CUDA stream lifetimes, validates MUL1 markers on
+the CPU, and avoids repeated GPU index discovery for single-token decoding.
+Expert selection and quantized tensor bytes are preserved.
+
+For a teacher-forced diagnostic and CPU profile:
+
+```sh
+bash scripts/run.sh --gpu-is-free diagnose \
+  --output /recipe/results/my-diagnostic
+```
+
+This defaults to 16/22/16 GiB caches and the same 20 continuation tokens. Diagnostic
+profiles include score copies and profiling overhead; they are excluded from speed
+results. Normal `bench` reports use the unchanged streamed-token timer.
+
+The earlier campaign in `results/20261017T232708Z-cache-campaign/` overlapped a GGUF
+upload and did not persist tuning. Its measurements are retained for history; the
+clean comparison is in `results/20261018-clean-optimization/`.
 
 ## Credits and license
 
 Recipe code: AGPL-3.0. The GPU cache and geometry validator derive from
 [`vllm-exl3`'s experimental NVMe components](https://github.com/vcruz305/vllm-exl3/tree/2a740a3773601c994072295fde45738ef8cea55e/experiments/dsv41_nvme).
 Pristine copies, copyright notices, and licenses are retained in `runtime/vendor/`.
-`runtime/cache.py` changes their imports, desktop memory guard, and missing-expert
-behavior. ExLlamaV3 retains its MIT license. Model weights retain their own licenses.
+`runtime/cache.py` adds the desktop memory guard, exact expert ownership, pinned
+transfers and single-token dispatch. ExLlamaV3 retains its MIT license. Model weights retain their own licenses.
 
 The existing GGUF quant, reference logits, calibration, benchmark evidence, public Q2
 comparison, and unrelated models were preserved. The 508 GB converted MXFP4/Q8

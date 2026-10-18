@@ -1,0 +1,128 @@
+{
+  "status": "complete",
+  "profile": {
+    "hardware": "RTX 5090 32 GB, Ryzen 9950X3D, 128 GB RAM, Samsung 990 PRO NVMe",
+    "gpu_expert_cache_bytes": 17179869184,
+    "ram_expert_cache_bytes": 68719476736,
+    "host_reserve_bytes": 12884901888,
+    "container_memory": "96g",
+    "container_memory_swap": "96g",
+    "context_tokens": 8192,
+    "prefill_chunk_tokens": 256,
+    "max_batch_size": 1,
+    "draft": false,
+    "text_only": true,
+    "status": "proposed; GPU validation pending"
+  },
+  "inventory": {
+    "model": "LibertAIDAI/DeepSeek-V4.1-Flash-1017-EXL3-2.9bpw",
+    "revision": "c178a01284fc5c0e859d8668cffaac81ca8f4042",
+    "experts": 15360,
+    "tensor_count": 184320,
+    "projection_K_counts": {
+      "3": 40320,
+      "2": 5760
+    },
+    "packed_record_bytes": 196104683520,
+    "largest_record_bytes": 13320192,
+    "payload_verified": false,
+    "header_source": "local_shards",
+    "gpu_used": false
+  },
+  "runs": [
+    {
+      "id": "extract",
+      "phase": "smoke",
+      "input_tokens": 28,
+      "output_tokens": 4,
+      "token_ids": [
+        45,
+        25,
+        48,
+        22
+      ],
+      "text": "K7N4",
+      "ttft_seconds": 41.01427492900257,
+      "seconds": 43.36669218899624,
+      "decode_tok_s": 1.5884379810482927,
+      "events": [
+        {
+          "seconds": 41.01427492900257,
+          "tokens": [
+            45
+          ]
+        },
+        {
+          "seconds": 41.766703264998796,
+          "tokens": [
+            25
+          ]
+        },
+        {
+          "seconds": 42.36153277399717,
+          "tokens": [
+            48
+          ]
+        },
+        {
+          "seconds": 42.90292279300047,
+          "tokens": [
+            22
+          ]
+        }
+      ],
+      "ram_cache": {
+        "hits": 289,
+        "misses": 2803,
+        "evictions": 0,
+        "read_bytes": 36019363840,
+        "peak_resident_bytes": 35894378496
+      },
+      "gpu_cache": {
+        "hits": 654,
+        "misses": 3092,
+        "evictions": 1738,
+        "failures": 0,
+        "peak_resident_bytes": 16973856768
+      },
+      "gpu_peak_allocated_bytes": 22860081664,
+      "gpu_peak_reserved_bytes": 22890414080,
+      "device_free_bytes_after_request": 8999010304,
+      "passed": true,
+      "expected": "K7N4"
+    }
+  ],
+  "runtime_lock": {
+    "schema": 1,
+    "exllamav3": {
+      "repo": "https://github.com/vcruz305/exllamav3.git",
+      "revision": "954a8ca6e59d48c3e3462068ecf083fe9990f4dc"
+    },
+    "cache_components": {
+      "repo": "https://github.com/vcruz305/vllm-exl3.git",
+      "revision": "2a740a3773601c994072295fde45738ef8cea55e",
+      "files": {
+        "expert_store.py": "05a8d337f3eda5a4d451216ba69294c14f0d58211c91c0ec802f5646f45d156b",
+        "expert_cache.py": "688d64d3ea80232415165603a21e00f9fcae93645506c986de4bf80baf9bad84"
+      }
+    },
+    "base_image": {
+      "local_tag": "localhost/glm53-sm120:20261001",
+      "id": "801524faa7a980a44e912d17073210c86d9d4233152d8a295d1949296c75f5db"
+    },
+    "cuda_arch": "12.0",
+    "gpu_validation": "pending_user_release"
+  },
+  "gpu": "NVIDIA GeForce RTX 5090",
+  "torch": "2.13.0+cu130",
+  "cuda": "13.0",
+  "metric": "Streamed output tokens after first token / elapsed time after first token; fresh KV state each request",
+  "load_seconds": 2.6073240420009824,
+  "memory_after_load": {
+    "device_free_bytes": 9559080960,
+    "device_total_bytes": 33708376064,
+    "torch_allocated_bytes": 22380981760,
+    "torch_reserved_bytes": 22408069120
+  },
+  "fixture_sha256": "937f844edefb590313d3423bf45f2887378b5b2ce5fe1aa245b318a593b78cb1"
+}

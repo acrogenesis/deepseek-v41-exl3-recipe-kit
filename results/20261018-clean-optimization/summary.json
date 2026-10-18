@@ -1,0 +1,106 @@
+{
+  "hardware": "RTX 5090 32 GB, Ryzen 9950X3D, 128 GB RAM, Samsung 990 PRO NVMe",
+  "metric": "Streamed output tokens after first token / elapsed time after first token; fresh KV state each request",
+  "context_tokens": 8192,
+  "runs_per_phase": 3,
+  "concurrent_upload": false,
+  "implementations": {
+    "baseline-fixed-16g": {
+      "cache_gib": 16.0,
+      "checks_passed": 8,
+      "checks_total": 8,
+      "identical_to_baseline": true,
+      "token_differences": [],
+      "generated_tokens_compared": 802,
+      "peak_torch_allocated_gib": 21.338417053222656,
+      "minimum_device_free_gib": 8.20172119140625,
+      "tune_cache_sha256_after": "8d51318014817de857c73eb8f07c870dbbf8cbd3b10f3f937b3cde91569446af",
+      "report_sha256": "f0105b92d21e48d382ba082a463fae3993a17b457b8348b06910673dbbf75ad8",
+      "fresh": {
+        "tok_s": [
+          3.027492831922052,
+          3.6301750846557352,
+          3.6530868474760068
+        ],
+        "median_tok_s": 3.6301750846557352,
+        "speed_ratio": 1.0,
+        "median_ttft_seconds": 11.127667625994945
+      },
+      "repeat": {
+        "tok_s": [
+          3.5850168784451286,
+          3.4700384076841257,
+          3.6185356736943266
+        ],
+        "median_tok_s": 3.5850168784451286,
+        "speed_ratio": 1.0,
+        "median_ttft_seconds": 11.35542407399771
+      }
+    },
+    "optimized-16g": {
+      "cache_gib": 16.0,
+      "checks_passed": 8,
+      "checks_total": 8,
+      "identical_to_baseline": true,
+      "token_differences": [],
+      "generated_tokens_compared": 802,
+      "peak_torch_allocated_gib": 21.15823221206665,
+      "minimum_device_free_gib": 8.45562744140625,
+      "tune_cache_sha256_after": "8d51318014817de857c73eb8f07c870dbbf8cbd3b10f3f937b3cde91569446af",
+      "report_sha256": "148fdc236d6108a5d437277b9148e9282be1d8544943439831fdb7ecb85eb761",
+      "fresh": {
+        "tok_s": [
+          3.598357154865816,
+          4.2074173623736355,
+          4.572112332154308
+        ],
+        "median_tok_s": 4.2074173623736355,
+        "speed_ratio": 1.1590122416292885,
+        "median_ttft_seconds": 10.767871165000543
+      },
+      "repeat": {
+        "tok_s": [
+          4.265900246027059,
+          4.307976338631947,
+          4.760111022493313
+        ],
+        "median_tok_s": 4.307976338631947,
+        "speed_ratio": 1.2016613825540414,
+        "median_ttft_seconds": 10.864978896002867
+      }
+    },
+    "optimized-22g": {
+      "cache_gib": 22.0,
+      "checks_passed": 8,
+      "checks_total": 8,
+      "identical_to_baseline": true,
+      "token_differences": [],
+      "generated_tokens_compared": 802,
+      "peak_torch_allocated_gib": 27.15823221206665,
+      "minimum_device_free_gib": 2.46026611328125,
+      "tune_cache_sha256_after": "8d51318014817de857c73eb8f07c870dbbf8cbd3b10f3f937b3cde91569446af",
+      "report_sha256": "6bdd1d02f62ae8a0ed58ac1afabda880af28ad74097cd3e2315ff04d4f978b9b",
+      "fresh": {
+        "tok_s": [
+          3.9320951795361814,
+          4.447766742219693,
+          5.266435829594625
+        ],
+        "median_tok_s": 4.447766742219693,
+        "speed_ratio": 1.2252209985738178,
+        "median_ttft_seconds": 10.738515402998019
+      },
+      "repeat": {
+        "tok_s": [
+          4.549927741938661,
+          4.527620978552348,
+          5.2988957472311835
+        ],
+        "median_tok_s": 4.549927741938661,
+        "speed_ratio": 1.269150995995318,
+        "median_ttft_seconds": 10.489808926002297
+      }
+    }
+  },
+  "same_tuning_after_all_runs": true
+}

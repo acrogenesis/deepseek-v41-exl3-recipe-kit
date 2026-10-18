@@ -1,0 +1,10 @@
+{
+  "ready_for_gpu_validation": true,
+  "gpu_used": false,
+  "download_status": "complete",
+  "verified_bytes": 413905629467,
+  "total_bytes": 413905629467,
+  "pending": []
+}
+{"pass": 0, "cache": 16, "seconds": 31.326979699006188, "max_logit_difference": 0.0, "same_argmax": true}
+{"pass": 1, "cache": 22, "seconds": 4.606161741001415, "max_logit_difference": 0.0, "same_argmax": true}

@@ -2,7 +2,7 @@
 
 Attention, Engram hashing/dequantization, routing and shared experts stay in
 the native engine. Only routed-expert allocation and execution are replaced.
-GPU qualification is pending; no speed or numerical parity claim is implied.
+Validation and measured limits are recorded in README.md and results/.
 """
 import re
 import torch

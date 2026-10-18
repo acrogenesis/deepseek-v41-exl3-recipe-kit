@@ -1,0 +1,64 @@
+{
+  "model": "LibertAIDAI/DeepSeek-V4.1-Flash-1017-EXL3-2.9bpw",
+  "revision": "c178a01284fc5c0e859d8668cffaac81ca8f4042",
+  "experts": 15360,
+  "tensor_count": 184320,
+  "projection_K_counts": {
+    "3": 40320,
+    "2": 5760
+  },
+  "packed_record_bytes": 196104683520,
+  "largest_record_bytes": 13320192,
+  "payload_verified": true,
+  "header_source": "local_shards",
+  "gpu_used": false,
+  "verified_mul1_markers": 46080,
+  "engram_tables": {
+    "layers.1.engram.embed.weight": {
+      "dtype": "F8_E4M3",
+      "shape": [
+        384006168,
+        256
+      ],
+      "data_offsets": [
+        0,
+        98305579008
+      ]
+    },
+    "layers.1.engram.embed.scale": {
+      "dtype": "F8_E8M0",
+      "shape": [
+        384006168,
+        8
+      ],
+      "data_offsets": [
+        98305579008,
+        101377628352
+      ]
+    },
+    "layers.14.engram.embed.weight": {
+      "dtype": "F8_E4M3",
+      "shape": [
+        384016682,
+        256
+      ],
+      "data_offsets": [
+        0,
+        98308270592
+      ]
+    },
+    "layers.14.engram.embed.scale": {
+      "dtype": "F8_E8M0",
+      "shape": [
+        384016682,
+        8
+      ],
+      "data_offsets": [
+        98308270592,
+        101380404048
+      ]
+    }
+  },
+  "completed_at": "2026-10-17T23:57:47.240871+00:00",
+  "gpu_validation": "pending; nothing starts automatically"
+}

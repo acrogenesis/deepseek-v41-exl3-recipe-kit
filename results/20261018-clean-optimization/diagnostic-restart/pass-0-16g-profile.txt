@@ -1,0 +1,104 @@
+         5095765 function calls (5033670 primitive calls) in 30.701 seconds
+
+   Ordered by: cumulative time
+   List reduced from 1195 to 55 due to restriction <55>
+
+   ncalls  tottime  percall  cumtime  percall filename:lineno(function)
+27169/14981    0.020    0.000   28.184    0.002 {built-in method builtins.next}
+    14964    0.079    0.000   28.176    0.002 /recipe/runtime/cache.py:154(lease)
+12002/7486    0.006    0.000   28.090    0.004 /usr/lib/python3.12/contextlib.py:132(__enter__)
+     4516    0.329    0.000   27.910    0.006 /recipe/runtime/cache.py:96(_load)
+     9032    4.950    0.001   23.750    0.003 /recipe/runtime/indexed_store.py:184(read)
+     3690    2.135    0.001   18.625    0.005 /recipe/runtime/indexed_store.py:156(_read_extent)
+     3690   14.210    0.004   14.210    0.004 {built-in method posix.preadv}
+    10039    1.959    0.000    1.959    0.000 {method 'copy_' of 'torch._C.TensorBase' objects}
+     3690    1.845    0.000    1.845    0.000 {method '__exit__' of 'mmap.mmap' objects}
+   5793/7    0.116    0.000    1.583    0.226 /opt/sglang/lib/python3.12/site-packages/exllamav3/modules/quant/exl3.py:114(forward)
+     5355    0.003    0.000    0.916    0.000 /recipe/runtime/cache.py:78(_guard)
+     5355    0.019    0.000    0.912    0.000 /recipe/runtime/memory_budget.py:22(guard_memory)
+    28854    0.035    0.000    0.792    0.000 /usr/lib/python3.12/pathlib.py:1024(read_text)
+    12734    0.050    0.000    0.571    0.000 /recipe/runtime/memory_budget.py:5(available_memory)
+    28863    0.011    0.000    0.536    0.000 /usr/lib/python3.12/pathlib.py:1007(open)
+    28913    0.263    0.000    0.523    0.000 {built-in method _io.open}
+      800    0.015    0.000    0.461    0.001 /opt/sglang/lib/python3.12/site-packages/exllamav3/modules/attention_fn/dsa_triton.py:867(dsa_attn)
+     23/2    0.000    0.000    0.434    0.217 /opt/sglang/lib/python3.12/site-packages/exllamav3/modules/dsv4.py:1072(forward)
+     1560    0.006    0.000    0.425    0.000 /opt/sglang/lib/python3.12/site-packages/triton/runtime/jit.py:370(<lambda>)
+     1560    0.022    0.000    0.419    0.000 /opt/sglang/lib/python3.12/site-packages/triton/runtime/jit.py:708(run)
+     3690    0.025    0.000    0.416    0.000 /recipe/runtime/indexed_store.py:141(_fd)
+    13548    0.148    0.000    0.402    0.000 /opt/sglang/lib/python3.12/site-packages/exllamav3/modules/quant/exl3.py:20(__init__)
+     42/2    0.000    0.000    0.378    0.189 /opt/sglang/lib/python3.12/site-packages/exllamav3/modules/dsv4.py:1200(_forward_cached)
+       42    0.000    0.000    0.346    0.008 /opt/sglang/lib/python3.12/site-packages/exllamav3/modules/dsv4.py:1545(_forward_cached_one)
+    47353    0.016    0.000    0.345    0.000 /usr/lib/python3.12/pathlib.py:447(__fspath__)
+    633/2    0.016    0.000    0.330    0.165 /opt/sglang/lib/python3.12/site-packages/exllamav3/modules/dsv4.py:1024(_project_o_grouped)
+    54742    0.058    0.000    0.329    0.000 /usr/lib/python3.12/pathlib.py:437(__str__)
+     7380    0.012    0.000    0.323    0.000 /usr/lib/python3.12/pathlib.py:1230(resolve)
+        9    0.000    0.000    0.276    0.031 /opt/sglang/lib/python3.12/site-packages/triton/compiler/compiler.py:226(compile)
+     1679    0.057    0.000    0.267    0.000 /opt/sglang/lib/python3.12/site-packages/exllamav3/modules/dsv41_hc.py:25(mix_full)
+        7    0.000    0.000    0.266    0.038 /opt/sglang/lib/python3.12/site-packages/triton/runtime/jit.py:859(_do_compile)
+        9    0.000    0.000    0.258    0.029 /opt/sglang/lib/python3.12/site-packages/triton/runtime/cache.py:315(get_cache_key)
+    49004    0.031    0.000    0.253    0.000 /usr/lib/python3.12/pathlib.py:551(drive)
+     2682    0.250    0.000    0.250    0.000 {method 'nonzero' of 'torch._C.TensorBase' objects}
+        1    0.000    0.000    0.242    0.242 /opt/sglang/lib/python3.12/site-packages/triton/runtime/cache.py:279(triton_key)
+     7380    0.009    0.000    0.239    0.000 <frozen posixpath>:428(realpath)
+    45314    0.040    0.000    0.222    0.000 /usr/lib/python3.12/pathlib.py:407(_load_parts)
+     5355    0.029    0.000    0.215    0.000 /recipe/runtime/memory_budget.py:12(cgroup_path)
+     2682    0.195    0.000    0.195    0.000 {method 'index_select' of 'torch._C.TensorBase' objects}
+    11998    0.036    0.000    0.186    0.000 /opt/sglang/lib/python3.12/site-packages/torch/cuda/__init__.py:1235(current_stream)
+    13548    0.009    0.000    0.185    0.000 /opt/sglang/lib/python3.12/site-packages/exllamav3/model/config.py:81(__init__)
+   137907    0.177    0.000    0.177    0.000 {method 'view' of 'torch._C.TensorBase' objects}
+    13548    0.041    0.000    0.175    0.000 /opt/sglang/lib/python3.12/site-packages/exllamav3/model/config.py:25(__init__)
+      452    0.173    0.000    0.173    0.000 {method 'update' of '_hashlib.HASH' objects}
+    28863    0.145    0.000    0.171    0.000 {method 'read' of '_io.TextIOWrapper' objects}
+       42    0.003    0.000    0.168    0.004 /opt/sglang/lib/python3.12/site-packages/exllamav3/modules/engram.py:507(forward_streams)
+     7380    0.040    0.000    0.152    0.000 <frozen posixpath>:437(_joinrealpath)
+       42    0.003    0.000    0.146    0.003 /opt/sglang/lib/python3.12/site-packages/exllamav3/modules/engram.py:261(rows)
+    45314    0.061    0.000    0.133    0.000 /usr/lib/python3.12/pathlib.py:387(_parse_path)
+    12002    0.013    0.000    0.128    0.000 /usr/lib/python3.12/contextlib.py:141(__exit__)
+    14964    0.124    0.000    0.124    0.000 {method 'clamp' of 'torch._C.TensorBase' objects}
+    27798    0.078    0.000    0.121    0.000 /opt/sglang/lib/python3.12/site-packages/torch/cuda/_utils.py:557(_get_device_index)
+    59745    0.032    0.000    0.121    0.000 /usr/lib/python3.12/pathlib.py:1159(__init__)
+    58790    0.113    0.000    0.113    0.000 {method 'narrow' of 'torch._C.TensorBase' objects}
+    81365    0.054    0.000    0.109    0.000 <frozen os>:680(__getitem__)
+
+
+         5095765 function calls (5033670 primitive calls) in 30.701 seconds
+
+   Ordered by: internal time
+   List reduced from 1195 to 35 due to restriction <35>
+
+   ncalls  tottime  percall  cumtime  percall filename:lineno(function)
+     3690   14.210    0.004   14.210    0.004 {built-in method posix.preadv}
+     9032    4.950    0.001   23.750    0.003 /recipe/runtime/indexed_store.py:184(read)
+     3690    2.135    0.001   18.625    0.005 /recipe/runtime/indexed_store.py:156(_read_extent)
+    10039    1.959    0.000    1.959    0.000 {method 'copy_' of 'torch._C.TensorBase' objects}
+     3690    1.845    0.000    1.845    0.000 {method '__exit__' of 'mmap.mmap' objects}
+     4516    0.329    0.000   27.910    0.006 /recipe/runtime/cache.py:96(_load)
+    28913    0.263    0.000    0.523    0.000 {built-in method _io.open}
+     2682    0.250    0.000    0.250    0.000 {method 'nonzero' of 'torch._C.TensorBase' objects}
+     2682    0.195    0.000    0.195    0.000 {method 'index_select' of 'torch._C.TensorBase' objects}
+   137907    0.177    0.000    0.177    0.000 {method 'view' of 'torch._C.TensorBase' objects}
+      452    0.173    0.000    0.173    0.000 {method 'update' of '_hashlib.HASH' objects}
+    13548    0.148    0.000    0.402    0.000 /opt/sglang/lib/python3.12/site-packages/exllamav3/modules/quant/exl3.py:20(__init__)
+    28863    0.145    0.000    0.171    0.000 {method 'read' of '_io.TextIOWrapper' objects}
+    14964    0.124    0.000    0.124    0.000 {method 'clamp' of 'torch._C.TensorBase' objects}
+   5793/7    0.116    0.000    1.583    0.226 /opt/sglang/lib/python3.12/site-packages/exllamav3/modules/quant/exl3.py:114(forward)
+    58790    0.113    0.000    0.113    0.000 {method 'narrow' of 'torch._C.TensorBase' objects}
+    17821    0.094    0.000    0.094    0.000 {method 'half' of 'torch._C.TensorBase' objects}
+     1679    0.087    0.000    0.087    0.000 {built-in method torch._C._nn.linear}
+    14964    0.079    0.000   28.176    0.002 /recipe/runtime/cache.py:154(lease)
+    27798    0.078    0.000    0.121    0.000 /opt/sglang/lib/python3.12/site-packages/torch/cuda/_utils.py:557(_get_device_index)
+      526    0.075    0.000    0.075    0.000 {method 'read' of '_io.BufferedReader' objects}
+    45314    0.061    0.000    0.133    0.000 /usr/lib/python3.12/pathlib.py:387(_parse_path)
+    59745    0.060    0.000    0.089    0.000 /usr/lib/python3.12/pathlib.py:357(__init__)
+    54742    0.058    0.000    0.329    0.000 /usr/lib/python3.12/pathlib.py:437(__str__)
+     1679    0.057    0.000    0.267    0.000 /opt/sglang/lib/python3.12/site-packages/exllamav3/modules/dsv41_hc.py:25(mix_full)
+    47723    0.054    0.000    0.084    0.000 <frozen posixpath>:71(join)
+    81365    0.054    0.000    0.109    0.000 <frozen os>:680(__getitem__)
+    33215    0.053    0.000    0.053    0.000 {built-in method posix.lstat}
+    11998    0.052    0.000    0.052    0.000 {function Event.record at 0x74144f645da0}
+    22737    0.052    0.000    0.052    0.000 /opt/sglang/lib/python3.12/site-packages/exllamav3/util/tensor.py:218(make_key)
+    12734    0.050    0.000    0.571    0.000 /recipe/runtime/memory_budget.py:5(available_memory)
+      839    0.050    0.000    0.050    0.000 {built-in method exllamav3_ext.routing_ds3_nogroup}
+     7482    0.049    0.000    0.049    0.000 {built-in method torch._C._nn.silu}
+     7670    0.047    0.000    0.047    0.000 {function Event.synchronize at 0x74144f646020}
+    28995    0.047    0.000    0.047    0.000 {method '__exit__' of '_io._IOBase' objects}

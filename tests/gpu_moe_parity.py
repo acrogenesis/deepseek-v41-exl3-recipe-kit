@@ -9,6 +9,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 parser = argparse.ArgumentParser()
 parser.add_argument("--allow-gpu", action="store_true")
+parser.add_argument('--output', type=Path, default=ROOT / 'results/gpu-moe-parity.json')
 args = parser.parse_args()
 if not args.allow_gpu:
     raise SystemExit("Explicit --allow-gpu required")
@@ -33,7 +34,10 @@ receipt = json.loads((ROOT / "work/download-state.json").read_text())["verified"
 result = {"status": "running", "gpu": torch.cuda.get_device_name(), "cases": [],
           "comparison": "Same checkpoint, resident native MoE versus paged MoE; identical router and shared experts",
           "relative_l2_limit": 0.002, "cosine_minimum": 0.99999}
-output = ROOT / "results/gpu-moe-parity.json"
+output = args.output
+output.resolve().relative_to((ROOT / 'results').resolve())
+if output.exists():
+    raise FileExistsError(output)
 
 
 def save():

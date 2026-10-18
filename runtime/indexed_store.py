@@ -122,7 +122,21 @@ class IndexedExpertStore:
         self.lock = threading.RLock()
         self.resident = 0
         self.fds = {}
-        self.stats = dict(hits=0, misses=0, evictions=0, read_bytes=0, peak_resident_bytes=0)
+        self.stats = dict(hits=0, misses=0, evictions=0, read_bytes=0, read_calls=0, peak_resident_bytes=0)
+        # The checkpoint stores most experts as twelve adjacent tensors. Read
+        # each contiguous source extent once, retaining the validated packed
+        # layout and padding used by the GPU cache. Never read across a gap.
+        self.extents = {}
+        for key, record in records.items():
+            groups = []
+            for name, spec in sorted(record['tensors'].items(),
+                    key=lambda item: (item[1]['source_file'], item[1]['source_offset'])):
+                if (groups and groups[-1][-1][1]['source_file'] == spec['source_file']
+                        and groups[-1][-1][1]['source_offset'] + groups[-1][-1][1]['bytes'] == spec['source_offset']):
+                    groups[-1].append((name, spec))
+                else:
+                    groups.append([(name, spec)])
+            self.extents[key] = groups
 
     def _fd(self, name):
         path = (self.directory / name).resolve()
@@ -139,26 +153,28 @@ class IndexedExpertStore:
             raise RuntimeError("Source shard changed after opening")
         return fd
 
-    def _read_into(self, spec, target):
-        fd = self._fd(spec["source_file"])
-        start, length = spec["source_offset"], spec["bytes"]
-        if self.direct:
-            base = start // ALIGN * ALIGN
-            delta = start - base
-            size = aligned(delta + length)
-            with mmap.mmap(-1, size) as staging:
-                n = os.preadv(fd, [staging], base)
-                if n < delta + length:
-                    raise OSError("Truncated expert tensor")
-                view = memoryview(staging)
-                target[:] = view[delta:delta + length]
-                view.release()
-                self.stats["read_bytes"] += n
-        else:
-            n = os.preadv(fd, [target], start)
-            if n != length:
+    def _read_extent(self, group, target, cancel):
+        first, last = group[0][1], group[-1][1]
+        fd = self._fd(first['source_file'])
+        start = first['source_offset']
+        length = last['source_offset'] + last['bytes'] - start
+        base = start // ALIGN * ALIGN if self.direct else start
+        delta = start - base
+        size = aligned(delta + length) if self.direct else length
+        with mmap.mmap(-1, size) as staging:
+            n = os.preadv(fd, [staging], base)
+            self.stats['read_calls'] += 1
+            if n < delta + length:
                 raise OSError("Truncated expert tensor")
-            self.stats["read_bytes"] += n
+            self.stats['read_bytes'] += n
+            with memoryview(staging) as source:
+                for name, spec in group:
+                    if cancel is not None and cancel.is_set():
+                        raise InterruptedError('Read cancelled')
+                    begin = spec['source_offset'] - base
+                    if name.endswith('.mul1') and struct.unpack_from('<i', source, begin)[0] != MARKER:
+                        raise ValueError('Wrong MUL1 codebook marker')
+                    target[spec['offset']:spec['offset'] + spec['bytes']] = source[begin:begin + spec['bytes']]
 
     def _evict(self):
         _, value = self.cache.popitem(last=False)
@@ -187,14 +203,10 @@ class IndexedExpertStore:
                 data = bytearray(record["bytes"])
                 view = memoryview(data)
                 try:
-                    for name, spec in record["tensors"].items():
+                    for group in self.extents[key]:
                         if cancel is not None and cancel.is_set():
                             raise InterruptedError("Read cancelled")
-                        target = view[spec["offset"]:spec["offset"] + spec["bytes"]]
-                        self._read_into(spec, target)
-                        if name.endswith(".mul1") and struct.unpack("<i", target)[0] != MARKER:
-                            raise ValueError("Wrong MUL1 codebook marker")
-                        target.release()
+                        self._read_extent(group, view, cancel)
                 finally:
                     view.release()
                 self.cache[key] = data

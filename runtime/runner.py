@@ -5,6 +5,7 @@ from decimal import Decimal, InvalidOperation
 import hashlib
 import json
 import os
+import inspect
 from pathlib import Path
 import statistics
 import time
@@ -65,6 +66,14 @@ def main():
         "runtime_lock": json.loads((ROOT / "runtime.lock.json").read_text()),
         "gpu": torch.cuda.get_device_name(0), "torch": torch.__version__, "cuda": torch.version.cuda,
         "metric": "Streamed output tokens after first token / elapsed time after first token; fresh KV state each request"}
+    result['runtime_sources'] = {}
+    for cls in (ExpertCache, IndexedExpertStore):
+        path = Path(inspect.getfile(cls))
+        result['runtime_sources'][cls.__name__] = {'path': str(path.relative_to(ROOT)),
+            'sha256': hashlib.sha256(path.read_bytes()).hexdigest()}
+    tune_path = os.environ.get('EXLLAMAV3_TUNE_CACHE')
+    result['tune_cache_path'] = tune_path
+    result['tune_cache_sha256_before'] = hashlib.sha256(Path(tune_path).read_bytes()).hexdigest() if tune_path and Path(tune_path).exists() else None
 
     def save():
         tmp = output.with_suffix(".tmp")
@@ -184,6 +193,7 @@ def main():
         result.update(status="failed", error=repr(exc))
         raise
     finally:
+        result['tune_cache_sha256_after'] = hashlib.sha256(Path(tune_path).read_bytes()).hexdigest() if tune_path and Path(tune_path).exists() else None
         save()
         if model is not None:
             model.unload()

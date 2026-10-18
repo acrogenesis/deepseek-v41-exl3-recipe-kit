@@ -3,3 +3,5 @@ work/
 __pycache__/
 *.pyc
 STATUS.md
+results/**/*.npy
+results/**/*.pstats

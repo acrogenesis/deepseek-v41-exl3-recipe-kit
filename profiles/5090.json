@@ -1,6 +1,6 @@
 {
   "hardware": "RTX 5090 32 GB, Ryzen 9950X3D, 128 GB RAM, Samsung 990 PRO NVMe",
-  "gpu_expert_cache_bytes": 17179869184,
+  "gpu_expert_cache_bytes": 23622320128,
   "ram_expert_cache_bytes": 68719476736,
   "host_reserve_bytes": 12884901888,
   "container_memory": "96g",
@@ -10,5 +10,5 @@
   "max_batch_size": 1,
   "draft": false,
   "text_only": true,
-  "status": "proposed; GPU validation pending"
+  "status": "validated: real text generation and paired 8K-profile benchmarks on RTX 5090"
 }

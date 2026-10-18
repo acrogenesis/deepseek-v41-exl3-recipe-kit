@@ -1,0 +1,42 @@
+{
+  "status": "complete",
+  "directory": "/home/archogenesis/Work/deepseek-v41-exl3-recipe-kit/results/20261017T232708Z-cache-campaign",
+  "authorized": true,
+  "steps": [
+    {
+      "name": "smoke-16g",
+      "exit_code": 0,
+      "result": "/home/archogenesis/Work/deepseek-v41-exl3-recipe-kit/results/20261017T232708Z-cache-campaign/smoke-16g.json",
+      "status": "complete"
+    },
+    {
+      "name": "smoke-22g",
+      "exit_code": 0,
+      "result": "/home/archogenesis/Work/deepseek-v41-exl3-recipe-kit/results/20261017T232708Z-cache-campaign/smoke-22g.json",
+      "status": "complete"
+    },
+    {
+      "name": "bench-16g",
+      "exit_code": 0,
+      "result": "/home/archogenesis/Work/deepseek-v41-exl3-recipe-kit/results/20261017T232708Z-cache-campaign/bench-16g.json",
+      "status": "complete"
+    },
+    {
+      "name": "bench-22g",
+      "exit_code": 0,
+      "result": "/home/archogenesis/Work/deepseek-v41-exl3-recipe-kit/results/20261017T232708Z-cache-campaign/bench-22g.json",
+      "status": "complete"
+    }
+  ],
+  "current_step": null,
+  "comparison": {
+    "same_generated_tokens_and_checks": false,
+    "fresh_speed_ratio": 1.0348750073012283,
+    "baseline_fresh_tok_s": 3.5128997523182175,
+    "candidate_fresh_tok_s": 3.635412156828798,
+    "baseline_repeat_tok_s": 3.5664260278795603,
+    "candidate_repeat_tok_s": 3.555673694359949,
+    "recommended_cache_gib": 16,
+    "limitation": "One paired sweep, 3 short fresh prompts each; Engram OS page cache may warm between processes. No automatic default change."
+  }
+}

@@ -1,0 +1,79 @@
+{
+  "description": "NPY files contain float32 full-vocabulary logits for the same 20 teacher-forced continuation positions. Equality below includes all stored values.",
+  "files": {
+    "diagnostic-baseline/pass-0-16g-logits.npy": {
+      "bytes": 10342528,
+      "sha256": "76580e926ddec662ca64529a279ae2a56468c34329b29e41240e4e4951ff962d",
+      "dtype": "<f4",
+      "shape": [
+        20,
+        129280
+      ]
+    },
+    "diagnostic-baseline/pass-1-22g-logits.npy": {
+      "bytes": 10342528,
+      "sha256": "76580e926ddec662ca64529a279ae2a56468c34329b29e41240e4e4951ff962d",
+      "dtype": "<f4",
+      "shape": [
+        20,
+        129280
+      ]
+    },
+    "diagnostic-baseline/pass-2-16g-logits.npy": {
+      "bytes": 10342528,
+      "sha256": "76580e926ddec662ca64529a279ae2a56468c34329b29e41240e4e4951ff962d",
+      "dtype": "<f4",
+      "shape": [
+        20,
+        129280
+      ]
+    },
+    "diagnostic-optimized/pass-0-16g-logits.npy": {
+      "bytes": 10342528,
+      "sha256": "be112e6b1f30098bb7d50404f55e25d849af022b26291f5337588121f1be731c",
+      "dtype": "<f4",
+      "shape": [
+        20,
+        129280
+      ]
+    },
+    "diagnostic-optimized/pass-1-16g-logits.npy": {
+      "bytes": 10342528,
+      "sha256": "be112e6b1f30098bb7d50404f55e25d849af022b26291f5337588121f1be731c",
+      "dtype": "<f4",
+      "shape": [
+        20,
+        129280
+      ]
+    },
+    "diagnostic-optimized/pass-2-22g-logits.npy": {
+      "bytes": 10342528,
+      "sha256": "be112e6b1f30098bb7d50404f55e25d849af022b26291f5337588121f1be731c",
+      "dtype": "<f4",
+      "shape": [
+        20,
+        129280
+      ]
+    },
+    "diagnostic-restart/pass-0-16g-logits.npy": {
+      "bytes": 10342528,
+      "sha256": "be112e6b1f30098bb7d50404f55e25d849af022b26291f5337588121f1be731c",
+      "dtype": "<f4",
+      "shape": [
+        20,
+        129280
+      ]
+    },
+    "diagnostic-restart/pass-1-22g-logits.npy": {
+      "bytes": 10342528,
+      "sha256": "be112e6b1f30098bb7d50404f55e25d849af022b26291f5337588121f1be731c",
+      "dtype": "<f4",
+      "shape": [
+        20,
+        129280
+      ]
+    }
+  },
+  "baseline_versus_optimized_and_restart_byte_exact": true,
+  "artifacts_retained_locally": true
+}

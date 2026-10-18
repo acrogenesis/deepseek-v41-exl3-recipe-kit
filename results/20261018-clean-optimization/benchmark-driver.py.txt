@@ -1,0 +1,24 @@
+from pathlib import Path
+import json, subprocess, time, hashlib, shutil
+root=Path.cwd()
+out=root/'results/20261018-clean-optimization'
+state={'status':'running','runs':[],'concurrent_upload':False}
+base=['podman','--hooks-dir',str(root/'work/no-hooks'),'run','--rm','--name','deepseek41-exl3-5090','--network','none','--device','nvidia.com/gpu=all','--memory=96g','--memory-swap=96g','--shm-size=2g','-e','CUDA_VISIBLE_DEVICES=0','-e','NVIDIA_VISIBLE_DEVICES=void','-e','EXL3_ATS_MMAP=0','-e','EXL3_ENGRAM_ATS=0','-e','EXL3_INT8_GEMV=0','-e','EXLLAMAV3_TUNE_CACHE=/kernel-cache/coop_autotune_v1.bin','-e','TRITON_CACHE_DIR=/kernel-cache/triton','-v',str(root)+':/recipe:ro','-v',str(root/'results')+':/recipe/results:rw','-v',str(root/'work/kernel-cache')+':/kernel-cache:rw','-w','/recipe','localhost/deepseek41-exl3-5090:staged']
+def save():
+ (out/'comparison-state.json').write_text(json.dumps(state,indent=2)+'\n')
+try:
+ for name,gib,entry in [('baseline-fixed-16g',16,['work/benchmark-baseline.py']),('optimized-16g',16,['-m','runtime.runner']),('optimized-22g',22,['-m','runtime.runner'])]:
+  assert not (root/'work/GPU_HOLD').exists(), 'GPU hold requested'
+  state['active']=name;save()
+  with (out/(name+'.log')).open('w') as log:
+   subprocess.run(base+entry+['bench','--allow-gpu','--gpu-cache-gib',str(gib),'--output','/recipe/results/20261018-clean-optimization/'+name+'.json'],stdout=log,stderr=subprocess.STDOUT,check=True)
+  report=json.loads((out/(name+'.json')).read_text())
+  assert report['status']=='complete'
+  state['runs'].append({'name':name,'fresh':report['fresh_median_tok_s'],'repeat':report['repeat_median_tok_s']})
+  shutil.copyfile(root/'work/kernel-cache/coop_autotune_v1.bin',out/(name+'-tuning.bin'))
+  save()
+ state['status']='complete'
+except BaseException as e:
+ state.update(status='failed',error=repr(e));raise
+finally:
+ save()

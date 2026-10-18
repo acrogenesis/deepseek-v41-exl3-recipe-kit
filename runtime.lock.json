@@ -17,5 +17,6 @@
     "id": "801524faa7a980a44e912d17073210c86d9d4233152d8a295d1949296c75f5db"
   },
   "cuda_arch": "12.0",
-  "gpu_validation": "pending_user_release"
+  "gpu_validation": "passed_5090_text_8192",
+  "validation_report": "results/20261018-clean-optimization/summary.json"
 }
