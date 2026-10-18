@@ -1,0 +1,100 @@
+"""Bounded RAM victim cache: discard GPU duplicates, retain evicted experts.
+
+No quantization or approximate routing. A separate D2H stream backs up GPU-only
+records, with explicit readiness for RAM consumers and GPU-slot overwrite.
+"""
+from collections import OrderedDict
+from contextlib import contextmanager
+from .indexed_store import IndexedExpertStore
+
+
+class VictimExpertStore(IndexedExpertStore):
+    victim_cache = True
+
+    def __init__(self, *a, **kw):
+        super().__init__(*a, **kw)
+        if not self.pinned:
+            raise ValueError('Victim cache requires registered RAM')
+        self.gpu_owned = set()
+        self.duplicates = OrderedDict()
+        self.read_ready = {}
+        self.stats.update(demotions=0, demote_bytes=0, duplicate_evictions=0)
+
+    def mark_gpu(self, key):
+        with self.lock:
+            self.gpu_owned.add(key)
+            if key in self.cache:
+                self.duplicates[key] = None
+                self.duplicates.move_to_end(key)
+
+    def _evict(self, recycle_bytes=0):
+        if self.duplicates:
+            key = next(iter(self.duplicates))
+            self.cache.move_to_end(key, last=False)
+            self.stats['duplicate_evictions'] += 1
+        else:
+            key = next(iter(self.cache))
+        self.duplicates.pop(key, None)
+        return super()._evict(recycle_bytes)
+
+    def _wait_dma(self, data):
+        super()._wait_dma(data)
+        self.read_ready.pop(id(data), None)
+
+    @contextmanager
+    def read(self, key, cancel=None):
+        with super().read(key, cancel=cancel) as data:
+            ready = self.read_ready.pop(id(self.cache[key]), None)
+            if ready is not None:
+                ready.synchronize()
+            if key in self.duplicates:
+                self.duplicates.move_to_end(key)
+            yield data
+
+    def demote(self, key, source, stream):
+        """Return the D2H event that must precede overwriting this GPU slot."""
+        import torch
+        with self.lock:
+            if key not in self.gpu_owned:
+                raise RuntimeError('GPU ownership lost before demotion')
+            ready = None
+            if key not in self.cache:
+                size = self.records[key]['bytes']
+                if source.dtype != torch.uint8 or source.numel() != size or not source.is_cuda:
+                    raise ValueError('Invalid victim GPU record')
+                data, _ = self._reserve_buffer(size)
+                target = None
+                try:
+                    target = torch.frombuffer(data, dtype=torch.uint8)
+                    if not target.is_pinned():
+                        raise RuntimeError('Victim buffer registration was lost')
+                    with torch.cuda.stream(stream):
+                        target.copy_(source, non_blocking=True)
+                        ready = torch.cuda.Event()
+                        ready.record(stream)
+                    source.record_stream(stream)
+                    self.pending_dma.setdefault(id(data), []).append(ready)
+                    self.read_ready[id(data)] = ready
+                except BaseException:
+                    stream.synchronize()
+                    del target
+                    target = None
+                    self._release(data)
+                    raise
+                finally:
+                    if target is not None:
+                        del target
+                self.cache[key] = data
+                self.resident += len(data)
+                self.stats['peak_resident_bytes'] = max(self.stats['peak_resident_bytes'], self.resident)
+                self.stats['demotions'] += 1
+                self.stats['demote_bytes'] += size
+            self.gpu_owned.remove(key)
+            self.duplicates.pop(key, None)
+            return ready
+
+    def close(self):
+        super().close()
+        self.gpu_owned.clear()
+        self.duplicates.clear()
+        self.read_ready.clear()

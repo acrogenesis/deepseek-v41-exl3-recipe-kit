@@ -1,0 +1,254 @@
+[
+  {
+    "GPU_GiB": 22,
+    "kind": "layer_lfu",
+    "runs": [
+      {
+        "phase": "fresh",
+        "id": "fresh-0",
+        "misses_per_output": 119.38,
+        "H2D_MB_per_output": 1529.83
+      },
+      {
+        "phase": "fresh",
+        "id": "fresh-1",
+        "misses_per_output": 97.86,
+        "H2D_MB_per_output": 1259.99
+      },
+      {
+        "phase": "fresh",
+        "id": "fresh-2",
+        "misses_per_output": 88.16,
+        "H2D_MB_per_output": 1133.51
+      },
+      {
+        "phase": "repeat",
+        "id": "fresh-0",
+        "misses_per_output": 79.41,
+        "H2D_MB_per_output": 1023.53
+      },
+      {
+        "phase": "repeat",
+        "id": "fresh-1",
+        "misses_per_output": 80.34,
+        "H2D_MB_per_output": 1037.98
+      },
+      {
+        "phase": "repeat",
+        "id": "fresh-2",
+        "misses_per_output": 76.25,
+        "H2D_MB_per_output": 983.59
+      }
+    ]
+  },
+  {
+    "GPU_GiB": 22,
+    "kind": "global_lfu",
+    "runs": [
+      {
+        "phase": "fresh",
+        "id": "fresh-0",
+        "misses_per_output": 137.1,
+        "H2D_MB_per_output": 1741.2
+      },
+      {
+        "phase": "fresh",
+        "id": "fresh-1",
+        "misses_per_output": 111.21,
+        "H2D_MB_per_output": 1420.49
+      },
+      {
+        "phase": "fresh",
+        "id": "fresh-2",
+        "misses_per_output": 100.4,
+        "H2D_MB_per_output": 1281.72
+      },
+      {
+        "phase": "repeat",
+        "id": "fresh-0",
+        "misses_per_output": 88.52,
+        "H2D_MB_per_output": 1130.56
+      },
+      {
+        "phase": "repeat",
+        "id": "fresh-1",
+        "misses_per_output": 89.38,
+        "H2D_MB_per_output": 1143.66
+      },
+      {
+        "phase": "repeat",
+        "id": "fresh-2",
+        "misses_per_output": 85.74,
+        "H2D_MB_per_output": 1096.93
+      }
+    ]
+  },
+  {
+    "GPU_GiB": 22,
+    "kind": "global_weighted_lfu",
+    "runs": [
+      {
+        "phase": "fresh",
+        "id": "fresh-0",
+        "misses_per_output": 138.41,
+        "H2D_MB_per_output": 1739.12
+      },
+      {
+        "phase": "fresh",
+        "id": "fresh-1",
+        "misses_per_output": 113.03,
+        "H2D_MB_per_output": 1416.26
+      },
+      {
+        "phase": "fresh",
+        "id": "fresh-2",
+        "misses_per_output": 102.57,
+        "H2D_MB_per_output": 1282.66
+      },
+      {
+        "phase": "repeat",
+        "id": "fresh-0",
+        "misses_per_output": 90.31,
+        "H2D_MB_per_output": 1128.81
+      },
+      {
+        "phase": "repeat",
+        "id": "fresh-1",
+        "misses_per_output": 90.28,
+        "H2D_MB_per_output": 1133.82
+      },
+      {
+        "phase": "repeat",
+        "id": "fresh-2",
+        "misses_per_output": 87.63,
+        "H2D_MB_per_output": 1098.1
+      }
+    ]
+  },
+  {
+    "GPU_GiB": 24,
+    "kind": "layer_lfu",
+    "runs": [
+      {
+        "phase": "fresh",
+        "id": "fresh-0",
+        "misses_per_output": 115.02,
+        "H2D_MB_per_output": 1475.46
+      },
+      {
+        "phase": "fresh",
+        "id": "fresh-1",
+        "misses_per_output": 92.59,
+        "H2D_MB_per_output": 1192.52
+      },
+      {
+        "phase": "fresh",
+        "id": "fresh-2",
+        "misses_per_output": 82.67,
+        "H2D_MB_per_output": 1063.85
+      },
+      {
+        "phase": "repeat",
+        "id": "fresh-0",
+        "misses_per_output": 74.05,
+        "H2D_MB_per_output": 955.46
+      },
+      {
+        "phase": "repeat",
+        "id": "fresh-1",
+        "misses_per_output": 74.24,
+        "H2D_MB_per_output": 960.48
+      },
+      {
+        "phase": "repeat",
+        "id": "fresh-2",
+        "misses_per_output": 70.84,
+        "H2D_MB_per_output": 915.21
+      }
+    ]
+  },
+  {
+    "GPU_GiB": 24,
+    "kind": "global_lfu",
+    "runs": [
+      {
+        "phase": "fresh",
+        "id": "fresh-0",
+        "misses_per_output": 130.98,
+        "H2D_MB_per_output": 1663.56
+      },
+      {
+        "phase": "fresh",
+        "id": "fresh-1",
+        "misses_per_output": 105.24,
+        "H2D_MB_per_output": 1344.44
+      },
+      {
+        "phase": "fresh",
+        "id": "fresh-2",
+        "misses_per_output": 94.61,
+        "H2D_MB_per_output": 1208.03
+      },
+      {
+        "phase": "repeat",
+        "id": "fresh-0",
+        "misses_per_output": 82.13,
+        "H2D_MB_per_output": 1049.62
+      },
+      {
+        "phase": "repeat",
+        "id": "fresh-1",
+        "misses_per_output": 82.74,
+        "H2D_MB_per_output": 1059.11
+      },
+      {
+        "phase": "repeat",
+        "id": "fresh-2",
+        "misses_per_output": 79.96,
+        "H2D_MB_per_output": 1023.31
+      }
+    ]
+  },
+  {
+    "GPU_GiB": 24,
+    "kind": "global_weighted_lfu",
+    "runs": [
+      {
+        "phase": "fresh",
+        "id": "fresh-0",
+        "misses_per_output": 132.73,
+        "H2D_MB_per_output": 1666.03
+      },
+      {
+        "phase": "fresh",
+        "id": "fresh-1",
+        "misses_per_output": 107.43,
+        "H2D_MB_per_output": 1346.1
+      },
+      {
+        "phase": "fresh",
+        "id": "fresh-2",
+        "misses_per_output": 96.53,
+        "H2D_MB_per_output": 1208.37
+      },
+      {
+        "phase": "repeat",
+        "id": "fresh-0",
+        "misses_per_output": 83.98,
+        "H2D_MB_per_output": 1051.23
+      },
+      {
+        "phase": "repeat",
+        "id": "fresh-1",
+        "misses_per_output": 83.66,
+        "H2D_MB_per_output": 1052.52
+      },
+      {
+        "phase": "repeat",
+        "id": "fresh-2",
+        "misses_per_output": 81.41,
+        "H2D_MB_per_output": 1022.48
+      }
+    ]
+  }
+]

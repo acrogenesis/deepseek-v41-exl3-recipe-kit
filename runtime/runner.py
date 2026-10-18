@@ -24,8 +24,14 @@ def main():
     parser.add_argument("--hc-graphs", action="store_true")
     parser.add_argument("--trace-routes", action="store_true")
     parser.add_argument("--gpu-policy", choices=('lru', 'lfu'), default='lru')
+    parser.add_argument("--victim-cache", action="store_true")
+    parser.add_argument("--gpu-only-gib", type=int, choices=range(1, 25))
+    parser.add_argument("--fast-guard", action="store_true")
+    parser.add_argument("--fused-reduce", action="store_true")
     parser.add_argument("--output", type=Path)
     args = parser.parse_args()
+    if args.gpu_only_gib is not None and not args.victim_cache:
+        parser.error('--gpu-only-gib requires --victim-cache')
     if not args.allow_gpu:
         raise SystemExit("GPU work is on hold. Run scripts/run.sh only after the GPU is free.")
     from scripts.preflight import check
@@ -46,6 +52,8 @@ def main():
     from exllamav3.generator import Generator, Job
     from exllamav3.generator.sampler import GreedySampler
     from .indexed_store import inventory, IndexedExpertStore
+    if args.victim_cache:
+        from .victim_store import VictimExpertStore as IndexedExpertStore
     from .cache import ExpertCache
     from .native_adapter import attach_engram, build_model
     from .memory_budget import guard_memory
@@ -59,14 +67,16 @@ def main():
     if torch.cuda.get_device_capability(0) != (12, 0):
         raise RuntimeError("This build/profile targets the SM120 RTX 5090")
     records, inv = inventory(ROOT)
+    store_options = {'gpu_only_limit_bytes': args.gpu_only_gib * 2**30} if args.gpu_only_gib is not None else {}
     store = IndexedExpertStore(ROOT / "work/models/exl3", records, profile["ram_expert_cache_bytes"],
-        reserve_bytes=profile["host_reserve_bytes"], pinned=profile.get('pinned_ram', False))
+        reserve_bytes=profile["host_reserve_bytes"], pinned=profile.get('pinned_ram', False), **store_options)
     capacity = profile["gpu_expert_cache_bytes"]
     per_layer = capacity // (40 * 4096) * 4096
     quotas = {l: per_layer for l in range(40)}
     quotas[39] += capacity - sum(quotas.values())
     experts = ExpertCache(store, capacity, layer_quotas=quotas, reserve_bytes=profile["host_reserve_bytes"],
-        grouped_dispatch=args.grouped_dispatch, route_trace=args.trace_routes, policy=args.gpu_policy)
+        grouped_dispatch=args.grouped_dispatch, route_trace=args.trace_routes, policy=args.gpu_policy,
+        fast_guard=args.fast_guard, fused_reduce=args.fused_reduce)
     stamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
     output = args.output or ROOT / "results" / f"{stamp}-{args.mode}.json"
     output.resolve().relative_to((ROOT / "results").resolve())
@@ -81,6 +91,10 @@ def main():
     result['grouped_dispatch'] = args.grouped_dispatch
     result['hc_graphs'] = args.hc_graphs
     result['gpu_policy'] = args.gpu_policy
+    result['victim_cache'] = args.victim_cache
+    result['gpu_only_limit_gib'] = args.gpu_only_gib
+    result['fast_guard'] = args.fast_guard
+    result['fused_reduce'] = args.fused_reduce
     if args.grouped_dispatch:
         result['grouped_source_sha256'] = {name: hashlib.sha256((ROOT/'runtime'/name).read_bytes()).hexdigest()
             for name in ('native_dispatch.cpp', 'native_dispatch.py', 'grouped_dispatch.cu', 'grouped_dispatch.h', 'hc_graphs.py')}

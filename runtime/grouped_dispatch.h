@@ -12,3 +12,7 @@ struct GroupedPointers {
 
 void launch_grouped(const void* input, void* output, void* had, int k, int n,
                     int input_stride, int bits, const GroupedPointers& ptrs);
+
+struct ExpertOrder { int positions[6]; int count; };
+void launch_expert_sum(const float* down, const float* weights, float* output,
+                       int n, ExpertOrder order);

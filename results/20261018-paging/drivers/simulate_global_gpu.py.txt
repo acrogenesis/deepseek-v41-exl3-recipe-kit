@@ -1,0 +1,40 @@
+import sys,json,heapq
+from pathlib import Path
+from collections import OrderedDict,defaultdict
+sys.path.insert(0,str(Path.cwd()))
+from runtime.indexed_store import inventory
+records,_=inventory(Path.cwd(),cached_headers=True)
+d=json.load(open('results/20261018-native/hc-full.json'));sizes={k:r['bytes'] for k,r in records.items()};largest=max(sizes.values());out=[]
+for gib in (22,24):
+ for kind in ('layer_lfu','global_lfu','global_weighted_lfu'):
+  cap=gib*2**30;per=cap//(40*4096)*4096;quotas={i:per for i in range(40)};quotas[39]+=cap-sum(quotas.values())
+  gpu={i:OrderedDict() for i in range(40)} if kind=='layer_lfu' else OrderedDict()
+  freq=defaultdict(int);last={}; heap=[];tick=0;rows=[]
+  for run in d['runs']:
+   misses=transfer=0
+   for layer,routes in run['route_trace']:
+    held=set();lru=gpu[layer] if kind=='layer_lfu' else gpu
+    for eid in routes:
+     key=f'{layer}:{eid}';freq[key]+=1;tick+=1;last[key]=tick
+     score=freq[key]*(sizes[key] if kind=='global_weighted_lfu' else 1)
+     if key not in lru:
+      misses+=1;transfer+=sizes[key]
+      capacity=quotas[layer]//sizes[key] if kind=='layer_lfu' else cap//largest
+      if len(lru)>=capacity:
+       if kind=='layer_lfu':old=min((k for k in lru if k not in held),key=freq.__getitem__)
+       else:
+        skipped=[]
+        while heap:
+         s,t,old=heapq.heappop(heap)
+         if old not in lru or last[old]!=t:continue
+         if old in held:skipped.append((s,t,old));continue
+         break
+        for row in skipped:heapq.heappush(heap,row)
+       del lru[old]
+      lru[key]=None
+     lru.move_to_end(key)
+     if kind!='layer_lfu':heapq.heappush(heap,(score,tick,key))
+     if len(routes)==6:held.add(key)
+   if run['phase']!='check':rows.append({'phase':run['phase'],'id':run['id'],'misses_per_output':round(misses/run['output_tokens'],2),'H2D_MB_per_output':round(transfer/run['output_tokens']/1e6,2)})
+  row={'GPU_GiB':gib,'kind':kind,'runs':rows};out.append(row);print(json.dumps(row),flush=True)
+Path('results/20261018-paging/global-gpu-simulation.json').write_text(json.dumps(out,indent=2)+'\n')

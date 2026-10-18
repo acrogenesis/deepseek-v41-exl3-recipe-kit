@@ -19,15 +19,18 @@ misses from the original safetensors files. It does not create another 196 GB ex
 | Registered RAM, buffer and GPU-handle reuse (default) | 22 / 84 GiB | **9.51** | **12.31** |
 | Grouped expert kernel (opt-in) | 22 / 84 GiB | 10.63 | 13.09 |
 | Grouped kernel + hyperconnection graphs + LFU (experimental) | 22 / 84 GiB | 13.52 | 13.74 |
+| Selective victim cache, shared graphs and fused sum (experimental) | 24 / 84 GiB | **15.11** | **27.47** |
 
 The default improves this suite by **2.14x fresh / 2.71x repeat**.
 An earlier run of the same configuration measured 8.98 / 12.34 tok/s. All full runs
 passed **8/8 checks** and produced the **same 802 output tokens** across 14 requests.
-The 30 tok/s target has not been reached. A short request fitting entirely in the
-RAM cache reached 25.54 tok/s with the grouped kernel and hyperconnection graphs
-in a separate instrumented diagnostic; that is not the full-suite result above.
-The experimental cache policy slowed the first fresh prompt, and graph replay
-had inconsistent full-suite timings. These options remain disabled by default.
+The 30 tok/s target has not been reached. The latest configuration reduces repeat
+SSD reads by keeping more distinct experts across RAM and VRAM, while retaining
+RAM copies of GPU experts that are frequently evicted. Fresh prompts still incur
+substantial SSD reads. All options remain disabled by default; the 24 GiB trial
+left only about 144 MiB of free GPU memory on this short-context workload.
+See the [paging measurements](results/20261018-paging/METHOD.md) and
+[latest raw summary](results/20261018-paging/summary.json).
 See the [new measurements and method](results/20261018-native/METHOD.md) and
 [raw summary](results/20261018-native/summary.json).
 
@@ -168,10 +171,20 @@ Details and reproducible experiments are in the measurement report.
 spreads the selected experts across a single cooperative GPU grid. It passed
 78 bit-exact K2/K3 comparisons, including GPU slot reuse, and full-model score
 and token comparisons. `--hc-graphs` replays the unchanged single-row
-hyperconnection mixer, using about 1 GiB more GPU memory in these runs.
+hyperconnection mixer. Sharing its capture stream and memory pool reduced live
+GPU overhead from about 1 GiB to about 37 MiB in the later score comparison.
 `--gpu-policy lfu` retains frequently requested experts, with LRU ties; it never
 changes which experts the model selects. All three flags are experimental.
 The extension compiles on first use into `work/kernel-cache/exact-dispatch`.
+
+`--victim-cache --gpu-only-gib 20` retains CPU copies of less frequently used GPU
+experts and backs up GPU-only experts before evicting them. Stream events protect
+both transfer directions and slot reuse. `--fast-guard` reuses memory-guard file
+descriptors, rereading current limits at every check. `--fused-reduce` performs
+the original ordered FP32 multiply/add sequence in one kernel. The complete
+combination passes all 802 fixture tokens, a full-vocabulary score comparison,
+102 real-weight kernel cases and 24 transfer-lifetime cases. The measured command
+and experimental limits are in the paging report linked above.
 
 For a teacher-forced diagnostic and CPU profile:
 

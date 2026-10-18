@@ -1,0 +1,15 @@
+from pathlib import Path
+import subprocess,json
+root=Path.cwd()
+base=['podman','--hooks-dir',str(root/'work/no-hooks'),'run','--rm','--name','deepseek41-exl3-5090','--network','none','--device','nvidia.com/gpu=all','--memory=96g','--memory-swap=96g','--shm-size=2g','-e','TORCH_CUDA_ARCH_LIST=12.0','-e','MAX_JOBS=2','-e','CUDA_VISIBLE_DEVICES=0','-e','NVIDIA_VISIBLE_DEVICES=void','-e','EXL3_INT8_GEMV=0','-e','EXLLAMAV3_TUNE_CACHE=/kernel-cache/coop_autotune_v1.bin','-e','TRITON_CACHE_DIR=/kernel-cache/triton','-v',str(root)+':/recipe:ro','-v',str(root/'results')+':/recipe/results:rw','-v',str(root/'work/kernel-cache')+':/kernel-cache:rw','-w','/recipe','localhost/deepseek41-exl3-5090:staged']
+import time
+while subprocess.run(['systemctl','--user','is-active','--quiet','deepseek41-exl3-victim.service']).returncode == 0:
+ time.sleep(5)
+assert json.load(open(root/'results/20261018-paging/victim-full.json'))['status']=='complete'
+for name,entry in [
+ ('victim-scores',['-m','runtime.diagnostic','--caches','22','22','--tokens','20','--ram-cache-gib','16','--pinned-ram','--grouped-dispatch','--gpu-policy','lfu','--victim-cache','--fast-guard','--no-profile','--trace','--baseline-cache','/recipe/work/paging-baseline/cache.py','--reference','/recipe/results/20261018-target30/selected-84g.json']),
+ ('victim-fast-full',['-m','runtime.runner','bench','--grouped-dispatch','--gpu-policy','lfu','--victim-cache','--fast-guard']),
+]:
+ with (root/('results/20261018-paging/'+name+'.log')).open('w') as log:
+  output='/recipe/results/20261018-paging/'+name+('' if name=='victim-scores' else '.json')
+  subprocess.run(base+entry+['--allow-gpu','--output',output],stdout=log,stderr=subprocess.STDOUT,check=True)

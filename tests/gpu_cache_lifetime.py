@@ -12,6 +12,8 @@ parser.add_argument('--allow-gpu', action='store_true')
 parser.add_argument('--output', type=Path, required=True)
 parser.add_argument('--pinned-ram', action='store_true')
 parser.add_argument('--gpu-policy', choices=('lru', 'lfu'), default='lru')
+parser.add_argument('--victim-cache', action='store_true')
+parser.add_argument('--gpu-only-gib', type=int)
 args = parser.parse_args()
 if not args.allow_gpu:
     raise SystemExit('Explicit GPU authorization required')
@@ -22,18 +24,22 @@ if args.output.exists():
 import torch
 from runtime.cache import ExpertCache
 from runtime.indexed_store import inventory, IndexedExpertStore
+if args.victim_cache:
+    from runtime.victim_store import VictimExpertStore as IndexedExpertStore
 
 records, _ = inventory(ROOT)
 keys = [f'{layer}:{expert}' for layer in (0, 18) for expert in (0, 1)]
 records = {key: records[key] for key in keys}
+options = {'gpu_only_limit_bytes': args.gpu_only_gib * 2**30} if args.gpu_only_gib is not None else {}
 store = IndexedExpertStore(ROOT / 'work/models/exl3', records,
-    2 * max(r['bytes'] for r in records.values()), pinned=args.pinned_ram)
+    2 * max(r['bytes'] for r in records.values()), pinned=args.pinned_ram, **options)
 quotas = {layer: max(r['bytes'] for key, r in records.items() if key.startswith(f'{layer}:')) for layer in (0, 18)}
 cache = ExpertCache(store, sum(quotas.values()), layer_quotas=quotas, policy=args.gpu_policy)
 streams = [torch.cuda.Stream() for _ in range(2)]
 copies, expected = [], {}
 result = {'status': 'running', 'cases': [], 'gpu': torch.cuda.get_device_name(), 'pinned_ram': args.pinned_ram}
 result['gpu_policy'] = args.gpu_policy
+result['victim_cache'] = args.victim_cache
 try:
     for key in keys:
         with store.read(key) as data:
@@ -49,7 +55,13 @@ try:
             snapshot = cache.arena[entry.offset:entry.offset + entry.size].clone()
         lease.__exit__(None, None, None)
         copies.append((key, snapshot))
+        if args.victim_cache:
+            assert set(store.duplicates) == store.gpu_owned.intersection(store.cache)
+            assert store.gpu_only_bytes == sum(store.records[k]['bytes'] for k in store.gpu_owned if k not in store.cache)
+            assert store.resident == sum(len(v) for v in store.cache.values()) <= store.capacity
     cache.clear()
+    if args.victim_cache:
+        assert not store.gpu_owned and not store.duplicates and store.gpu_only_bytes == 0
     torch.cuda.synchronize()
     for key, snapshot in copies:
         digest = hashlib.sha256(snapshot.cpu().numpy().tobytes()).hexdigest()

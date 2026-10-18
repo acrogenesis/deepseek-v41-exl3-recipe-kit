@@ -1,0 +1,36 @@
+from pathlib import Path
+import json,hashlib,re,shutil
+root=Path.cwd();out=root/'results/20261018-paging';base=json.loads((root/'results/20261018-target30/selected-84g.json').read_text())
+summary={'goal_achieved':False,'default_changed':False,'full_runs':[],'score_comparisons':[]}
+for name in ('victim-full','victim-fast-full','hot-victim-full','hot-24g-full','fused-sum-full'):
+ d=json.loads((out/(name+'.json')).read_text());assert d['status']=='complete'
+ assert len(d['runs'])==14 and all(a['token_ids']==b['token_ids'] for a,b in zip(d['runs'],base['runs']))
+ assert all(r['passed'] for r in d['runs'] if r['phase']=='check')
+ assert max(r['cgroup_swap_current'] for r in d['runs'])==0
+ traffic=[];previous=d['runs'][7]
+ for r in d['runs'][8:]:
+  traffic.append({'id':r['id'],'phase':r['phase'],'SSD_MB_per_output':(r['ram_cache']['read_bytes']-previous['ram_cache']['read_bytes'])/r['output_tokens']/1e6,'D2H_MB_per_output':(r['ram_cache']['demote_bytes']-previous['ram_cache']['demote_bytes'])/r['output_tokens']/1e6});previous=r
+ summary['full_runs'].append({'file':name+'.json','fresh_tok_s':d['fresh_median_tok_s'],'repeat_tok_s':d['repeat_median_tok_s'],'identical_tokens':802,'exact_checks':8,
+ 'peak_container_gib':max(r['cgroup_memory_peak'] for r in d['runs'])/2**30,
+ 'minimum_sampled_host_available_gib':min(r['host_available_bytes'] for r in d['runs'])/2**30,
+ 'peak_torch_gpu_gib':max(r['gpu_peak_allocated_bytes'] for r in d['runs'])/2**30,
+ 'minimum_sampled_gpu_free_gib':min(r['device_free_bytes_after_request'] for r in d['runs'])/2**30,
+ 'process_swap_bytes':0,'traffic':traffic})
+for name in ('victim-scores','hc-shared-scores','final-scores'):
+ d=json.loads((out/name/'result.json').read_text());assert all(max(r['max_absolute_error_by_position'])==0 for r in d['passes'])
+ hashes={p.name:hashlib.sha256(p.read_bytes()).hexdigest() for p in sorted((out/name).glob('*.npy'))};assert len(set(hashes.values()))==1
+ summary['score_comparisons'].append({'directory':name,'positions':20,'max_absolute_error':0,'score_sha256':hashes,'D2H_bytes':d['passes'][-1]['ram']['demote_bytes']})
+u=json.loads((out/'fused-sum-unit.json').read_text());assert u['status']=='passed' and len(u['cases'])==102 and all(r['bit_exact'] for r in u['cases'])
+summary['fused_unit']={'cases':102,'status':'passed','timings':u['timings']}
+l=json.loads((out/'final-lifetime.json').read_text());assert l['status']=='passed' and l['ram_cache']['demote_bytes']>0
+summary['final_lifetime']={'cases':len(l['cases']),'status':'passed','demote_bytes':l['ram_cache']['demote_bytes'],'checks':['delayed DMA','stream ownership','GPU slot reuse','RAM accounting','GPU-only accounting','failed-read cleanup']}
+summary['cpu_tests_passed']=16
+(out/'summary.json').write_text(json.dumps(summary,indent=2)+'\n')
+for p in out.rglob('*.json'):
+ before=json.loads(p.read_text());s=p.read_text()
+ s=re.sub(r'("requested_experts": )\[\s*((?:"[^"\n]+"\s*,?\s*)+)\]',lambda m:m[1]+json.dumps(json.loads('['+m[2]+']')),s)
+ assert json.loads(s)==before;p.write_text(s)
+(out/'drivers').mkdir(exist_ok=True)
+for name in ('paging-probe.py','simulate_exclusive.py','simulate_hot_victim.py','simulate_global_gpu.py','victim-validation.py','victim-fast-validation.py','hot-victim-validation.py','hc-shared-validation.py','fused-sum-validation.py','paging-final-scores.py','paging-final-lifetime.py','finalize-paging.py'):
+ shutil.copyfile(root/'work'/name,out/'drivers'/(name+'.txt'))
+print(json.dumps([{k:v for k,v in r.items() if k not in ('traffic',)} for r in summary['full_runs']],indent=2))

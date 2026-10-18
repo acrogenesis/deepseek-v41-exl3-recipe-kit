@@ -81,9 +81,12 @@ try:
                             args = (x, weights, positions, gates, ups, downs, limit)
                             compare(f'{layer}/{seed}/{scale}/moe-{limit}',
                                 ext.exact_experts(*args), ext.grouped_experts(*args))
+                            compare(f'{layer}/{seed}/{scale}/fused-sum-{limit}',
+                                ext.exact_experts(*args), ext.grouped_experts(*args, True))
                 args = (x, weights, positions, gates, ups, downs, 10.0)
                 row = {'layer': layer, 'eager': timed(lambda: ext.exact_experts(*args)),
-                       'grouped': timed(lambda: ext.grouped_experts(*args))}
+                       'grouped': timed(lambda: ext.grouped_experts(*args)),
+                       'fused_sum': timed(lambda: ext.grouped_experts(*args, True))}
                 result['timings'].append(row)
                 print(json.dumps(row), flush=True)
             for batch, chosen in enumerate(([1, 21, 101, 151, 251, 382], ids, [2, 22, 102, 152, 252, 381])):
@@ -92,6 +95,7 @@ try:
                 baseline = cache.apply(layer, x, route, weights)
                 cache.native_dispatch = ext
                 cache.grouped_dispatch = True
+                cache.fused_reduce = True
                 actual = cache.apply(layer, x, route, weights)
                 compare(f'{layer}/slot-reuse-{batch}', baseline, actual)
                 cache.native_dispatch = None

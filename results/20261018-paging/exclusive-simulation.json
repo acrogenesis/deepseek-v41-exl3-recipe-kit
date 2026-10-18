@@ -1,0 +1,194 @@
+[
+  {
+    "policy": "lru",
+    "victim_cache": false,
+    "runs": [
+      {
+        "id": "fresh-0",
+        "phase": "fresh",
+        "GPU_misses": 11752,
+        "SSD_MB_per_output": 321.61,
+        "D2H_MB_per_output": 0.0
+      },
+      {
+        "id": "fresh-1",
+        "phase": "fresh",
+        "GPU_misses": 11651,
+        "SSD_MB_per_output": 145.46,
+        "D2H_MB_per_output": 0.0
+      },
+      {
+        "id": "fresh-2",
+        "phase": "fresh",
+        "GPU_misses": 11166,
+        "SSD_MB_per_output": 127.15,
+        "D2H_MB_per_output": 0.0
+      },
+      {
+        "id": "fresh-0",
+        "phase": "repeat",
+        "GPU_misses": 11510,
+        "SSD_MB_per_output": 147.62,
+        "D2H_MB_per_output": 0.0
+      },
+      {
+        "id": "fresh-1",
+        "phase": "repeat",
+        "GPU_misses": 11651,
+        "SSD_MB_per_output": 140.43,
+        "D2H_MB_per_output": 0.0
+      },
+      {
+        "id": "fresh-2",
+        "phase": "repeat",
+        "GPU_misses": 11166,
+        "SSD_MB_per_output": 127.15,
+        "D2H_MB_per_output": 0.0
+      }
+    ]
+  },
+  {
+    "policy": "lru",
+    "victim_cache": true,
+    "runs": [
+      {
+        "id": "fresh-0",
+        "phase": "fresh",
+        "GPU_misses": 11752,
+        "SSD_MB_per_output": 228.98,
+        "D2H_MB_per_output": 1078.29
+      },
+      {
+        "id": "fresh-1",
+        "phase": "fresh",
+        "GPU_misses": 11651,
+        "SSD_MB_per_output": 94.26,
+        "D2H_MB_per_output": 1173.12
+      },
+      {
+        "id": "fresh-2",
+        "phase": "fresh",
+        "GPU_misses": 11166,
+        "SSD_MB_per_output": 72.23,
+        "D2H_MB_per_output": 1122.03
+      },
+      {
+        "id": "fresh-0",
+        "phase": "repeat",
+        "GPU_misses": 11510,
+        "SSD_MB_per_output": 0.31,
+        "D2H_MB_per_output": 1156.79
+      },
+      {
+        "id": "fresh-1",
+        "phase": "repeat",
+        "GPU_misses": 11651,
+        "SSD_MB_per_output": 0.0,
+        "D2H_MB_per_output": 1173.12
+      },
+      {
+        "id": "fresh-2",
+        "phase": "repeat",
+        "GPU_misses": 11166,
+        "SSD_MB_per_output": 0.0,
+        "D2H_MB_per_output": 1122.03
+      }
+    ]
+  },
+  {
+    "policy": "lfu",
+    "victim_cache": false,
+    "runs": [
+      {
+        "id": "fresh-0",
+        "phase": "fresh",
+        "GPU_misses": 15280,
+        "SSD_MB_per_output": 271.44,
+        "D2H_MB_per_output": 0.0
+      },
+      {
+        "id": "fresh-1",
+        "phase": "fresh",
+        "GPU_misses": 12526,
+        "SSD_MB_per_output": 160.69,
+        "D2H_MB_per_output": 0.0
+      },
+      {
+        "id": "fresh-2",
+        "phase": "fresh",
+        "GPU_misses": 11284,
+        "SSD_MB_per_output": 112.17,
+        "D2H_MB_per_output": 0.0
+      },
+      {
+        "id": "fresh-0",
+        "phase": "repeat",
+        "GPU_misses": 10164,
+        "SSD_MB_per_output": 98.46,
+        "D2H_MB_per_output": 0.0
+      },
+      {
+        "id": "fresh-1",
+        "phase": "repeat",
+        "GPU_misses": 10284,
+        "SSD_MB_per_output": 72.61,
+        "D2H_MB_per_output": 0.0
+      },
+      {
+        "id": "fresh-2",
+        "phase": "repeat",
+        "GPU_misses": 9760,
+        "SSD_MB_per_output": 59.74,
+        "D2H_MB_per_output": 0.0
+      }
+    ]
+  },
+  {
+    "policy": "lfu",
+    "victim_cache": true,
+    "runs": [
+      {
+        "id": "fresh-0",
+        "phase": "fresh",
+        "GPU_misses": 15280,
+        "SSD_MB_per_output": 228.95,
+        "D2H_MB_per_output": 1110.94
+      },
+      {
+        "id": "fresh-1",
+        "phase": "fresh",
+        "GPU_misses": 12526,
+        "SSD_MB_per_output": 94.33,
+        "D2H_MB_per_output": 1131.74
+      },
+      {
+        "id": "fresh-2",
+        "phase": "fresh",
+        "GPU_misses": 11284,
+        "SSD_MB_per_output": 73.41,
+        "D2H_MB_per_output": 984.96
+      },
+      {
+        "id": "fresh-0",
+        "phase": "repeat",
+        "GPU_misses": 10164,
+        "SSD_MB_per_output": 0.1,
+        "D2H_MB_per_output": 882.78
+      },
+      {
+        "id": "fresh-1",
+        "phase": "repeat",
+        "GPU_misses": 10284,
+        "SSD_MB_per_output": 0.0,
+        "D2H_MB_per_output": 891.44
+      },
+      {
+        "id": "fresh-2",
+        "phase": "repeat",
+        "GPU_misses": 9760,
+        "SSD_MB_per_output": 0.0,
+        "D2H_MB_per_output": 835.97
+      }
+    ]
+  }
+]

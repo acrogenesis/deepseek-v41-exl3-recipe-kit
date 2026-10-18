@@ -1,0 +1,207 @@
+[
+  {
+    "gpu_only_limit_gib": 4,
+    "runs": [
+      {
+        "id": "fresh-0",
+        "phase": "fresh",
+        "SSD_MB_per_output": 304.3,
+        "D2H_MB_per_output": 0.1
+      },
+      {
+        "id": "fresh-1",
+        "phase": "fresh",
+        "SSD_MB_per_output": 169.23,
+        "D2H_MB_per_output": 4.86
+      },
+      {
+        "id": "fresh-2",
+        "phase": "fresh",
+        "SSD_MB_per_output": 127.19,
+        "D2H_MB_per_output": 7.43
+      },
+      {
+        "id": "fresh-0",
+        "phase": "repeat",
+        "SSD_MB_per_output": 135.03,
+        "D2H_MB_per_output": 4.68
+      },
+      {
+        "id": "fresh-1",
+        "phase": "repeat",
+        "SSD_MB_per_output": 124.27,
+        "D2H_MB_per_output": 2.5
+      },
+      {
+        "id": "fresh-2",
+        "phase": "repeat",
+        "SSD_MB_per_output": 112.54,
+        "D2H_MB_per_output": 1.67
+      }
+    ]
+  },
+  {
+    "gpu_only_limit_gib": 8,
+    "runs": [
+      {
+        "id": "fresh-0",
+        "phase": "fresh",
+        "SSD_MB_per_output": 282.27,
+        "D2H_MB_per_output": 11.76
+      },
+      {
+        "id": "fresh-1",
+        "phase": "fresh",
+        "SSD_MB_per_output": 154.79,
+        "D2H_MB_per_output": 19.81
+      },
+      {
+        "id": "fresh-2",
+        "phase": "fresh",
+        "SSD_MB_per_output": 108.42,
+        "D2H_MB_per_output": 9.89
+      },
+      {
+        "id": "fresh-0",
+        "phase": "repeat",
+        "SSD_MB_per_output": 111.26,
+        "D2H_MB_per_output": 5.34
+      },
+      {
+        "id": "fresh-1",
+        "phase": "repeat",
+        "SSD_MB_per_output": 100.57,
+        "D2H_MB_per_output": 3.09
+      },
+      {
+        "id": "fresh-2",
+        "phase": "repeat",
+        "SSD_MB_per_output": 95.93,
+        "D2H_MB_per_output": 1.67
+      }
+    ]
+  },
+  {
+    "gpu_only_limit_gib": 12,
+    "runs": [
+      {
+        "id": "fresh-0",
+        "phase": "fresh",
+        "SSD_MB_per_output": 264.4,
+        "D2H_MB_per_output": 35.73
+      },
+      {
+        "id": "fresh-1",
+        "phase": "fresh",
+        "SSD_MB_per_output": 129.05,
+        "D2H_MB_per_output": 24.36
+      },
+      {
+        "id": "fresh-2",
+        "phase": "fresh",
+        "SSD_MB_per_output": 88.02,
+        "D2H_MB_per_output": 12.56
+      },
+      {
+        "id": "fresh-0",
+        "phase": "repeat",
+        "SSD_MB_per_output": 92.28,
+        "D2H_MB_per_output": 6.18
+      },
+      {
+        "id": "fresh-1",
+        "phase": "repeat",
+        "SSD_MB_per_output": 80.24,
+        "D2H_MB_per_output": 3.26
+      },
+      {
+        "id": "fresh-2",
+        "phase": "repeat",
+        "SSD_MB_per_output": 75.8,
+        "D2H_MB_per_output": 1.87
+      }
+    ]
+  },
+  {
+    "gpu_only_limit_gib": 16,
+    "runs": [
+      {
+        "id": "fresh-0",
+        "phase": "fresh",
+        "SSD_MB_per_output": 249.17,
+        "D2H_MB_per_output": 63.45
+      },
+      {
+        "id": "fresh-1",
+        "phase": "fresh",
+        "SSD_MB_per_output": 107.86,
+        "D2H_MB_per_output": 35.42
+      },
+      {
+        "id": "fresh-2",
+        "phase": "fresh",
+        "SSD_MB_per_output": 78.51,
+        "D2H_MB_per_output": 19.05
+      },
+      {
+        "id": "fresh-0",
+        "phase": "repeat",
+        "SSD_MB_per_output": 71.57,
+        "D2H_MB_per_output": 8.36
+      },
+      {
+        "id": "fresh-1",
+        "phase": "repeat",
+        "SSD_MB_per_output": 58.98,
+        "D2H_MB_per_output": 4.72
+      },
+      {
+        "id": "fresh-2",
+        "phase": "repeat",
+        "SSD_MB_per_output": 58.8,
+        "D2H_MB_per_output": 3.19
+      }
+    ]
+  },
+  {
+    "gpu_only_limit_gib": 20,
+    "runs": [
+      {
+        "id": "fresh-0",
+        "phase": "fresh",
+        "SSD_MB_per_output": 233.63,
+        "D2H_MB_per_output": 209.36
+      },
+      {
+        "id": "fresh-1",
+        "phase": "fresh",
+        "SSD_MB_per_output": 98.73,
+        "D2H_MB_per_output": 169.26
+      },
+      {
+        "id": "fresh-2",
+        "phase": "fresh",
+        "SSD_MB_per_output": 74.73,
+        "D2H_MB_per_output": 113.54
+      },
+      {
+        "id": "fresh-0",
+        "phase": "repeat",
+        "SSD_MB_per_output": 0.21,
+        "D2H_MB_per_output": 101.71
+      },
+      {
+        "id": "fresh-1",
+        "phase": "repeat",
+        "SSD_MB_per_output": 0.0,
+        "D2H_MB_per_output": 98.52
+      },
+      {
+        "id": "fresh-2",
+        "phase": "repeat",
+        "SSD_MB_per_output": 0.0,
+        "D2H_MB_per_output": 74.27
+      }
+    ]
+  }
+]

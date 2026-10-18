@@ -39,7 +39,7 @@ class Entry:
 
 
 class ExpertCache:
-    def __init__(self, store, capacity_bytes, *, layer_quotas=None, device='cuda:0', reserve_bytes=8*2**30, native_dispatch=False, grouped_dispatch=False, route_trace=False, policy='lru'):
+    def __init__(self, store, capacity_bytes, *, layer_quotas=None, device='cuda:0', reserve_bytes=8*2**30, native_dispatch=False, grouped_dispatch=False, route_trace=False, policy='lru', fast_guard=False, fused_reduce=False):
         if capacity_bytes <= 0 or capacity_bytes % ALIGN:
             raise ValueError('Cache capacity must be aligned')
         self.store = store
@@ -58,6 +58,9 @@ class ExpertCache:
             layer_quotas = {layers[0]: capacity_bytes}
         if set(layer_quotas) != set(layers) or sum(layer_quotas.values()) != capacity_bytes:
             raise ValueError('Layer quotas must exactly partition the cache')
+        gpu_only_limit = getattr(store, 'gpu_only_limit', None)
+        if gpu_only_limit is not None and store.capacity + gpu_only_limit < capacity_bytes:
+            raise ValueError('RAM plus GPU-only budget must cover the GPU cache')
         self.regions = {}
         base = 0
         for layer, size in sorted(layer_quotas.items()):
@@ -83,6 +86,7 @@ class ExpertCache:
         self.staging_events = [None, None]
         self.staging_index = 0
         self.copy_stream = torch.cuda.Stream(device=self.device)
+        self.writeback_stream = torch.cuda.Stream(device=self.device) if getattr(store, 'victim_cache', False) else None
         # A cache slot's GPU addresses stay fixed when its expert changes.
         # Reuse the quantized views/BC handles where every expert in a layer
         # has identical geometry. No reconstructed weight is retained.
@@ -95,12 +99,22 @@ class ExpertCache:
         self.slot_projections = {}
         self.native_dispatch = None
         self.grouped_dispatch = grouped_dispatch
+        self.fused_reduce = fused_reduce
+        if fused_reduce and not grouped_dispatch:
+            raise ValueError('Fused reduction requires grouped dispatch')
         if native_dispatch or grouped_dispatch:
             from .native_dispatch import load_dispatch
             self.native_dispatch = load_dispatch()
+        self.fast_memory_guard = None
+        if fast_guard:
+            from .memory_budget import PersistentMemoryGuard
+            self.fast_memory_guard = PersistentMemoryGuard(reserve_bytes)
 
     def _guard(self):
-        guard_memory(self.reserve)
+        if self.fast_memory_guard is None:
+            guard_memory(self.reserve)
+        else:
+            self.fast_memory_guard.check()
 
     def _evict(self, key):
         entry = self.entries[key]
@@ -109,6 +123,10 @@ class ExpertCache:
         for event in entry.events:
             event.synchronize()
         entry.events.clear()
+        if self.writeback_stream is not None:
+            ready = self.store.demote(key, self.arena.narrow(0, entry.offset, entry.size), self.writeback_stream)
+            if ready is not None:
+                self.copy_stream.wait_event(ready)
         # Dropping handles is necessary: LinearEXL3.unload() is a no-op.
         entry.projections = {}
         self.regions[int(key.split(':')[0])].release(entry.offset)
@@ -194,6 +212,8 @@ class ExpertCache:
             self.layer_lru[layer][key] = None
             self.resident_bytes += record['bytes']
             self.stats['peak_resident_bytes'] = max(self.stats['peak_resident_bytes'],self.resident_bytes)
+            if self.writeback_stream is not None:
+                self.store.mark_gpu(key)
             return entry
         except BaseException:
             self.copy_stream.synchronize()
@@ -226,6 +246,8 @@ class ExpertCache:
                 raise InterruptedError('Expert lease cancelled')
             if self.policy != 'lru':
                 self.frequencies[key] = self.frequencies.get(key, 0) + 1
+            if self.writeback_stream is not None:
+                self.store.touch_gpu(key)
             entry = self.entries.get(key)
             if entry is None:
                 self.stats['misses'] += 1
@@ -270,7 +292,8 @@ class ExpertCache:
                 return dispatch(x.half().contiguous(), weights,
                     [position for position, _ in ordered],
                     [p['w1'].bc for p in projections], [p['w3'].bc for p in projections],
-                    [p['w2'].bc for p in projections], limit)
+                    [p['w2'].bc for p in projections], limit,
+                    **({'fused_reduce': True} if self.fused_reduce else {}))
         for position, eid in ordered:
             key = f'{layer}:{int(eid)}'
             if key not in self.store.records:
@@ -309,5 +332,9 @@ class ExpertCache:
                     event.synchronize()
             self.staging.clear()
             self.staging_events.clear()
+            if self.writeback_stream is not None:
+                self.writeback_stream.synchronize()
             self.arena = None
+            if self.fast_memory_guard is not None:
+                self.fast_memory_guard.close()
             self.closed = True

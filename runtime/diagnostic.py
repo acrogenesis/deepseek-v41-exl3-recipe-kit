@@ -25,6 +25,11 @@ def main():
     parser.add_argument('--native-dispatch', action='store_true')
     parser.add_argument('--grouped-dispatch', action='store_true')
     parser.add_argument('--hc-graphs', action='store_true')
+    parser.add_argument('--victim-cache', action='store_true')
+    parser.add_argument('--gpu-only-gib', type=int, choices=range(1, 25))
+    parser.add_argument('--fast-guard', action='store_true')
+    parser.add_argument('--fused-reduce', action='store_true')
+    parser.add_argument('--gpu-policy', choices=('lru', 'lfu'), default='lru')
     parser.add_argument('--ram-cache-gib', type=int, choices=range(16, 85))
     parser.add_argument('--pinned-ram', action='store_true')
     parser.add_argument('--threads', type=int, choices=range(1, 33), nargs='+', help='One CPU thread count per pass')
@@ -33,6 +38,8 @@ def main():
     parser.add_argument('--baseline-final', action='store_true', help='Also use the baseline for the last pass')
     parser.add_argument('--reference', type=Path, default=ROOT / 'results/20261017T232708Z-cache-campaign/bench-16g.json')
     args = parser.parse_args()
+    if args.gpu_only_gib is not None and not args.victim_cache:
+        parser.error('--gpu-only-gib requires --victim-cache')
     if args.threads and len(args.threads) != len(args.caches):
         parser.error('--threads needs one value per cache pass')
     if not args.allow_gpu:
@@ -50,6 +57,8 @@ def main():
     from exllamav3.generator import Generator, Job
     from exllamav3.generator.sampler import GreedySampler
     from .indexed_store import inventory, IndexedExpertStore
+    if args.victim_cache:
+        from .victim_store import VictimExpertStore as IndexedExpertStore
     from .cache import ExpertCache
     baseline_class = ExpertCache
     if args.baseline_cache:
@@ -63,14 +72,18 @@ def main():
     if args.ram_cache_gib is not None:
         profile['ram_expert_cache_bytes'] = args.ram_cache_gib * 2**30
     records, _ = inventory(ROOT)
+    store_options = {'gpu_only_limit_bytes': args.gpu_only_gib * 2**30} if args.gpu_only_gib is not None else {}
     store = IndexedExpertStore(ROOT / 'work/models/exl3', records, profile['ram_expert_cache_bytes'],
-        reserve_bytes=profile['host_reserve_bytes'], pinned=args.pinned_ram)
+        reserve_bytes=profile['host_reserve_bytes'], pinned=args.pinned_ram, **store_options)
     fixture = json.loads((ROOT / 'fixtures/paired-gguf.json').read_text())['speed'][0]
     reference = json.loads(args.reference.read_text())
     forced = next(r['token_ids'] for r in reference['runs'] if r['id'] == fixture['id'] and r['phase'] == 'fresh')[:args.tokens]
     assert len(forced) == args.tokens
     result = {'status': 'running', 'diagnostic_only': True, 'case': fixture['id'], 'forced_tokens': forced, 'passes': [],
         'native_dispatch': args.native_dispatch, 'grouped_dispatch': args.grouped_dispatch, 'hc_graphs': args.hc_graphs,
+        'victim_cache': args.victim_cache, 'fast_guard': args.fast_guard, 'gpu_policy': args.gpu_policy,
+        'gpu_only_limit_gib': args.gpu_only_gib,
+        'fused_reduce': args.fused_reduce,
         'pinned_ram': args.pinned_ram, 'ram_cache_gib': profile['ram_expert_cache_bytes'] / 2**30,
         'runtime_sha256': {name: hashlib.sha256((ROOT / 'runtime' / name).read_bytes()).hexdigest()
             for name in ('cache.py', 'indexed_store.py', 'diagnostic.py')},
@@ -142,6 +155,8 @@ def main():
             options = {'native_dispatch': True} if args.native_dispatch and not is_baseline else {}
             if args.grouped_dispatch and not is_baseline:
                 options['grouped_dispatch'] = True
+            if not is_baseline:
+                options.update(fast_guard=args.fast_guard, policy=args.gpu_policy, fused_reduce=args.fused_reduce)
             cache = cache_class(store, size, layer_quotas=quotas, reserve_bytes=profile['host_reserve_bytes'], **options)
             if model is None:
                 config = Config.from_directory(str(ROOT / 'work/models/exl3'))
@@ -207,7 +222,10 @@ def main():
             row = {'cache_gib': gib, 'implementation': 'baseline' if is_baseline else 'current',
                 'cpu_threads': torch.get_num_threads(),
                 'seconds': duration, 'ram': dict(store.stats), 'gpu': dict(cache.stats),
-                'argmax_tokens': logits.argmax(-1).tolist()}
+                'argmax_tokens': logits.argmax(-1).tolist(),
+                'gpu_allocated_bytes': torch.cuda.memory_allocated(),
+                'gpu_reserved_bytes': torch.cuda.memory_reserved(),
+                'gpu_free_bytes': torch.cuda.mem_get_info()[0]}
             if args.trace:
                 for step in sampler.trace:
                     step['seconds'] -= started

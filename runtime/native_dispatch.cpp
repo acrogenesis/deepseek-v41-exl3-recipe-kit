@@ -40,8 +40,9 @@ at::Tensor grouped_experts(const at::Tensor& x, const at::Tensor& weights,
     const std::vector<std::shared_ptr<BC_LinearEXL3>>& gates,
     const std::vector<std::shared_ptr<BC_LinearEXL3>>& ups,
     const std::vector<std::shared_ptr<BC_LinearEXL3>>& downs,
-    c10::optional<double> limit)
+    c10::optional<double> limit, bool fused_reduce)
 {
+    c10::cuda::CUDAGuard guard(x.device());
     const auto n = gates.size();
     TORCH_CHECK(n > 0 && n <= 6 && ups.size() == n && downs.size() == n
         && positions.size() == n && x.size(0) == 1, "Invalid expert batch");
@@ -57,6 +58,18 @@ at::Tensor grouped_experts(const at::Tensor& x, const at::Tensor& weights,
     }
     auto act = (at::silu(gate) * up).to(at::kHalf).contiguous();
     auto down = grouped_linear(act, downs);
+    if (fused_reduce) {
+        ExpertOrder order{};
+        order.count = n;
+        for (size_t i = 0; i < n; ++i) {
+            TORCH_CHECK(positions[i] >= 0 && positions[i] < n, "Invalid weight index");
+            order.positions[i] = positions[i];
+        }
+        auto result = at::empty_like(x, x.options().dtype(at::kFloat));
+        auto w = weights.to(at::kFloat).contiguous();
+        launch_expert_sum(down.data_ptr<float>(), w.data_ptr<float>(), result.data_ptr<float>(), x.size(1), order);
+        return result;
+    }
     auto result = at::zeros_like(x, x.options().dtype(at::kFloat));
     for (size_t i = 0; i < n; ++i) {
         TORCH_CHECK(positions[i] >= 0 && positions[i] < n, "Invalid weight index");
@@ -106,5 +119,7 @@ PYBIND11_MODULE(TORCH_EXTENSION_NAME, m)
 {
     m.def("exact_experts", &exact_experts, py::call_guard<py::gil_scoped_release>());
     m.def("grouped_linear", &grouped_linear, py::call_guard<py::gil_scoped_release>());
-    m.def("grouped_experts", &grouped_experts, py::call_guard<py::gil_scoped_release>());
+    m.def("grouped_experts", &grouped_experts, py::arg("x"), py::arg("weights"), py::arg("positions"),
+        py::arg("gates"), py::arg("ups"), py::arg("downs"), py::arg("limit"), py::arg("fused_reduce") = false,
+        py::call_guard<py::gil_scoped_release>());
 }

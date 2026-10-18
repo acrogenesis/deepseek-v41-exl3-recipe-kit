@@ -291,3 +291,27 @@ void launch_grouped(const void* input, void* output, void* had, int k, int n,
         at::cuda::getCurrentCUDAStream().stream()));
     C10_CUDA_KERNEL_LAUNCH_CHECK();
 }
+
+// Match the eager sequence of separate fp32 multiply and add kernels. Explicit
+// PTX prevents FMA contraction and preserves subnormals despite fast-math used
+// by the unchanged upstream GEMV code in this translation unit.
+__global__ void ordered_expert_sum(const float* down, const float* weights,
+                                  float* output, int n, ExpertOrder order)
+{
+    int j = blockIdx.x * blockDim.x + threadIdx.x;
+    if (j >= n) return;
+    float sum = 0.0f;
+    for (int i = 0; i < order.count; ++i) {
+        float product;
+        asm("mul.rn.f32 %0, %1, %2;" : "=f"(product) : "f"(down[i*n+j]), "f"(weights[order.positions[i]]));
+        asm("add.rn.f32 %0, %1, %2;" : "=f"(sum) : "f"(sum), "f"(product));
+    }
+    output[j] = sum;
+}
+
+void launch_expert_sum(const float* down, const float* weights, float* output,
+                       int n, ExpertOrder order)
+{
+    ordered_expert_sum<<<(n+255)/256, 256, 0, at::cuda::getCurrentCUDAStream().stream()>>>(down, weights, output, n, order);
+    C10_CUDA_KERNEL_LAUNCH_CHECK();
+}

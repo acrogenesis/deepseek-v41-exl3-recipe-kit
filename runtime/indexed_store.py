@@ -240,6 +240,27 @@ class IndexedExpertStore:
             ext.cuda_host_unregister(self.registered.pop(id(data)))
             data.close()
 
+    def _reserve_buffer(self, size):
+        """Reserve one bounded record buffer. Caller holds the store lock."""
+        recycled = None
+        try:
+            while self.resident + size > self.capacity:
+                value = self._evict(recycle_bytes=size if recycled is None else 0)
+                if value is not None:
+                    recycled = value
+            if self.reserve:
+                from .memory_budget import available_memory
+                while self.cache and available_memory() < self.reserve + 2 * size:
+                    self._evict()
+                if available_memory() < self.reserve + 2 * size:
+                    raise MemoryError("RAM reserve reached")
+        except BaseException:
+            if recycled is not None:
+                self._release(recycled)
+            raise
+        data = recycled if recycled is not None else self._allocate(size)
+        return data, recycled is not None
+
     @contextmanager
     def read(self, key, cancel=None):
         with self.lock:
@@ -251,27 +272,11 @@ class IndexedExpertStore:
             else:
                 record = self.records[key]
                 self.stats["misses"] += 1
-                recycled = None
-                try:
-                    while self.resident + record["bytes"] > self.capacity:
-                        value = self._evict(recycle_bytes=record['bytes'] if recycled is None else 0)
-                        if value is not None:
-                            recycled = value
-                    if self.reserve:
-                        from .memory_budget import available_memory
-                        while self.cache and available_memory() < self.reserve + 2 * record["bytes"]:
-                            self._evict()
-                        if available_memory() < self.reserve + 2 * record["bytes"]:
-                            raise MemoryError("RAM reserve reached")
-                except BaseException:
-                    if recycled is not None:
-                        self._release(recycled)
-                    raise
-                data = recycled if recycled is not None else self._allocate(record["bytes"])
+                data, recycled = self._reserve_buffer(record['bytes'])
                 view = None
                 try:
                     view = memoryview(data)
-                    if recycled is not None:
+                    if recycled:
                         # Tensor payloads are overwritten below. Clear only
                         # alignment padding, including if equal-sized records
                         # have different internal layouts.

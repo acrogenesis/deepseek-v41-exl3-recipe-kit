@@ -1,0 +1,133 @@
+{
+  "status": "passed",
+  "cases": [
+    {
+      "expert": "0:0",
+      "byte_exact": true
+    },
+    {
+      "expert": "0:0",
+      "byte_exact": true
+    },
+    {
+      "expert": "0:1",
+      "byte_exact": true
+    },
+    {
+      "expert": "0:1",
+      "byte_exact": true
+    },
+    {
+      "expert": "18:0",
+      "byte_exact": true
+    },
+    {
+      "expert": "18:0",
+      "byte_exact": true
+    },
+    {
+      "expert": "18:1",
+      "byte_exact": true
+    },
+    {
+      "expert": "18:1",
+      "byte_exact": true
+    },
+    {
+      "expert": "0:0",
+      "byte_exact": true
+    },
+    {
+      "expert": "0:0",
+      "byte_exact": true
+    },
+    {
+      "expert": "0:1",
+      "byte_exact": true
+    },
+    {
+      "expert": "0:1",
+      "byte_exact": true
+    },
+    {
+      "expert": "18:0",
+      "byte_exact": true
+    },
+    {
+      "expert": "18:0",
+      "byte_exact": true
+    },
+    {
+      "expert": "18:1",
+      "byte_exact": true
+    },
+    {
+      "expert": "18:1",
+      "byte_exact": true
+    },
+    {
+      "expert": "0:0",
+      "ram_eviction_during_dma": true,
+      "byte_exact": true
+    },
+    {
+      "expert": "0:1",
+      "ram_eviction_during_dma": true,
+      "byte_exact": true
+    },
+    {
+      "expert": "18:0",
+      "ram_eviction_during_dma": true,
+      "byte_exact": true
+    },
+    {
+      "expert": "18:1",
+      "ram_eviction_during_dma": true,
+      "byte_exact": true
+    },
+    {
+      "expert": "0:0",
+      "ram_eviction_during_dma": true,
+      "byte_exact": true
+    },
+    {
+      "expert": "0:1",
+      "ram_eviction_during_dma": true,
+      "byte_exact": true
+    },
+    {
+      "expert": "18:0",
+      "ram_eviction_during_dma": true,
+      "byte_exact": true
+    },
+    {
+      "expert": "18:1",
+      "ram_eviction_during_dma": true,
+      "byte_exact": true
+    }
+  ],
+  "gpu": "NVIDIA GeForce RTX 5090",
+  "pinned_ram": true,
+  "gpu_policy": "lfu",
+  "victim_cache": true,
+  "registered_read_failure_cleanup": true,
+  "cache": {
+    "hits": 8,
+    "misses": 8,
+    "evictions": 8,
+    "failures": 0,
+    "peak_resident_bytes": 22216704
+  },
+  "ram_cache": {
+    "hits": 2,
+    "misses": 10,
+    "evictions": 12,
+    "read_bytes": 111083520,
+    "read_calls": 10,
+    "peak_resident_bytes": 26640384,
+    "buffer_reuses": 1,
+    "demotions": 4,
+    "demote_bytes": 44433408,
+    "duplicate_evictions": 4
+  }
+}

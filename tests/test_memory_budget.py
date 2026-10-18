@@ -3,7 +3,7 @@ import tempfile
 import unittest
 from unittest.mock import patch
 
-from runtime.memory_budget import guard_memory
+from runtime.memory_budget import guard_memory, PersistentMemoryGuard
 
 
 class BudgetTests(unittest.TestCase):
@@ -27,3 +27,31 @@ class BudgetTests(unittest.TestCase):
         with patch("runtime.memory_budget.available_memory", return_value=8 * 2**30):
             with self.assertRaisesRegex(MemoryError, "reserve"):
                 guard_memory(12 * 2**30)
+
+    def test_persistent_guard_reads_changes_and_closes(self):
+        with tempfile.TemporaryDirectory() as temp:
+            group = Path(temp)
+            meminfo = group/'meminfo'
+            meminfo.write_text('MemAvailable: 16777216 kB\n')
+            (group/'memory.swap.max').write_text('0\n')
+            (group/'memory.swap.current').write_text('0\n')
+            with patch('runtime.memory_budget.cgroup_path', return_value=group):
+                guard = PersistentMemoryGuard(12 * 2**30, meminfo=meminfo)
+            try:
+                guard.check()
+                meminfo.write_text('MemAvailable: 8388608 kB\n')
+                with self.assertRaisesRegex(MemoryError, 'reserve'):
+                    guard.check()
+                meminfo.write_text('MemAvailable: 16777216 kB\n')
+                (group/'memory.swap.max').write_text('max\n')
+                with self.assertRaisesRegex(RuntimeError, 'equal Podman'):
+                    guard.check()
+                (group/'memory.swap.max').write_text('0\n')
+                (group/'memory.swap.current').write_text('4096\n')
+                with self.assertRaisesRegex(MemoryError, 'swapping'):
+                    guard.check()
+            finally:
+                guard.close()
+            guard.close()
+            with self.assertRaisesRegex(RuntimeError, 'closed'):
+                guard.check()

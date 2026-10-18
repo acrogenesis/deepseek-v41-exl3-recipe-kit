@@ -1,0 +1,41 @@
+import sys,json
+from pathlib import Path
+from collections import OrderedDict,defaultdict
+sys.path.insert(0,str(Path.cwd()))
+from runtime.indexed_store import inventory
+records,_=inventory(Path.cwd(),cached_headers=True)
+d=json.load(open('results/20261018-native/hc-full.json')); sizes={k:r['bytes'] for k,r in records.items()}
+cap=22*2**30;per=cap//(40*4096)*4096;quotas={i:per for i in range(40)};quotas[39]+=cap-sum(quotas.values())
+rows=[]
+for policy in ('lru','lfu'):
+ for victim in (False,True):
+  gpu={i:OrderedDict() for i in range(40)}; counts=defaultdict(int);ram=OrderedDict();dups=OrderedDict();used=0;capacity=84*2**30
+  def admit(key):
+   global used
+   while used+sizes[key]>capacity:
+    old=next(iter(dups)) if victim and dups else next(iter(ram))
+    used-=sizes[old];del ram[old];dups.pop(old,None)
+   ram[key]=None;used+=sizes[key]
+  results=[]
+  for run in d['runs']:
+   reads=writebacks=0;gpu_miss=0
+   for layer, routes in run['route_trace']:
+    held=set();lru=gpu[layer]
+    for eid in routes:
+     key=f'{layer}:{eid}';counts[key]+=1
+     if key in lru:lru.move_to_end(key)
+     else:
+      gpu_miss+=1
+      while (len(lru)+1)*sizes[key]>quotas[layer]:
+       candidates=(k for k in lru if k not in held)
+       old=next(candidates) if policy=='lru' else min(candidates,key=counts.__getitem__)
+       if victim and old not in ram:
+        admit(old);writebacks+=sizes[old]
+       dups.pop(old,None);del lru[old]
+      if key not in ram:admit(key);reads+=sizes[key]
+      else:ram.move_to_end(key)
+      lru[key]=None;dups[key]=None;dups.move_to_end(key)
+     if len(routes)==6:held.add(key)
+   if run['phase']!='check':results.append({'id':run['id'],'phase':run['phase'],'GPU_misses':gpu_miss,'SSD_MB_per_output':round(reads/run['output_tokens']/1e6,2),'D2H_MB_per_output':round(writebacks/run['output_tokens']/1e6,2)})
+  row={'policy':policy,'victim_cache':victim,'runs':results};rows.append(row);print(json.dumps(row),flush=True)
+Path('results/20261018-paging/exclusive-simulation.json').write_text(json.dumps(rows,indent=2)+'\n')
