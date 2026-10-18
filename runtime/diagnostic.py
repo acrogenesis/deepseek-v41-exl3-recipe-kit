@@ -29,6 +29,9 @@ def main():
     parser.add_argument('--gpu-only-gib', type=int, choices=range(1, 25))
     parser.add_argument('--fast-guard', action='store_true')
     parser.add_argument('--fused-reduce', action='store_true')
+    parser.add_argument('--overlap-loads', action='store_true')
+    parser.add_argument('--overlap-shared', action='store_true')
+    parser.add_argument('--engram-cache-rows', type=int, choices=(0, 16384, 65536), default=0)
     parser.add_argument('--gpu-policy', choices=('lru', 'lfu'), default='lru')
     parser.add_argument('--ram-cache-gib', type=int, choices=range(16, 85))
     parser.add_argument('--pinned-ram', action='store_true')
@@ -84,9 +87,12 @@ def main():
         'victim_cache': args.victim_cache, 'fast_guard': args.fast_guard, 'gpu_policy': args.gpu_policy,
         'gpu_only_limit_gib': args.gpu_only_gib,
         'fused_reduce': args.fused_reduce,
+        'overlap_loads': args.overlap_loads,
+        'overlap_shared': args.overlap_shared,
+        'engram_cache_rows': args.engram_cache_rows,
         'pinned_ram': args.pinned_ram, 'ram_cache_gib': profile['ram_expert_cache_bytes'] / 2**30,
         'runtime_sha256': {name: hashlib.sha256((ROOT / 'runtime' / name).read_bytes()).hexdigest()
-            for name in ('cache.py', 'indexed_store.py', 'diagnostic.py')},
+            for name in ('cache.py', 'indexed_store.py', 'diagnostic.py', 'native_adapter.py', 'engram_cache.py')},
         'tune_cache_path': os.environ.get('EXLLAMAV3_TUNE_CACHE')}
     if args.baseline_cache:
         result['baseline_cache_sha256'] = hashlib.sha256(args.baseline_cache.read_bytes()).hexdigest()
@@ -156,7 +162,8 @@ def main():
             if args.grouped_dispatch and not is_baseline:
                 options['grouped_dispatch'] = True
             if not is_baseline:
-                options.update(fast_guard=args.fast_guard, policy=args.gpu_policy, fused_reduce=args.fused_reduce)
+                options.update(fast_guard=args.fast_guard, policy=args.gpu_policy, fused_reduce=args.fused_reduce,
+                               overlap_loads=args.overlap_loads, overlap_shared=args.overlap_shared)
             cache = cache_class(store, size, layer_quotas=quotas, reserve_bytes=profile['host_reserve_bytes'], **options)
             if model is None:
                 config = Config.from_directory(str(ROOT / 'work/models/exl3'))
@@ -173,6 +180,8 @@ def main():
             if args.hc_graphs:
                 from .hc_graphs import configure
                 configure(model, not is_baseline)
+            from .engram_cache import configure as configure_rows
+            row_cache = configure_rows(model, args.engram_cache_rows if not is_baseline else 0)
             generator = Generator(model=model, cache=kv, tokenizer=tokenizer,
                 max_batch_size=1, max_chunk_size=256, recurrent_cache_size=512 * 2**20)
             sampler = CaptureSampler()
@@ -230,6 +239,9 @@ def main():
                 for step in sampler.trace:
                     step['seconds'] -= started
                 row['step_trace'] = sampler.trace
+            if row_cache is not None:
+                row['engram_cache'] = dict(row_cache.stats, resident_rows=len(row_cache.rows),
+                    payload_bytes=row_cache.payload_bytes)
             valid = logits[:, :config.vocab_size]
             if first_logits is None:
                 first_logits = valid.copy()

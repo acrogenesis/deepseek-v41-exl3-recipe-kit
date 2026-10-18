@@ -1,0 +1,11 @@
+from pathlib import Path
+import subprocess,json
+root=Path.cwd()
+base=['podman','--hooks-dir',str(root/'work/no-hooks'),'run','--rm','--name','deepseek41-exl3-5090','--network','none','--device','nvidia.com/gpu=all','--memory=96g','--memory-swap=96g','--shm-size=2g','-e','TORCH_CUDA_ARCH_LIST=12.0','-e','MAX_JOBS=2','-e','CUDA_VISIBLE_DEVICES=0','-e','NVIDIA_VISIBLE_DEVICES=void','-e','EXL3_INT8_GEMV=0','-e','EXLLAMAV3_TUNE_CACHE=/kernel-cache/coop_autotune_v1.bin','-e','TRITON_CACHE_DIR=/kernel-cache/triton','-v',str(root)+':/recipe:ro','-v',str(root/'results')+':/recipe/results:rw','-v',str(root/'work/kernel-cache')+':/kernel-cache:rw','-w','/recipe','localhost/deepseek41-exl3-5090:staged']
+with (root/'results/20261018-overlap/gpu-telemetry.csv').open('w') as samples:
+ monitor=subprocess.Popen(['nvidia-smi','--query-gpu=timestamp,pstate,clocks.current.sm,clocks.current.memory,utilization.gpu,power.draw,temperature.gpu,clocks_event_reasons.sw_power_cap,clocks_event_reasons.hw_thermal_slowdown','--format=csv','-lms','200'],stdout=samples,stderr=subprocess.STDOUT)
+ try:
+  with (root/'results/20261018-overlap/telemetry-full.log').open('w') as log:
+   subprocess.run(base+['work/telemetry-bench.py','bench','--allow-gpu','--gpu-cache-gib','24','--grouped-dispatch','--hc-graphs','--gpu-policy','lfu','--victim-cache','--gpu-only-gib','20','--fast-guard','--fused-reduce','--overlap-loads','--overlap-shared','--output','/recipe/results/20261018-overlap/telemetry-full.json'],stdout=log,stderr=subprocess.STDOUT,check=True)
+ finally:
+  monitor.terminate(); monitor.wait()

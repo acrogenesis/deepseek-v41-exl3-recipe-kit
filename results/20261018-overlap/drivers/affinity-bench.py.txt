@@ -1,0 +1,26 @@
+"""Full fixture with only the host dispatch thread pinned; workers stay available."""
+from pathlib import Path
+import hashlib,json,os,sys
+sys.path.insert(0, '/recipe')
+import torch
+cpu = int(os.environ['BENCH_HOST_CPU'])
+previous = sorted(os.sched_getaffinity(0))
+assert cpu in previous
+# Initialize the existing CPU worker pool before narrowing only this thread's
+# affinity. Future matrix work still has the original 16-worker pool.
+a = torch.ones((512,512),device='cpu')
+b = a @ a
+del a,b
+workers = {p.name: sorted(os.sched_getaffinity(int(p.name))) for p in Path('/proc/self/task').iterdir()}
+os.sched_setaffinity(0,{cpu})
+from runtime.runner import main
+try:
+    main()
+finally:
+    os.sched_setaffinity(0,previous)
+    output = Path(sys.argv[sys.argv.index('--output')+1])
+    if output.exists():
+        r = json.loads(output.read_text())
+        r.update(host_cpu=cpu, host_previous_affinity=previous, worker_affinities_before_pin=workers,
+                 host_affinity_source_sha256=hashlib.sha256(Path(__file__).read_bytes()).hexdigest())
+        output.write_text(json.dumps(r,indent=2)+'\n')

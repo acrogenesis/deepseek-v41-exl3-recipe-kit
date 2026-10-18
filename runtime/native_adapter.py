@@ -50,10 +50,31 @@ def cached_moe_class(cache):
                 raise ValueError("Only single-device inference is supported")
             y = x.reshape(-1, self.hidden_size).contiguous()
             ids, weights = self.routing_fn(y.shape[0], self.routing_cfg, y, params)
-            result = self.expert_cache.apply(self.cache_layer, y, ids, weights,
-                limit=self.act_limit).view(x.shape)
-            if self.shared_experts is not None:
-                result = result + self.shared_experts.forward(x, params)
+            stream = getattr(self.expert_cache, 'shared_stream', None)
+            if (stream is not None and y.shape[0] == 1 and self.shared_experts is not None
+                    and self.shared_experts.bc is not None):
+                # The native shared-expert BC owns its projection scratch. The
+                # grouped routed path also uses private scratch, so it cannot
+                # overwrite the shared calculation's intermediates. Prefill
+                # falls back to serial execution because its eager projections
+                # use the engine's global single-row scratch buffers.
+                current = torch.cuda.current_stream(x.device)
+                stream.wait_stream(current)
+                try:
+                    with torch.cuda.stream(stream):
+                        shared = self.shared_experts.forward(x, params)
+                    result = self.expert_cache.apply(self.cache_layer, y, ids, weights,
+                        limit=self.act_limit).view(x.shape)
+                finally:
+                    current.wait_stream(stream)
+                    x.record_stream(stream)
+                shared.record_stream(current)
+                result = result + shared
+            else:
+                result = self.expert_cache.apply(self.cache_layer, y, ids, weights,
+                    limit=self.act_limit).view(x.shape)
+                if self.shared_experts is not None:
+                    result = result + self.shared_experts.forward(x, params)
             return result.to(out_dtype) if out_dtype is not None else result
 
     return CachedMoE

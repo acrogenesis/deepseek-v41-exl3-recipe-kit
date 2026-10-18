@@ -1,0 +1,80 @@
+"""Opt-in capture of unchanged HC mixing, stream collapse and RMSNorm together.
+
+Only the fixed single-token, single-sequence forward is captured. Attention,
+routing, expert paging and recurrent-state updates execute normally. Graph
+outputs remain referenced and all sites replay in model order on one stream.
+"""
+import types
+import torch
+from exllamav3.modules.dsv41_hc import DSV41TransformerBlock, collapse, pending_pre_mix, PRE_MIX_KEY
+
+
+def configure(model, enabled):
+    if not hasattr(model, '_recipe_mix_resources'):
+        raise ValueError('Block graphs require HC graph configuration first')
+    count = 0
+    for module in model:
+        if not isinstance(module, DSV41TransformerBlock):
+            continue
+        count += 1
+        if not hasattr(module, '_recipe_block_original'):
+            module._recipe_block_original = module.forward
+            module._recipe_block_stages = {}
+            module.forward = types.MethodType(_forward, module)
+        module._recipe_block_enabled = enabled
+        module._recipe_block_resources = model._recipe_mix_resources
+    if count != 40:
+        raise ValueError(f'Expected 40 DeepSeek blocks, got {count}')
+
+
+def _stage(self, name, streams, pre_in):
+    state = self._recipe_block_stages.get(name)
+    if state is None:
+        hc = getattr(self, name + '_hc')
+        norm = getattr(self, name + '_norm')
+        source, pre_source = torch.empty_like(streams), torch.empty_like(pre_in)
+        source.copy_(streams)
+        pre_source.copy_(pre_in)
+        def body():
+            pre, post, comb = hc._recipe_mix_original(source)
+            y = norm.forward(collapse(source, pre_source).half(), {}, out_dtype=torch.half)
+            return pre, post, comb, y
+        current = torch.cuda.current_stream(streams.device)
+        resources = self._recipe_block_resources
+        if not resources:
+            resources.update(stream=torch.cuda.Stream(device=streams.device), pool=torch.cuda.graph_pool_handle())
+        capture_stream = resources['stream']
+        capture_stream.wait_stream(current)
+        with torch.cuda.stream(capture_stream):
+            for _ in range(3):
+                body()
+        current.wait_stream(capture_stream)
+        graph = torch.cuda.CUDAGraph()
+        with torch.cuda.graph(graph, pool=resources['pool'], stream=capture_stream, capture_error_mode='thread_local'):
+            outputs = body()
+        state = (graph, source, pre_source, outputs)
+        self._recipe_block_stages[name] = state
+    graph, source, pre_source, outputs = state
+    source.copy_(streams)
+    pre_source.copy_(pre_in)
+    graph.replay()
+    return outputs
+
+
+def _forward(self, x, params, out_dtype=None):
+    if (not self._recipe_block_enabled or x.shape != (1, 1, 4, 5120)
+            or x.dtype != torch.float32 or not x.is_contiguous()
+            or params.get('export_state_layers') or params.get('export_state_norm_keys')
+            or any(k in params for k in ('capture', 'quant_preserve', 'ovr', 'reconstruct', 'autosplit_measure'))):
+        return self._recipe_block_original(x, params, out_dtype=out_dtype)
+    pre_in = pending_pre_mix(params, x, self.attn_hc.hc_mult)
+    attn_pre, attn_post, attn_comb, y = _stage(self, 'attn', x, pre_in)
+    y = self.attn.forward(y, params)
+    if params.get('prefill'):
+        return x
+    x = self.attn_hc.apply_(x, y, attn_post, attn_comb, params)
+    mlp_pre, mlp_post, mlp_comb, y = _stage(self, 'mlp', x, attn_pre)
+    y = self.mlp.forward(y, params)
+    x = self.mlp_hc.apply_(x, y, mlp_post, mlp_comb, params)
+    params[PRE_MIX_KEY] = mlp_pre
+    return x

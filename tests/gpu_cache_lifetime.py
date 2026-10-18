@@ -66,6 +66,29 @@ try:
     for key, snapshot in copies:
         digest = hashlib.sha256(snapshot.cpu().numpy().tobytes()).hexdigest()
         result['cases'].append({'expert': key, 'byte_exact': digest == expected[key]})
+    # The overlap scheduler may release a deferred-readiness lease through an
+    # exception before it ever reads the weights. Its completion must still
+    # protect the in-flight upload, including a later GPU-only demotion.
+    for i, key in enumerate(keys):
+        with torch.cuda.stream(cache.copy_stream):
+            torch.cuda._sleep(20_000_000)
+        with torch.cuda.stream(streams[i % 2]):
+            lease = cache.lease(key, wait_ready=False)
+            entry = lease.__enter__()
+        lease.__exit__(InterruptedError, InterruptedError('test deferred cancellation'), None)
+        assert entry.users == 0
+        if args.victim_cache:
+            for other in keys:
+                if other != key:
+                    with store.read(other):
+                        pass
+            assert key not in store.cache and key in store.gpu_owned
+        cache._evict(key)
+        assert entry.ready.query()
+        with store.read(key) as data:
+            digest = hashlib.sha256(data).hexdigest()
+        result['cases'].append({'expert': key, 'deferred_exception_cleanup': True,
+            'byte_exact': digest == expected[key]})
     if args.pinned_ram:
         # Force RAM eviction while a deliberately delayed DMA still owns its
         # source, independently of the GPU expert cache's eviction barriers.

@@ -1,0 +1,47 @@
+"""Full fixture, eight decode steps of the first repeat; timing is diagnostic."""
+from pathlib import Path
+import sys,json,functools
+sys.path.insert(0, '/recipe')
+import torch
+from exllamav3.generator import Generator
+from runtime.cache import ExpertCache
+out = Path('/recipe/results/20261018-overlap/profile')
+out.mkdir(exist_ok=False)
+original_init, original_iterate = Generator.__init__, Generator.iterate
+counter = 0
+
+def init(self, *a, **kw):
+    global counter
+    original_init(self, *a, **kw)
+    self._probe_index = counter
+    self._probe_step = 0
+    self._probe_profiler = None
+    counter += 1
+
+def iterate(self, *a, **kw):
+    self._probe_step += 1
+    if self._probe_index == 11 and self._probe_step == 20:
+        self._probe_profiler = torch.profiler.profile(activities=[torch.profiler.ProfilerActivity.CPU, torch.profiler.ProfilerActivity.CUDA])
+        self._probe_profiler.start()
+    if self._probe_index == 11 and self._probe_step == 28:
+        self._probe_profiler.stop()
+        self._probe_profiler.export_chrome_trace(str(out/'cuda-trace.json'))
+        (out/'cuda-profile.txt').write_text(self._probe_profiler.key_averages().table(sort_by='self_device_time_total', row_limit=60))
+        self._probe_profiler = None
+    return original_iterate(self,*a,**kw)
+
+Generator.__init__, Generator.iterate = init, iterate
+for name in ('apply', '_load', '_evict'):
+    def wrap(fn, label):
+        @functools.wraps(fn)
+        def inner(self,*a,**kw):
+            with torch.profiler.record_function('expert_'+label):
+                return fn(self,*a,**kw)
+        return inner
+    setattr(ExpertCache,name,wrap(getattr(ExpertCache,name),name))
+from runtime.runner import main
+main()
+result = Path(sys.argv[sys.argv.index('--output')+1])
+r = json.loads(result.read_text())
+r.update(diagnostic_only=True, profiling='Eight decode steps of the first repeat, plus record_function overhead on all requests')
+result.write_text(json.dumps(r,indent=2)+'\n')

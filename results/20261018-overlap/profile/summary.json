@@ -1,0 +1,12 @@
+{
+  "diagnostic_only": true,
+  "profiled_decode_steps": 8,
+  "fixture_request": "first repeat, iterator steps20..27",
+  "kernel_calls_per_token": 3083.625,
+  "kernel_activity_ms_per_token": 15.248010955810546,
+  "memcpy_activity_ms_per_token": 11.756382781982422,
+  "overlap_ms_per_token": 0.0,
+  "device_active_union_ms_per_token": 27.00439373779297,
+  "profiled_span_ms_per_token": 43.084457977294925,
+  "note": "Profiler overhead affects wall time; sums are activity, not additive critical-path costs."
+}

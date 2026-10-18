@@ -1,0 +1,12 @@
+from pathlib import Path
+import subprocess,json
+root=Path.cwd()
+base=['podman','--hooks-dir',str(root/'work/no-hooks'),'run','--rm','--name','deepseek41-exl3-5090','--network','none','--device','nvidia.com/gpu=all','--memory=96g','--memory-swap=96g','--shm-size=2g','-e','TORCH_CUDA_ARCH_LIST=12.0','-e','MAX_JOBS=2','-e','CUDA_VISIBLE_DEVICES=0','-e','NVIDIA_VISIBLE_DEVICES=void','-e','EXL3_INT8_GEMV=0','-e','EXLLAMAV3_TUNE_CACHE=/kernel-cache/coop_autotune_v1.bin','-e','TRITON_CACHE_DIR=/kernel-cache/triton','-v',str(root)+':/recipe:ro','-v',str(root/'results')+':/recipe/results:rw','-v',str(root/'work/kernel-cache')+':/kernel-cache:rw','-w','/recipe','localhost/deepseek41-exl3-5090:staged']
+def run(name, entry, output=None):
+ with (root/('results/20261018-overlap/'+name+'.log')).open('w') as log:
+  subprocess.run(base+entry+['--allow-gpu','--output',output or '/recipe/results/20261018-overlap/'+name+'.json'],stdout=log,stderr=subprocess.STDOUT,check=True)
+run('engram-scores', ['-m','runtime.diagnostic','--caches','24','24','--tokens','20','--ram-cache-gib','16','--pinned-ram','--grouped-dispatch','--hc-graphs','--gpu-policy','lfu','--victim-cache','--gpu-only-gib','20','--fast-guard','--fused-reduce','--overlap-loads','--overlap-shared','--engram-cache-rows','65536','--no-profile','--trace','--baseline-cache','/recipe/work/paging-baseline/cache.py','--reference','/recipe/results/20261018-target30/selected-84g.json'], '/recipe/results/20261018-overlap/engram-scores')
+r=json.loads((root/'results/20261018-overlap/engram-scores/result.json').read_text())
+assert r['status']=='complete'
+assert all(v == 0 for p in r['passes'] for v in p['max_absolute_error_by_position'])
+run('engram-full', ['-m','runtime.runner','bench','--gpu-cache-gib','24','--grouped-dispatch','--hc-graphs','--gpu-policy','lfu','--victim-cache','--gpu-only-gib','20','--fast-guard','--fused-reduce','--overlap-loads','--overlap-shared','--engram-cache-rows','65536'])

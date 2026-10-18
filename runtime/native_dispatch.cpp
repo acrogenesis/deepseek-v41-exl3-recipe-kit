@@ -35,19 +35,16 @@ at::Tensor grouped_linear(const at::Tensor& x,
     return out;
 }
 
-at::Tensor grouped_experts(const at::Tensor& x, const at::Tensor& weights,
-    const std::vector<int64_t>& positions,
+at::Tensor grouped_down(const at::Tensor& x,
     const std::vector<std::shared_ptr<BC_LinearEXL3>>& gates,
     const std::vector<std::shared_ptr<BC_LinearEXL3>>& ups,
     const std::vector<std::shared_ptr<BC_LinearEXL3>>& downs,
-    c10::optional<double> limit, bool fused_reduce)
+    c10::optional<double> limit)
 {
     c10::cuda::CUDAGuard guard(x.device());
     const auto n = gates.size();
     TORCH_CHECK(n > 0 && n <= 6 && ups.size() == n && downs.size() == n
-        && positions.size() == n && x.size(0) == 1, "Invalid expert batch");
-    TORCH_CHECK(weights.device() == x.device() && weights.dim() == 2
-        && weights.size(0) == 1 && weights.size(1) == n, "Invalid weights");
+        && x.size(0) == 1, "Invalid expert batch");
     auto projections = gates;
     projections.insert(projections.end(), ups.begin(), ups.end());
     auto gu = grouped_linear(x, projections);
@@ -57,7 +54,21 @@ at::Tensor grouped_experts(const at::Tensor& x, const at::Tensor& weights,
         up = up.clamp(-*limit, *limit);
     }
     auto act = (at::silu(gate) * up).to(at::kHalf).contiguous();
-    auto down = grouped_linear(act, downs);
+    return grouped_linear(act, downs);
+}
+
+at::Tensor grouped_experts(const at::Tensor& x, const at::Tensor& weights,
+    const std::vector<int64_t>& positions,
+    const std::vector<std::shared_ptr<BC_LinearEXL3>>& gates,
+    const std::vector<std::shared_ptr<BC_LinearEXL3>>& ups,
+    const std::vector<std::shared_ptr<BC_LinearEXL3>>& downs,
+    c10::optional<double> limit, bool fused_reduce)
+{
+    c10::cuda::CUDAGuard guard(x.device());
+    const auto n = gates.size();
+    TORCH_CHECK(positions.size() == n && weights.device() == x.device() && weights.dim() == 2
+        && weights.size(0) == 1 && weights.size(1) == n, "Invalid weights");
+    auto down = grouped_down(x, gates, ups, downs, limit);
     if (fused_reduce) {
         ExpertOrder order{};
         order.count = n;
@@ -76,6 +87,35 @@ at::Tensor grouped_experts(const at::Tensor& x, const at::Tensor& weights,
         auto weight = weights.slice(1, positions[i], positions[i] + 1).to(at::kFloat);
         result.add_(down.slice(0, i, i + 1) * weight);
     }
+    return result;
+}
+
+at::Tensor reduce_split(const at::Tensor& first, const at::Tensor& second,
+    const at::Tensor& weights, const std::vector<int64_t>& positions,
+    const std::vector<int64_t>& rows)
+{
+    c10::cuda::CUDAGuard guard(first.device());
+    TORCH_CHECK(first.is_cuda() && second.device() == first.device()
+        && first.dim() == 2 && second.dim() == 2 && first.size(1) == second.size(1)
+        && first.scalar_type() == at::kFloat && second.scalar_type() == at::kFloat
+        && first.is_contiguous() && second.is_contiguous(), "Invalid split expert outputs");
+    const int n = first.size(1), e = rows.size();
+    TORCH_CHECK(e > 0 && e <= 6 && positions.size() == e && first.size(0)+second.size(0) == e
+        && weights.device() == first.device() && weights.dim() == 2
+        && weights.size(0) == 1 && weights.size(1) == e, "Invalid split routing");
+    SplitExpertOrder order{};
+    order.count = e;
+    for (int i = 0; i < e; ++i) {
+        TORCH_CHECK(positions[i] >= 0 && positions[i] < e, "Invalid weight index");
+        const auto& source = rows[i] >= 0 ? first : second;
+        int row = rows[i] >= 0 ? rows[i] : -1-rows[i];
+        TORCH_CHECK(row >= 0 && row < source.size(0), "Invalid split row");
+        order.sources[i] = source.data_ptr<float>() + row*n;
+        order.positions[i] = positions[i];
+    }
+    auto result = at::empty({1, n}, first.options());
+    auto w = weights.to(at::kFloat).contiguous();
+    launch_split_sum(w.data_ptr<float>(), result.data_ptr<float>(), n, order);
     return result;
 }
 
@@ -119,6 +159,8 @@ PYBIND11_MODULE(TORCH_EXTENSION_NAME, m)
 {
     m.def("exact_experts", &exact_experts, py::call_guard<py::gil_scoped_release>());
     m.def("grouped_linear", &grouped_linear, py::call_guard<py::gil_scoped_release>());
+    m.def("grouped_down", &grouped_down, py::call_guard<py::gil_scoped_release>());
+    m.def("reduce_split", &reduce_split, py::call_guard<py::gil_scoped_release>());
     m.def("grouped_experts", &grouped_experts, py::arg("x"), py::arg("weights"), py::arg("positions"),
         py::arg("gates"), py::arg("ups"), py::arg("downs"), py::arg("limit"), py::arg("fused_reduce") = false,
         py::call_guard<py::gil_scoped_release>());

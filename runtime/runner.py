@@ -28,6 +28,9 @@ def main():
     parser.add_argument("--gpu-only-gib", type=int, choices=range(1, 25))
     parser.add_argument("--fast-guard", action="store_true")
     parser.add_argument("--fused-reduce", action="store_true")
+    parser.add_argument("--overlap-loads", action="store_true")
+    parser.add_argument("--overlap-shared", action="store_true")
+    parser.add_argument("--engram-cache-rows", type=int, choices=(0, 16384, 65536), default=0)
     parser.add_argument("--output", type=Path)
     args = parser.parse_args()
     if args.gpu_only_gib is not None and not args.victim_cache:
@@ -76,7 +79,8 @@ def main():
     quotas[39] += capacity - sum(quotas.values())
     experts = ExpertCache(store, capacity, layer_quotas=quotas, reserve_bytes=profile["host_reserve_bytes"],
         grouped_dispatch=args.grouped_dispatch, route_trace=args.trace_routes, policy=args.gpu_policy,
-        fast_guard=args.fast_guard, fused_reduce=args.fused_reduce)
+        fast_guard=args.fast_guard, fused_reduce=args.fused_reduce, overlap_loads=args.overlap_loads,
+        overlap_shared=args.overlap_shared)
     stamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
     output = args.output or ROOT / "results" / f"{stamp}-{args.mode}.json"
     output.resolve().relative_to((ROOT / "results").resolve())
@@ -95,6 +99,11 @@ def main():
     result['gpu_only_limit_gib'] = args.gpu_only_gib
     result['fast_guard'] = args.fast_guard
     result['fused_reduce'] = args.fused_reduce
+    result['overlap_loads'] = args.overlap_loads
+    result['overlap_shared'] = args.overlap_shared
+    result['engram_cache_rows'] = args.engram_cache_rows
+    result['runtime_source_sha256'] = {p.name: hashlib.sha256(p.read_bytes()).hexdigest()
+        for p in sorted((ROOT/'runtime').iterdir()) if p.suffix in ('.py', '.cpp', '.cu', '.h')}
     if args.grouped_dispatch:
         result['grouped_source_sha256'] = {name: hashlib.sha256((ROOT/'runtime'/name).read_bytes()).hexdigest()
             for name in ('native_dispatch.cpp', 'native_dispatch.py', 'grouped_dispatch.cu', 'grouped_dispatch.h', 'hc_graphs.py')}
@@ -124,6 +133,8 @@ def main():
         if args.hc_graphs:
             from .hc_graphs import configure
             configure(model, True)
+        from .engram_cache import configure as configure_rows
+        row_cache = configure_rows(model, args.engram_cache_rows)
         result["load_seconds"] = time.perf_counter() - started
         free, total = torch.cuda.mem_get_info()
         result["memory_after_load"] = {"device_free_bytes": free, "device_total_bytes": total,
@@ -185,6 +196,9 @@ def main():
                 "ram_cache": dict(store.stats), "gpu_cache": dict(experts.stats),
                 "gpu_peak_allocated_bytes": torch.cuda.max_memory_allocated()}
             row["gpu_peak_reserved_bytes"] = torch.cuda.max_memory_reserved()
+            if row_cache is not None:
+                row['engram_cache'] = dict(row_cache.stats, resident_rows=len(row_cache.rows),
+                    payload_bytes=row_cache.payload_bytes)
             row["device_free_bytes_after_request"] = torch.cuda.mem_get_info()[0]
             from .memory_budget import available_memory, cgroup_path
             group = cgroup_path()

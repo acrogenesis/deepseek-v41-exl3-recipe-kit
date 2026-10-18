@@ -1,0 +1,18 @@
+"""Full fixture with request wall-clock markers for external NVML samples."""
+from pathlib import Path
+import hashlib,json,sys,time
+sys.path.insert(0, '/recipe')
+from exllamav3.generator import Generator
+original=Generator.__init__
+starts=[]
+def init(self,*a,**kw):
+ original(self,*a,**kw)
+ starts.append(time.time())
+Generator.__init__=init
+from runtime.runner import main
+try:
+ main()
+finally:
+ p=Path(sys.argv[sys.argv.index('--output')+1])
+ if p.exists():
+  r=json.loads(p.read_text());r.update(diagnostic_only=True,request_start_unix_seconds=starts,telemetry_source_sha256=hashlib.sha256(Path(__file__).read_bytes()).hexdigest());p.write_text(json.dumps(r,indent=2)+'\n')

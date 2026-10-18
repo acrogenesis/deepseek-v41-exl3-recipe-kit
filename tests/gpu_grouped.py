@@ -83,6 +83,20 @@ try:
                                 ext.exact_experts(*args), ext.grouped_experts(*args))
                             compare(f'{layer}/{seed}/{scale}/fused-sum-{limit}',
                                 ext.exact_experts(*args), ext.grouped_experts(*args, True))
+                            expected = ext.exact_experts(*args)
+                            for count in range(1, 6):
+                                # Interleaved rows exercise the original sum
+                                # order even when groups execute separately.
+                                first_ids = [0, 2, 4, 1, 3][:count]
+                                second_ids = [i for i in range(6) if i not in first_ids]
+                                def partial(chosen):
+                                    return ext.grouped_down(x, [gates[i] for i in chosen],
+                                        [ups[i] for i in chosen], [downs[i] for i in chosen], limit)
+                                first, second = partial(first_ids), partial(second_ids)
+                                rows = [first_ids.index(i) if i in first_ids else -1-second_ids.index(i)
+                                        for i in range(6)]
+                                compare(f'{layer}/{seed}/{scale}/split-{limit}-{count}', expected,
+                                    ext.reduce_split(first, second, weights, positions, rows))
                 args = (x, weights, positions, gates, ups, downs, 10.0)
                 row = {'layer': layer, 'eager': timed(lambda: ext.exact_experts(*args)),
                        'grouped': timed(lambda: ext.grouped_experts(*args)),
@@ -98,6 +112,19 @@ try:
                 cache.fused_reduce = True
                 actual = cache.apply(layer, x, route, weights)
                 compare(f'{layer}/slot-reuse-{batch}', baseline, actual)
+                cache.overlap_loads = True
+                cache.stats.update(split_calls=0, split_resident=0, split_missing=0)
+                for count in range(1, 6):
+                    for eid in chosen[:count]:
+                        cache._evict(f'{layer}:{eid}')
+                    with torch.cuda.stream(cache.copy_stream):
+                        torch.cuda._sleep(1_000_000)
+                    actual = cache.apply(layer, x, route, weights)
+                    compare(f'{layer}/delayed-split-{batch}-{count}', baseline, actual)
+                assert cache.stats['split_calls'] == 5
+                assert cache.stats['split_missing'] == 15
+                assert cache.stats['split_resident'] == 15
+                cache.overlap_loads = False
                 cache.native_dispatch = None
             assert cache.stats['evictions'] > 0
     result['gpu_cache'] = dict(cache.stats)

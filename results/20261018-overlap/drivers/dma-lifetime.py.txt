@@ -1,0 +1,9 @@
+from pathlib import Path
+import subprocess,json
+root=Path.cwd()
+base=['podman','--hooks-dir',str(root/'work/no-hooks'),'run','--rm','--name','deepseek41-exl3-5090','--network','none','--device','nvidia.com/gpu=all','--memory=96g','--memory-swap=96g','--shm-size=2g','-e','TORCH_CUDA_ARCH_LIST=12.0','-e','MAX_JOBS=2','-e','CUDA_VISIBLE_DEVICES=0','-e','NVIDIA_VISIBLE_DEVICES=void','-e','EXL3_INT8_GEMV=0','-e','EXLLAMAV3_TUNE_CACHE=/kernel-cache/coop_autotune_v1.bin','-e','TRITON_CACHE_DIR=/kernel-cache/triton','-v',str(root)+':/recipe:ro','-v',str(root/'results')+':/recipe/results:rw','-v',str(root/'work/kernel-cache')+':/kernel-cache:rw','-w','/recipe','localhost/deepseek41-exl3-5090:staged']
+import time
+while subprocess.run(['systemctl','--user','is-active','--quiet','deepseek-dma-validation.service']).returncode == 0:
+ time.sleep(3)
+with (root/'results/20261018-overlap/dma-lifetime.log').open('w') as log:
+ subprocess.run(base+['tests/gpu_cache_lifetime.py','--allow-gpu','--pinned-ram','--gpu-policy','lfu','--victim-cache','--gpu-only-gib','1','--output','/recipe/results/20261018-overlap/dma-lifetime.json'],stdout=log,stderr=subprocess.STDOUT,check=True)

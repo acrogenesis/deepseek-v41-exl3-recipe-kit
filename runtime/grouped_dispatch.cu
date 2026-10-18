@@ -315,3 +315,22 @@ void launch_expert_sum(const float* down, const float* weights, float* output,
     ordered_expert_sum<<<(n+255)/256, 256, 0, at::cuda::getCurrentCUDAStream().stream()>>>(down, weights, output, n, order);
     C10_CUDA_KERNEL_LAUNCH_CHECK();
 }
+
+__global__ void split_expert_sum(const float* weights, float* output, int n, SplitExpertOrder order)
+{
+    int j = blockIdx.x * blockDim.x + threadIdx.x;
+    if (j >= n) return;
+    float sum = 0.0f;
+    for (int i = 0; i < order.count; ++i) {
+        float product;
+        asm("mul.rn.f32 %0, %1, %2;" : "=f"(product) : "f"(order.sources[i][j]), "f"(weights[order.positions[i]]));
+        asm("add.rn.f32 %0, %1, %2;" : "=f"(sum) : "f"(sum), "f"(product));
+    }
+    output[j] = sum;
+}
+
+void launch_split_sum(const float* weights, float* output, int n, SplitExpertOrder order)
+{
+    split_expert_sum<<<(n+255)/256, 256, 0, at::cuda::getCurrentCUDAStream().stream()>>>(weights, output, n, order);
+    C10_CUDA_KERNEL_LAUNCH_CHECK();
+}

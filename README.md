@@ -19,18 +19,27 @@ misses from the original safetensors files. It does not create another 196 GB ex
 | Registered RAM, buffer and GPU-handle reuse (default) | 22 / 84 GiB | **9.51** | **12.31** |
 | Grouped expert kernel (opt-in) | 22 / 84 GiB | 10.63 | 13.09 |
 | Grouped kernel + hyperconnection graphs + LFU (experimental) | 22 / 84 GiB | 13.52 | 13.74 |
-| Selective victim cache, shared graphs and fused sum (experimental) | 24 / 84 GiB | **15.11** | **27.47** |
+| Selective victim cache, shared graphs and fused sum (experimental) | 24 / 84 GiB | 15.11 | 27.47 |
+| DMA-first resident overlap (experimental) | 24 / 84 GiB | 12.87 | 28.83 |
+| Same + shared-expert overlap (experimental) | 24 / 84 GiB | 14.34 | 29.41 |
+| Same + bounded Engram row cache (experimental) | 24 / 84 GiB | **16.18** | **30.60** |
+| Independent repeat of that configuration | 24 / 84 GiB | **15.73** | **30.75** |
 
 The default improves this suite by **2.14x fresh / 2.71x repeat**.
 An earlier run of the same configuration measured 8.98 / 12.34 tok/s. All full runs
 passed **8/8 checks** and produced the **same 802 output tokens** across 14 requests.
-The 30 tok/s target has not been reached. The latest configuration reduces repeat
-SSD reads by keeping more distinct experts across RAM and VRAM, while retaining
+The two Engram-cache sweeps reached **30.54–30.96 tok/s** on all six complete
+repeat prompts. The row cache retained 7.5 MiB of original bytes and
+avoided the engine's tiny threaded reads for those repeated rows. Resident and
+shared-expert computation can overlap staging of missing experts. The selective
+victim cache retains more distinct experts across RAM and VRAM while keeping
 RAM copies of GPU experts that are frequently evicted. Fresh prompts still incur
 substantial SSD reads. All options remain disabled by default; the 24 GiB trial
 left only about 144 MiB of free GPU memory on this short-context workload.
 See the [paging measurements](results/20261018-paging/METHOD.md) and
-[latest raw summary](results/20261018-paging/summary.json).
+[paging summary](results/20261018-paging/summary.json). The
+[overlap report](results/20261018-overlap/METHOD.md) and
+[raw summary](results/20261018-overlap/summary.json) cover the latest experiments.
 See the [new measurements and method](results/20261018-native/METHOD.md) and
 [raw summary](results/20261018-native/summary.json).
 
@@ -185,6 +194,21 @@ the original ordered FP32 multiply/add sequence in one kernel. The complete
 combination passes all 802 fixture tokens, a full-vocabulary score comparison,
 102 real-weight kernel cases and 24 transfer-lifetime cases. The measured command
 and experimental limits are in the paging report linked above.
+
+`--overlap-loads` starts missing-expert DMA before resident computation and
+combines the two groups in the original FP32 order. It requires grouped dispatch
+and fused reduction. `--overlap-shared` runs the native shared expert during
+routed-expert staging; it requires grouped dispatch and uses serial execution
+for prefill. These paths pass 252 bit-exact real-weight cases, 28 transfer/lifetime
+cases, full-vocabulary score comparisons and all 802 fixture output tokens.
+Broader HC block graphs were slower and are archived with their measurements.
+
+`--engram-cache-rows 65536` adds a bounded online LRU shared by both Engram
+layers. It caches original weight/scale bytes and leaves the existing GPU
+dequantization unchanged. It passed a full-vocabulary score comparison with
+actual cache hits and all 802 fixture tokens; CPU tests cover eviction, ordering,
+handle isolation and failed reads. The overlap report includes the complete
+command and separate fresh/repeat results.
 
 For a teacher-forced diagnostic and CPU profile:
 

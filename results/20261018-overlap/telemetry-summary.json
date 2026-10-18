@@ -1,0 +1,257 @@
+{
+  "diagnostic_only": true,
+  "requests": [
+    {
+      "phase": "check",
+      "id": "multiply",
+      "tok_s_instrumented": 3.375888421118471,
+      "sm_min_median_max_MHz": [
+        2565,
+        2632,
+        2722
+      ],
+      "memory_MHz": {
+        "13801 MHz": 49
+      },
+      "pstate": {
+        "P1": 49
+      },
+      "power_cap_samples": 0,
+      "thermal_slowdown_samples": 0
+    },
+    {
+      "phase": "check",
+      "id": "remaining",
+      "tok_s_instrumented": null,
+      "sm_min_median_max_MHz": [
+        2625,
+        2647.0,
+        2670
+      ],
+      "memory_MHz": {
+        "13801 MHz": 32
+      },
+      "pstate": {
+        "P1": 32
+      },
+      "power_cap_samples": 0,
+      "thermal_slowdown_samples": 0
+    },
+    {
+      "phase": "check",
+      "id": "percentage",
+      "tok_s_instrumented": 8.74395083103472,
+      "sm_min_median_max_MHz": [
+        2647,
+        2655,
+        2692
+      ],
+      "memory_MHz": {
+        "13801 MHz": 25
+      },
+      "pstate": {
+        "P1": 25
+      },
+      "power_cap_samples": 0,
+      "thermal_slowdown_samples": 0
+    },
+    {
+      "phase": "check",
+      "id": "extract",
+      "tok_s_instrumented": 4.4584213708750156,
+      "sm_min_median_max_MHz": [
+        2632,
+        2655.0,
+        2692
+      ],
+      "memory_MHz": {
+        "13801 MHz": 32
+      },
+      "pstate": {
+        "P1": 32
+      },
+      "power_cap_samples": 0,
+      "thermal_slowdown_samples": 0
+    },
+    {
+      "phase": "check",
+      "id": "ordering",
+      "tok_s_instrumented": 8.890084664173207,
+      "sm_min_median_max_MHz": [
+        2655,
+        2670,
+        2677
+      ],
+      "memory_MHz": {
+        "13801 MHz": 17
+      },
+      "pstate": {
+        "P1": 17
+      },
+      "power_cap_samples": 0,
+      "thermal_slowdown_samples": 0
+    },
+    {
+      "phase": "check",
+      "id": "json",
+      "tok_s_instrumented": 6.291147256495855,
+      "sm_min_median_max_MHz": [
+        2655,
+        2670.0,
+        2700
+      ],
+      "memory_MHz": {
+        "13801 MHz": 32
+      },
+      "pstate": {
+        "P1": 32
+      },
+      "power_cap_samples": 0,
+      "thermal_slowdown_samples": 0
+    },
+    {
+      "phase": "check",
+      "id": "sort",
+      "tok_s_instrumented": 9.15027719454698,
+      "sm_min_median_max_MHz": [
+        2655,
+        2700,
+        2745
+      ],
+      "memory_MHz": {
+        "13801 MHz": 17
+      },
+      "pstate": {
+        "P1": 17
+      },
+      "power_cap_samples": 0,
+      "thermal_slowdown_samples": 0
+    },
+    {
+      "phase": "check",
+      "id": "python",
+      "tok_s_instrumented": null,
+      "sm_min_median_max_MHz": [
+        2677,
+        2718.5,
+        2745
+      ],
+      "memory_MHz": {
+        "13801 MHz": 16
+      },
+      "pstate": {
+        "P1": 16
+      },
+      "power_cap_samples": 0,
+      "thermal_slowdown_samples": 0
+    },
+    {
+      "phase": "fresh",
+      "id": "fresh-0",
+      "tok_s_instrumented": 8.975886810015364,
+      "sm_min_median_max_MHz": [
+        2692,
+        2745,
+        2880
+      ],
+      "memory_MHz": {
+        "13801 MHz": 87
+      },
+      "pstate": {
+        "P1": 87
+      },
+      "power_cap_samples": 0,
+      "thermal_slowdown_samples": 0
+    },
+    {
+      "phase": "fresh",
+      "id": "fresh-1",
+      "tok_s_instrumented": 12.778965630985384,
+      "sm_min_median_max_MHz": [
+        2865,
+        2872.0,
+        2887
+      ],
+      "memory_MHz": {
+        "13801 MHz": 58
+      },
+      "pstate": {
+        "P1": 58
+      },
+      "power_cap_samples": 0,
+      "thermal_slowdown_samples": 0
+    },
+    {
+      "phase": "fresh",
+      "id": "fresh-2",
+      "tok_s_instrumented": 14.650449064064702,
+      "sm_min_median_max_MHz": [
+        2865,
+        2872,
+        2880
+      ],
+      "memory_MHz": {
+        "13801 MHz": 51
+      },
+      "pstate": {
+        "P1": 51
+      },
+      "power_cap_samples": 0,
+      "thermal_slowdown_samples": 0
+    },
+    {
+      "phase": "repeat",
+      "id": "fresh-0",
+      "tok_s_instrumented": 23.469168103802616,
+      "sm_min_median_max_MHz": [
+        2857,
+        2857,
+        2880
+      ],
+      "memory_MHz": {
+        "13801 MHz": 31
+      },
+      "pstate": {
+        "P1": 31
+      },
+      "power_cap_samples": 0,
+      "thermal_slowdown_samples": 0
+    },
+    {
+      "phase": "repeat",
+      "id": "fresh-1",
+      "tok_s_instrumented": 26.82532050604383,
+      "sm_min_median_max_MHz": [
+        2850,
+        2857.0,
+        2880
+      ],
+      "memory_MHz": {
+        "13801 MHz": 28
+      },
+      "pstate": {
+        "P1": 28
+      },
+      "power_cap_samples": 0,
+      "thermal_slowdown_samples": 0
+    },
+    {
+      "phase": "repeat",
+      "id": "fresh-2",
+      "tok_s_instrumented": 31.018005203459744,
+      "sm_min_median_max_MHz": [
+        2850,
+        2857.0,
+        2880
+      ],
+      "memory_MHz": {
+        "13801 MHz": 24
+      },
+      "pstate": {
+        "P1": 24
+      },
+      "power_cap_samples": 0,
+      "thermal_slowdown_samples": 0
+    }
+  ]
+}

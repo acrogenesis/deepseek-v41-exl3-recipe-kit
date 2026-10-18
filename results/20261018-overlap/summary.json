@@ -1,0 +1,214 @@
+{
+  "goal_achieved": true,
+  "goal_scope": "Above 30 tok/s on full repeat-prompt sweeps; fresh prompts reported separately",
+  "fresh_above_30": false,
+  "default_changed": false,
+  "full_runs": [
+    {
+      "file": "full.json",
+      "fresh_tok_s": 12.572949449365785,
+      "repeat_tok_s": 27.910790569457067,
+      "repeat_prompt_rates": [
+        27.66133167261483,
+        27.910790569457067,
+        28.640698597789175
+      ],
+      "identical_tokens": 802,
+      "exact_checks": 8,
+      "peak_container_gib": 88.07568359375,
+      "minimum_sampled_host_available_gib": 14.179004669189453,
+      "peak_torch_gpu_gib": 29.19570016860962,
+      "minimum_sampled_gpu_free_gib": 0.13861083984375,
+      "process_swap_bytes": 0
+    },
+    {
+      "file": "block-full.json",
+      "fresh_tok_s": 12.827798480414605,
+      "repeat_tok_s": 25.728074042070812,
+      "repeat_prompt_rates": [
+        23.50492743843633,
+        25.728074042070812,
+        28.4206082932019
+      ],
+      "identical_tokens": 802,
+      "exact_checks": 8,
+      "peak_container_gib": 88.0477180480957,
+      "minimum_sampled_host_available_gib": 14.133525848388672,
+      "peak_torch_gpu_gib": 29.1965012550354,
+      "minimum_sampled_gpu_free_gib": 0.13995361328125,
+      "process_swap_bytes": 0
+    },
+    {
+      "file": "dma-full.json",
+      "fresh_tok_s": 12.871576614157865,
+      "repeat_tok_s": 28.833820096650438,
+      "repeat_prompt_rates": [
+        28.576905533065403,
+        28.833820096650438,
+        29.603079578081054
+      ],
+      "identical_tokens": 802,
+      "exact_checks": 8,
+      "peak_container_gib": 88.04524230957031,
+      "minimum_sampled_host_available_gib": 14.115135192871094,
+      "peak_torch_gpu_gib": 29.19570016860962,
+      "minimum_sampled_gpu_free_gib": 0.1380615234375,
+      "process_swap_bytes": 0
+    },
+    {
+      "file": "shared-full.json",
+      "fresh_tok_s": 14.342132377110314,
+      "repeat_tok_s": 29.40585500752854,
+      "repeat_prompt_rates": [
+        22.542511935461977,
+        29.40585500752854,
+        30.97725958980849
+      ],
+      "identical_tokens": 802,
+      "exact_checks": 8,
+      "peak_container_gib": 88.15570068359375,
+      "minimum_sampled_host_available_gib": 13.006515502929688,
+      "peak_torch_gpu_gib": 29.19570016860962,
+      "minimum_sampled_gpu_free_gib": 0.13861083984375,
+      "process_swap_bytes": 0
+    },
+    {
+      "file": "affinity-full.json",
+      "fresh_tok_s": 12.884894494213816,
+      "repeat_tok_s": 23.060712392014153,
+      "repeat_prompt_rates": [
+        21.513813387367538,
+        23.060712392014153,
+        31.657457803426507
+      ],
+      "identical_tokens": 802,
+      "exact_checks": 8,
+      "peak_container_gib": 88.98732376098633,
+      "minimum_sampled_host_available_gib": 14.25461196899414,
+      "peak_torch_gpu_gib": 29.19570016860962,
+      "minimum_sampled_gpu_free_gib": 0.13720703125,
+      "process_swap_bytes": 0
+    },
+    {
+      "file": "engram-full.json",
+      "fresh_tok_s": 16.17974251774819,
+      "repeat_tok_s": 30.59766741299151,
+      "repeat_prompt_rates": [
+        30.54290784433289,
+        30.958992441423543,
+        30.59766741299151
+      ],
+      "identical_tokens": 802,
+      "exact_checks": 8,
+      "peak_container_gib": 88.31807708740234,
+      "minimum_sampled_host_available_gib": 14.364311218261719,
+      "peak_torch_gpu_gib": 29.19570016860962,
+      "minimum_sampled_gpu_free_gib": 0.15032958984375,
+      "process_swap_bytes": 0,
+      "engram_cache": {
+        "hits": 56866,
+        "misses": 59710,
+        "evictions": 0,
+        "peak_rows": 59710,
+        "peak_payload_bytes": 7881720,
+        "resident_rows": 59710,
+        "payload_bytes": 7881720
+      }
+    },
+    {
+      "file": "engram-replica.json",
+      "fresh_tok_s": 15.730751628695359,
+      "repeat_tok_s": 30.754518731410244,
+      "repeat_prompt_rates": [
+        30.59495087708327,
+        30.945804915439336,
+        30.754518731410244
+      ],
+      "identical_tokens": 802,
+      "exact_checks": 8,
+      "peak_container_gib": 88.11581802368164,
+      "minimum_sampled_host_available_gib": 14.27548599243164,
+      "peak_torch_gpu_gib": 29.19570016860962,
+      "minimum_sampled_gpu_free_gib": 0.15032958984375,
+      "process_swap_bytes": 0,
+      "engram_cache": {
+        "hits": 56866,
+        "misses": 59710,
+        "evictions": 0,
+        "peak_rows": 59710,
+        "peak_payload_bytes": 7881720,
+        "resident_rows": 59710,
+        "payload_bytes": 7881720
+      }
+    }
+  ],
+  "score_comparisons": [
+    {
+      "directory": "scores",
+      "positions": 20,
+      "vocabulary_scores_per_position": 129280,
+      "max_absolute_error": 0,
+      "array_sha256": {
+        "pass-0-24g-logits.npy": "be112e6b1f30098bb7d50404f55e25d849af022b26291f5337588121f1be731c",
+        "pass-1-24g-logits.npy": "be112e6b1f30098bb7d50404f55e25d849af022b26291f5337588121f1be731c"
+      }
+    },
+    {
+      "directory": "block-scores",
+      "positions": 20,
+      "vocabulary_scores_per_position": 129280,
+      "max_absolute_error": 0,
+      "array_sha256": {
+        "pass-0-24g-logits.npy": "be112e6b1f30098bb7d50404f55e25d849af022b26291f5337588121f1be731c",
+        "pass-1-24g-logits.npy": "be112e6b1f30098bb7d50404f55e25d849af022b26291f5337588121f1be731c"
+      }
+    },
+    {
+      "directory": "dma-scores",
+      "positions": 20,
+      "vocabulary_scores_per_position": 129280,
+      "max_absolute_error": 0,
+      "array_sha256": {
+        "pass-0-24g-logits.npy": "be112e6b1f30098bb7d50404f55e25d849af022b26291f5337588121f1be731c",
+        "pass-1-24g-logits.npy": "be112e6b1f30098bb7d50404f55e25d849af022b26291f5337588121f1be731c"
+      }
+    },
+    {
+      "directory": "shared-scores",
+      "positions": 20,
+      "vocabulary_scores_per_position": 129280,
+      "max_absolute_error": 0,
+      "array_sha256": {
+        "pass-0-24g-logits.npy": "be112e6b1f30098bb7d50404f55e25d849af022b26291f5337588121f1be731c",
+        "pass-1-24g-logits.npy": "be112e6b1f30098bb7d50404f55e25d849af022b26291f5337588121f1be731c"
+      }
+    },
+    {
+      "directory": "engram-scores",
+      "positions": 20,
+      "vocabulary_scores_per_position": 129280,
+      "max_absolute_error": 0,
+      "array_sha256": {
+        "pass-0-24g-logits.npy": "be112e6b1f30098bb7d50404f55e25d849af022b26291f5337588121f1be731c",
+        "pass-1-24g-logits.npy": "be112e6b1f30098bb7d50404f55e25d849af022b26291f5337588121f1be731c"
+      }
+    }
+  ],
+  "unit_checks": [
+    {
+      "file": "unit.json",
+      "cases": 252,
+      "status": "passed"
+    },
+    {
+      "file": "dma-unit.json",
+      "cases": 252,
+      "status": "passed"
+    },
+    {
+      "file": "dma-lifetime.json",
+      "cases": 28,
+      "status": "passed"
+    }
+  ]
+}

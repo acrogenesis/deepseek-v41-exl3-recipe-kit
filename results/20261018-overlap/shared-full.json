@@ -1,0 +1,6340 @@
+{
+  "status": "complete",
+  "profile": {
+    "hardware": "RTX 5090 32 GB, Ryzen 9950X3D, 128 GB RAM, Samsung 990 PRO NVMe",
+    "gpu_expert_cache_bytes": 25769803776,
+    "ram_expert_cache_bytes": 90194313216,
+    "host_reserve_bytes": 12884901888,
+    "container_memory": "96g",
+    "container_memory_swap": "96g",
+    "context_tokens": 8192,
+    "prefill_chunk_tokens": 256,
+    "max_batch_size": 1,
+    "draft": false,
+    "text_only": true,
+    "status": "validated: real text generation and paired 8K-profile benchmarks on RTX 5090",
+    "pinned_ram": true
+  },
+  "inventory": {
+    "model": "LibertAIDAI/DeepSeek-V4.1-Flash-1017-EXL3-2.9bpw",
+    "revision": "c178a01284fc5c0e859d8668cffaac81ca8f4042",
+    "experts": 15360,
+    "tensor_count": 184320,
+    "projection_K_counts": {
+      "3": 40320,
+      "2": 5760
+    },
+    "packed_record_bytes": 196104683520,
+    "largest_record_bytes": 13320192,
+    "payload_verified": false,
+    "header_source": "local_shards",
+    "gpu_used": false
+  },
+  "runs": [
+    {
+      "id": "multiply",
+      "phase": "check",
+      "input_tokens": 16,
+      "output_tokens": 2,
+      "token_ids": [
+        23123,
+        21
+      ],
+      "text": "3973",
+      "ttft_seconds": 9.035275242000353,
+      "seconds": 9.6185216629965,
+      "decode_tok_s": 3.4521420469507267,
+      "events": [
+        {
+          "seconds": 9.035275242000353,
+          "tokens": [
+            23123
+          ]
+        },
+        {
+          "seconds": 9.324950459995307,
+          "tokens": [
+            21
+          ]
+        }
+      ],
+      "ram_cache": {
+        "hits": 4,
+        "misses": 1787,
+        "evictions": 0,
+        "read_bytes": 22842363904,
+        "read_calls": 1787,
+        "peak_resident_bytes": 22843244544,
+        "buffer_reuses": 0,
+        "demotions": 0,
+        "demote_bytes": 0,
+        "duplicate_evictions": 0
+      },
+      "gpu_cache": {
+        "hits": 550,
+        "misses": 1791,
+        "evictions": 87,
+        "failures": 0,
+        "peak_resident_bytes": 21737668608,
+        "split_calls": 91,
+        "split_resident": 382,
+        "split_missing": 164
+      },
+      "gpu_peak_allocated_bytes": 31323521024,
+      "gpu_peak_reserved_bytes": 31356616704,
+      "device_free_bytes_after_request": 322961408,
+      "host_available_bytes": 83419525120,
+      "cgroup_memory_current": 26826072064,
+      "cgroup_memory_peak": 26826072064,
+      "cgroup_swap_current": 0,
+      "passed": true,
+      "expected": "3973"
+    },
+    {
+      "id": "remaining",
+      "phase": "check",
+      "input_tokens": 28,
+      "output_tokens": 1,
+      "token_ids": [
+        1059
+      ],
+      "text": "30",
+      "ttft_seconds": 6.306432700999721,
+      "seconds": 6.385160926998651,
+      "decode_tok_s": null,
+      "events": [
+        {
+          "seconds": 6.306432700999721,
+          "tokens": [
+            1059
+          ]
+        }
+      ],
+      "ram_cache": {
+        "hits": 623,
+        "misses": 3003,
+        "evictions": 0,
+        "read_bytes": 38318059520,
+        "read_calls": 3003,
+        "peak_resident_bytes": 38319538176,
+        "buffer_reuses": 0,
+        "demotions": 0,
+        "demote_bytes": 0,
+        "duplicate_evictions": 0
+      },
+      "gpu_cache": {
+        "hits": 1568,
+        "misses": 3626,
+        "evictions": 1631,
+        "failures": 0,
+        "peak_resident_bytes": 25056460800,
+        "split_calls": 142,
+        "split_resident": 606,
+        "split_missing": 246
+      },
+      "gpu_peak_allocated_bytes": 31337439744,
+      "gpu_peak_reserved_bytes": 31381782528,
+      "device_free_bytes_after_request": 264241152,
+      "host_available_bytes": 67478253568,
+      "cgroup_memory_current": 42384891904,
+      "cgroup_memory_peak": 42384896000,
+      "cgroup_swap_current": 0,
+      "passed": true,
+      "expected": "30"
+    },
+    {
+      "id": "percentage",
+      "phase": "check",
+      "input_tokens": 31,
+      "output_tokens": 3,
+      "token_ids": [
+        13635,
+        16,
+        22
+      ],
+      "text": "224.4",
+      "ttft_seconds": 4.703656303005118,
+      "seconds": 5.020166408001387,
+      "decode_tok_s": 8.816955036487462,
+      "events": [
+        {
+          "seconds": 4.703656303005118,
+          "tokens": [
+            13635
+          ]
+        },
+        {
+          "seconds": 4.813341701999889,
+          "tokens": [
+            16
+          ]
+        },
+        {
+          "seconds": 4.930491983999673,
+          "tokens": [
+            22
+          ]
+        }
+      ],
+      "ram_cache": {
+        "hits": 1240,
+        "misses": 3900,
+        "evictions": 0,
+        "read_bytes": 49810214912,
+        "read_calls": 3900,
+        "peak_resident_bytes": 49812111360,
+        "buffer_reuses": 0,
+        "demotions": 0,
+        "demote_bytes": 0,
+        "duplicate_evictions": 0
+      },
+      "gpu_cache": {
+        "hits": 3450,
+        "misses": 5140,
+        "evictions": 3126,
+        "failures": 0,
+        "peak_resident_bytes": 25247612928,
+        "split_calls": 234,
+        "split_resident": 1018,
+        "split_missing": 386
+      },
+      "gpu_peak_allocated_bytes": 31341401600,
+      "gpu_peak_reserved_bytes": 31383879680,
+      "device_free_bytes_after_request": 236912640,
+      "host_available_bytes": 55333576704,
+      "cgroup_memory_current": 53936422912,
+      "cgroup_memory_peak": 53937057792,
+      "cgroup_swap_current": 0,
+      "passed": true,
+      "expected": "224.4"
+    },
+    {
+      "id": "extract",
+      "phase": "check",
+      "input_tokens": 28,
+      "output_tokens": 4,
+      "token_ids": [
+        45,
+        25,
+        48,
+        22
+      ],
+      "text": "K7N4",
+      "ttft_seconds": 5.635897931002546,
+      "seconds": 6.4330204560028506,
+      "decode_tok_s": 4.52606972489446,
+      "events": [
+        {
+          "seconds": 5.635897931002546,
+          "tokens": [
+            45
+          ]
+        },
+        {
+          "seconds": 5.8946829049964435,
+          "tokens": [
+            25
+          ]
+        },
+        {
+          "seconds": 6.111974925996037,
+          "tokens": [
+            48
+          ]
+        },
+        {
+          "seconds": 6.298724661995948,
+          "tokens": [
+            22
+          ]
+        }
+      ],
+      "ram_cache": {
+        "hits": 1982,
+        "misses": 5104,
+        "evictions": 0,
+        "read_bytes": 65236680704,
+        "read_calls": 5104,
+        "peak_resident_bytes": 65239154688,
+        "buffer_reuses": 0,
+        "demotions": 0,
+        "demote_bytes": 0,
+        "duplicate_evictions": 0
+      },
+      "gpu_cache": {
+        "hits": 5258,
+        "misses": 7086,
+        "evictions": 5052,
+        "failures": 0,
+        "peak_resident_bytes": 25500745728,
+        "split_calls": 390,
+        "split_resident": 1587,
+        "split_missing": 753
+      },
+      "gpu_peak_allocated_bytes": 31341401600,
+      "gpu_peak_reserved_bytes": 31383879680,
+      "device_free_bytes_after_request": 203358208,
+      "host_available_bytes": 39591292928,
+      "cgroup_memory_current": 69441269760,
+      "cgroup_memory_peak": 69441269760,
+      "cgroup_swap_current": 0,
+      "passed": true,
+      "expected": "K7N4"
+    },
+    {
+      "id": "ordering",
+      "phase": "check",
+      "input_tokens": 25,
+      "output_tokens": 2,
+      "token_ids": [
+        50,
+        601
+      ],
+      "text": "Pia",
+      "ttft_seconds": 3.1367873010021867,
+      "seconds": 3.364233091000642,
+      "decode_tok_s": 8.919761571145713,
+      "events": [
+        {
+          "seconds": 3.1367873010021867,
+          "tokens": [
+            50
+          ]
+        },
+        {
+          "seconds": 3.2488979210029356,
+          "tokens": [
+            601
+          ]
+        }
+      ],
+      "ram_cache": {
+        "hits": 2731,
+        "misses": 5687,
+        "evictions": 0,
+        "read_bytes": 72679051264,
+        "read_calls": 5687,
+        "peak_resident_bytes": 72681897984,
+        "buffer_reuses": 0,
+        "demotions": 0,
+        "demote_bytes": 0,
+        "duplicate_evictions": 0
+      },
+      "gpu_cache": {
+        "hits": 6846,
+        "misses": 8418,
+        "evictions": 6379,
+        "failures": 0,
+        "peak_resident_bytes": 25567346688,
+        "split_calls": 475,
+        "split_resident": 1923,
+        "split_missing": 927
+      },
+      "gpu_peak_allocated_bytes": 31341401600,
+      "gpu_peak_reserved_bytes": 31383879680,
+      "device_free_bytes_after_request": 188678144,
+      "host_available_bytes": 31994171392,
+      "cgroup_memory_current": 76923572224,
+      "cgroup_memory_peak": 76923666432,
+      "cgroup_swap_current": 0,
+      "passed": true,
+      "expected": "Pia"
+    },
+    {
+      "id": "json",
+      "phase": "check",
+      "input_tokens": 43,
+      "output_tokens": 6,
+      "token_ids": [
+        24313,
+        10499,
+        3362,
+        223,
+        21,
+        95
+      ],
+      "text": "{\"count\": 3}",
+      "ttft_seconds": 5.542583359005221,
+      "seconds": 6.616412276998744,
+      "decode_tok_s": 5.50641100862629,
+      "events": [
+        {
+          "seconds": 5.542583359005221,
+          "tokens": [
+            24313
+          ]
+        },
+        {
+          "seconds": 5.736496857003658,
+          "tokens": [
+            10499
+          ]
+        },
+        {
+          "seconds": 5.959042788002989,
+          "tokens": [
+            3362
+          ]
+        },
+        {
+          "seconds": 6.147462036002253,
+          "tokens": [
+            223
+          ]
+        },
+        {
+          "seconds": 6.308854827002506,
+          "tokens": [
+            21
+          ]
+        },
+        {
+          "seconds": 6.450615831003233,
+          "tokens": [
+            95
+          ]
+        }
+      ],
+      "ram_cache": {
+        "hits": 4268,
+        "misses": 6801,
+        "evictions": 0,
+        "read_bytes": 86959681536,
+        "read_calls": 6801,
+        "peak_resident_bytes": 86963208192,
+        "buffer_reuses": 0,
+        "demotions": 0,
+        "demote_bytes": 0,
+        "duplicate_evictions": 0
+      },
+      "gpu_cache": {
+        "hits": 9146,
+        "misses": 11069,
+        "evictions": 9029,
+        "failures": 0,
+        "peak_resident_bytes": 25580666880,
+        "split_calls": 708,
+        "split_resident": 2778,
+        "split_missing": 1470
+      },
+      "gpu_peak_allocated_bytes": 31348644352,
+      "gpu_peak_reserved_bytes": 31385976832,
+      "device_free_bytes_after_request": 155123712,
+      "host_available_bytes": 18124615680,
+      "cgroup_memory_current": 91242418176,
+      "cgroup_memory_peak": 91242418176,
+      "cgroup_swap_current": 0,
+      "passed": true,
+      "expected": {
+        "count": 3
+      }
+    },
+    {
+      "id": "sort",
+      "phase": "check",
+      "input_tokens": 30,
+      "output_tokens": 15,
+      "token_ids": [
+        26913,
+        21,
+        14,
+        223,
+        18,
+        14,
+        223,
+        26,
+        14,
+        223,
+        929,
+        14,
+        223,
+        929,
+        63
+      ],
+      "text": "[-3, 0, 8, 14, 14]",
+      "ttft_seconds": 1.8368808700033696,
+      "seconds": 3.1365028209984303,
+      "decode_tok_s": 11.211877558173558,
+      "events": [
+        {
+          "seconds": 1.8368808700033696,
+          "tokens": [
+            26913
+          ]
+        },
+        {
+          "seconds": 1.9728504270024132,
+          "tokens": [
+            21
+          ]
+        },
+        {
+          "seconds": 2.102052497000841,
+          "tokens": [
+            14
+          ]
+        },
+        {
+          "seconds": 2.1871957580005983,
+          "tokens": [
+            223
+          ]
+        },
+        {
+          "seconds": 2.2603975500023807,
+          "tokens": [
+            18
+          ]
+        },
+        {
+          "seconds": 2.346668056001363,
+          "tokens": [
+            14
+          ]
+        },
+        {
+          "seconds": 2.4675586049997946,
+          "tokens": [
+            223
+          ]
+        },
+        {
+          "seconds": 2.5695472430015798,
+          "tokens": [
+            26
+          ]
+        },
+        {
+          "seconds": 2.66174319700076,
+          "tokens": [
+            14
+          ]
+        },
+        {
+          "seconds": 2.7093086219974793,
+          "tokens": [
+            223
+          ]
+        },
+        {
+          "seconds": 2.8213345679978374,
+          "tokens": [
+            929
+          ]
+        },
+        {
+          "seconds": 2.884614014001272,
+          "tokens": [
+            14
+          ]
+        },
+        {
+          "seconds": 2.9567367720010225,
+          "tokens": [
+            223
+          ]
+        },
+        {
+          "seconds": 3.0203432950002025,
+          "tokens": [
+            929
+          ]
+        },
+        {
+          "seconds": 3.085556653997628,
+          "tokens": [
+            63
+          ]
+        }
+      ],
+      "ram_cache": {
+        "hits": 5973,
+        "misses": 7219,
+        "evictions": 169,
+        "read_bytes": 92328300544,
+        "read_calls": 7219,
+        "peak_resident_bytes": 90191659008,
+        "buffer_reuses": 136,
+        "demotions": 0,
+        "demote_bytes": 0,
+        "duplicate_evictions": 169
+      },
+      "gpu_cache": {
+        "hits": 13175,
+        "misses": 13192,
+        "evictions": 11152,
+        "failures": 0,
+        "peak_resident_bytes": 25580666880,
+        "split_calls": 1205,
+        "split_resident": 4728,
+        "split_missing": 2502
+      },
+      "gpu_peak_allocated_bytes": 31348644352,
+      "gpu_peak_reserved_bytes": 31385976832,
+      "device_free_bytes_after_request": 148832256,
+      "host_available_bytes": 14853787648,
+      "cgroup_memory_current": 94498586624,
+      "cgroup_memory_peak": 94499213312,
+      "cgroup_swap_current": 0,
+      "passed": true,
+      "expected": [
+        -3,
+        0,
+        8,
+        14,
+        14
+      ]
+    },
+    {
+      "id": "python",
+      "phase": "check",
+      "input_tokens": 36,
+      "output_tokens": 1,
+      "token_ids": [
+        1810
+      ],
+      "text": "35",
+      "ttft_seconds": 2.712305891000142,
+      "seconds": 2.747109748001094,
+      "decode_tok_s": null,
+      "events": [
+        {
+          "seconds": 2.712305891000142,
+          "tokens": [
+            1810
+          ]
+        }
+      ],
+      "ram_cache": {
+        "hits": 7141,
+        "misses": 7689,
+        "evictions": 642,
+        "read_bytes": 98340802560,
+        "read_calls": 7689,
+        "peak_resident_bytes": 90191659008,
+        "buffer_reuses": 537,
+        "demotions": 0,
+        "demote_bytes": 0,
+        "duplicate_evictions": 642
+      },
+      "gpu_cache": {
+        "hits": 14893,
+        "misses": 14830,
+        "evictions": 12790,
+        "failures": 0,
+        "peak_resident_bytes": 25580666880,
+        "split_calls": 1238,
+        "split_resident": 4884,
+        "split_missing": 2544
+      },
+      "gpu_peak_allocated_bytes": 31348644352,
+      "gpu_peak_reserved_bytes": 31385976832,
+      "device_free_bytes_after_request": 148832256,
+      "host_available_bytes": 14829187072,
+      "cgroup_memory_current": 94499954688,
+      "cgroup_memory_peak": 94510256128,
+      "cgroup_swap_current": 0,
+      "passed": true,
+      "expected": "35"
+    },
+    {
+      "id": "fresh-0",
+      "phase": "fresh",
+      "input_tokens": 30,
+      "output_tokens": 128,
+      "token_ids": [
+        5,
+        20884,
+        53776,
+        39652,
+        5057,
+        8856,
+        43475,
+        271,
+        35,
+        2333,
+        8977,
+        344,
+        270,
+        55390,
+        582,
+        18977,
+        1844,
+        4,
+        18553,
+        396,
+        1750,
+        126756,
+        8476,
+        2231,
+        18848,
+        16,
+        3245,
+        270,
+        8126,
+        42223,
+        2333,
+        14,
+        5675,
+        295,
+        38740,
+        6464,
+        2136,
+        270,
+        17437,
+        11761,
+        14,
+        270,
+        2912,
+        11104,
+        14,
+        295,
+        100815,
+        50944,
+        14,
+        305,
+        270,
+        2501,
+        294,
+        21847,
+        20739,
+        18061,
+        2136,
+        117895,
+        32613,
+        16,
+        14402,
+        270,
+        43888,
+        20342,
+        294,
+        14570,
+        2518,
+        343,
+        1805,
+        582,
+        38,
+        5925,
+        26510,
+        396,
+        1117,
+        17138,
+        396,
+        982,
+        3384,
+        4438,
+        12,
+        1936,
+        270,
+        29182,
+        344,
+        2413,
+        1031,
+        60739,
+        14,
+        305,
+        270,
+        22938,
+        481,
+        20342,
+        343,
+        1805,
+        582,
+        35,
+        5925,
+        26510,
+        396,
+        1117,
+        17138,
+        396,
+        515,
+        982,
+        2869,
+        12,
+        13792,
+        9120,
+        1119,
+        19685,
+        16,
+        39652,
+        344,
+        270,
+        6822,
+        396,
+        38758,
+        85,
+        260,
+        11055,
+        2501,
+        538,
+        11782,
+        28303,
+        377,
+        12603
+      ],
+      "text": "# Database Transaction Recovery After Power Failure\n\nA power failure is the canonical \"crash\" scenario that every transactional database must survive. When the machine loses power, everything in volatile memory — the buffer pool, the log tail, in-flight locks, and the state of partially executed transactions — vanishes instantly. Yet the durability guarantee of ACID (the \"D\") promises that any transaction that *committed* before the crash is still there afterward, and the atomicity guarantee (the \"A\") promises that any transaction that was *not* committed leaves no trace. Recovery is the mechanism that reconstructs a consistent state from whatever survived on stable",
+      "ttft_seconds": 2.7832307270000456,
+      "seconds": 14.57517674099654,
+      "decode_tok_s": 10.770071424780634,
+      "events": [
+        {
+          "seconds": 2.7832307270000456,
+          "tokens": [
+            5
+          ]
+        },
+        {
+          "seconds": 2.951024903995858,
+          "tokens": [
+            20884
+          ]
+        },
+        {
+          "seconds": 3.0544847619967186,
+          "tokens": [
+            53776
+          ]
+        },
+        {
+          "seconds": 3.1502903449945734,
+          "tokens": [
+            39652
+          ]
+        },
+        {
+          "seconds": 3.2460760959947947,
+          "tokens": [
+            5057
+          ]
+        },
+        {
+          "seconds": 3.3803506740005105,
+          "tokens": [
+            8856
+          ]
+        },
+        {
+          "seconds": 3.5086717829981353,
+          "tokens": [
+            43475
+          ]
+        },
+        {
+          "seconds": 3.6319560119954986,
+          "tokens": [
+            271
+          ]
+        },
+        {
+          "seconds": 3.7482457289952436,
+          "tokens": [
+            35
+          ]
+        },
+        {
+          "seconds": 3.8435010989996954,
+          "tokens": [
+            2333
+          ]
+        },
+        {
+          "seconds": 3.9335416159956367,
+          "tokens": [
+            8977
+          ]
+        },
+        {
+          "seconds": 4.0601414579941775,
+          "tokens": [
+            344
+          ]
+        },
+        {
+          "seconds": 4.2672655879941885,
+          "tokens": [
+            270
+          ]
+        },
+        {
+          "seconds": 4.423410850999062,
+          "tokens": [
+            55390
+          ]
+        },
+        {
+          "seconds": 4.559497467998881,
+          "tokens": [
+            582
+          ]
+        },
+        {
+          "seconds": 4.671456131000014,
+          "tokens": [
+            18977
+          ]
+        },
+        {
+          "seconds": 4.844136903993785,
+          "tokens": [
+            1844
+          ]
+        },
+        {
+          "seconds": 4.935622401993896,
+          "tokens": [
+            4
+          ]
+        },
+        {
+          "seconds": 5.027425836997281,
+          "tokens": [
+            18553
+          ]
+        },
+        {
+          "seconds": 5.137343214999419,
+          "tokens": [
+            396
+          ]
+        },
+        {
+          "seconds": 5.2601277329958975,
+          "tokens": [
+            1750
+          ]
+        },
+        {
+          "seconds": 5.370696534999297,
+          "tokens": [
+            126756
+          ]
+        },
+        {
+          "seconds": 5.47545657199953,
+          "tokens": [
+            8476
+          ]
+        },
+        {
+          "seconds": 5.57624317099544,
+          "tokens": [
+            2231
+          ]
+        },
+        {
+          "seconds": 5.744911145993683,
+          "tokens": [
+            18848
+          ]
+        },
+        {
+          "seconds": 5.892727037993609,
+          "tokens": [
+            16
+          ]
+        },
+        {
+          "seconds": 6.010318123000616,
+          "tokens": [
+            3245
+          ]
+        },
+        {
+          "seconds": 6.148488324994105,
+          "tokens": [
+            270
+          ]
+        },
+        {
+          "seconds": 6.236480126994138,
+          "tokens": [
+            8126
+          ]
+        },
+        {
+          "seconds": 6.343185174999235,
+          "tokens": [
+            42223
+          ]
+        },
+        {
+          "seconds": 6.47169652699813,
+          "tokens": [
+            2333
+          ]
+        },
+        {
+          "seconds": 6.592426929993962,
+          "tokens": [
+            14
+          ]
+        },
+        {
+          "seconds": 6.704142836999381,
+          "tokens": [
+            5675
+          ]
+        },
+        {
+          "seconds": 6.793101079994813,
+          "tokens": [
+            295
+          ]
+        },
+        {
+          "seconds": 6.90212371799862,
+          "tokens": [
+            38740
+          ]
+        },
+        {
+          "seconds": 7.038349157999619,
+          "tokens": [
+            6464
+          ]
+        },
+        {
+          "seconds": 7.127616096993734,
+          "tokens": [
+            2136
+          ]
+        },
+        {
+          "seconds": 7.232627737997973,
+          "tokens": [
+            270
+          ]
+        },
+        {
+          "seconds": 7.3055314519951935,
+          "tokens": [
+            17437
+          ]
+        },
+        {
+          "seconds": 7.419452857000579,
+          "tokens": [
+            11761
+          ]
+        },
+        {
+          "seconds": 7.535512867994839,
+          "tokens": [
+            14
+          ]
+        },
+        {
+          "seconds": 7.635548041995207,
+          "tokens": [
+            270
+          ]
+        },
+        {
+          "seconds": 7.707955964993744,
+          "tokens": [
+            2912
+          ]
+        },
+        {
+          "seconds": 7.808669382997323,
+          "tokens": [
+            11104
+          ]
+        },
+        {
+          "seconds": 7.892144985999039,
+          "tokens": [
+            14
+          ]
+        },
+        {
+          "seconds": 7.980122016997484,
+          "tokens": [
+            295
+          ]
+        },
+        {
+          "seconds": 8.124832190995221,
+          "tokens": [
+            100815
+          ]
+        },
+        {
+          "seconds": 8.203172522000386,
+          "tokens": [
+            50944
+          ]
+        },
+        {
+          "seconds": 8.310734768994735,
+          "tokens": [
+            14
+          ]
+        },
+        {
+          "seconds": 8.37083038399578,
+          "tokens": [
+            305
+          ]
+        },
+        {
+          "seconds": 8.44802544099366,
+          "tokens": [
+            270
+          ]
+        },
+        {
+          "seconds": 8.507642516000487,
+          "tokens": [
+            2501
+          ]
+        },
+        {
+          "seconds": 8.59631269199599,
+          "tokens": [
+            294
+          ]
+        },
+        {
+          "seconds": 8.687839610996889,
+          "tokens": [
+            21847
+          ]
+        },
+        {
+          "seconds": 8.774032422996243,
+          "tokens": [
+            20739
+          ]
+        },
+        {
+          "seconds": 8.838794219998817,
+          "tokens": [
+            18061
+          ]
+        },
+        {
+          "seconds": 8.93312905899802,
+          "tokens": [
+            2136
+          ]
+        },
+        {
+          "seconds": 9.033214003000467,
+          "tokens": [
+            117895
+          ]
+        },
+        {
+          "seconds": 9.15171660699707,
+          "tokens": [
+            32613
+          ]
+        },
+        {
+          "seconds": 9.246677978997468,
+          "tokens": [
+            16
+          ]
+        },
+        {
+          "seconds": 9.33874839899363,
+          "tokens": [
+            14402
+          ]
+        },
+        {
+          "seconds": 9.468031296994013,
+          "tokens": [
+            270
+          ]
+        },
+        {
+          "seconds": 9.531827662998694,
+          "tokens": [
+            43888
+          ]
+        },
+        {
+          "seconds": 9.62749975099723,
+          "tokens": [
+            20342
+          ]
+        },
+        {
+          "seconds": 9.737645082997915,
+          "tokens": [
+            294
+          ]
+        },
+        {
+          "seconds": 9.82362684099644,
+          "tokens": [
+            14570
+          ]
+        },
+        {
+          "seconds": 9.931451512995409,
+          "tokens": [
+            2518
+          ]
+        },
+        {
+          "seconds": 10.054167977999896,
+          "tokens": [
+            343
+          ]
+        },
+        {
+          "seconds": 10.178587589995004,
+          "tokens": [
+            1805
+          ]
+        },
+        {
+          "seconds": 10.249629632999131,
+          "tokens": [
+            582
+          ]
+        },
+        {
+          "seconds": 10.338114815000154,
+          "tokens": [
+            38
+          ]
+        },
+        {
+          "seconds": 10.434775494999485,
+          "tokens": [
+            5925
+          ]
+        },
+        {
+          "seconds": 10.53013727600046,
+          "tokens": [
+            26510
+          ]
+        },
+        {
+          "seconds": 10.621025408996502,
+          "tokens": [
+            396
+          ]
+        },
+        {
+          "seconds": 10.709735575997911,
+          "tokens": [
+            1117
+          ]
+        },
+        {
+          "seconds": 10.76352350399975,
+          "tokens": [
+            17138
+          ]
+        },
+        {
+          "seconds": 10.830269423997379,
+          "tokens": [
+            396
+          ]
+        },
+        {
+          "seconds": 10.929296624999552,
+          "tokens": [
+            982
+          ]
+        },
+        {
+          "seconds": 11.076827068995044,
+          "tokens": [
+            3384
+          ]
+        },
+        {
+          "seconds": 11.170784378999087,
+          "tokens": [
+            4438
+          ]
+        },
+        {
+          "seconds": 11.262874748994363,
+          "tokens": [
+            12
+          ]
+        },
+        {
+          "seconds": 11.330021996996948,
+          "tokens": [
+            1936
+          ]
+        },
+        {
+          "seconds": 11.412890316998528,
+          "tokens": [
+            270
+          ]
+        },
+        {
+          "seconds": 11.451157377996424,
+          "tokens": [
+            29182
+          ]
+        },
+        {
+          "seconds": 11.522650330000033,
+          "tokens": [
+            344
+          ]
+        },
+        {
+          "seconds": 11.589257747000374,
+          "tokens": [
+            2413
+          ]
+        },
+        {
+          "seconds": 11.682238655994297,
+          "tokens": [
+            1031
+          ]
+        },
+        {
+          "seconds": 11.761301342994557,
+          "tokens": [
+            60739
+          ]
+        },
+        {
+          "seconds": 11.86914711499412,
+          "tokens": [
+            14
+          ]
+        },
+        {
+          "seconds": 11.93970874799561,
+          "tokens": [
+            305
+          ]
+        },
+        {
+          "seconds": 12.00642746599624,
+          "tokens": [
+            270
+          ]
+        },
+        {
+          "seconds": 12.073970822995761,
+          "tokens": [
+            22938
+          ]
+        },
+        {
+          "seconds": 12.15074173999892,
+          "tokens": [
+            481
+          ]
+        },
+        {
+          "seconds": 12.228410456998972,
+          "tokens": [
+            20342
+          ]
+        },
+        {
+          "seconds": 12.309593178993964,
+          "tokens": [
+            343
+          ]
+        },
+        {
+          "seconds": 12.406635027000448,
+          "tokens": [
+            1805
+          ]
+        },
+        {
+          "seconds": 12.464428431994747,
+          "tokens": [
+            582
+          ]
+        },
+        {
+          "seconds": 12.5485675289965,
+          "tokens": [
+            35
+          ]
+        },
+        {
+          "seconds": 12.627321708998352,
+          "tokens": [
+            5925
+          ]
+        },
+        {
+          "seconds": 12.702862988997367,
+          "tokens": [
+            26510
+          ]
+        },
+        {
+          "seconds": 12.795576031996461,
+          "tokens": [
+            396
+          ]
+        },
+        {
+          "seconds": 12.85786072499468,
+          "tokens": [
+            1117
+          ]
+        },
+        {
+          "seconds": 12.914702188994852,
+          "tokens": [
+            17138
+          ]
+        },
+        {
+          "seconds": 12.956922895995376,
+          "tokens": [
+            396
+          ]
+        },
+        {
+          "seconds": 13.018768908994389,
+          "tokens": [
+            515
+          ]
+        },
+        {
+          "seconds": 13.090242940997996,
+          "tokens": [
+            982
+          ]
+        },
+        {
+          "seconds": 13.148385752996546,
+          "tokens": [
+            2869
+          ]
+        },
+        {
+          "seconds": 13.223848231995362,
+          "tokens": [
+            12
+          ]
+        },
+        {
+          "seconds": 13.28555322199827,
+          "tokens": [
+            13792
+          ]
+        },
+        {
+          "seconds": 13.333769247998134,
+          "tokens": [
+            9120
+          ]
+        },
+        {
+          "seconds": 13.412356084998464,
+          "tokens": [
+            1119
+          ]
+        },
+        {
+          "seconds": 13.479979942996579,
+          "tokens": [
+            19685
+          ]
+        },
+        {
+          "seconds": 13.572526101997937,
+          "tokens": [
+            16
+          ]
+        },
+        {
+          "seconds": 13.65409854400059,
+          "tokens": [
+            39652
+          ]
+        },
+        {
+          "seconds": 13.71280807799485,
+          "tokens": [
+            344
+          ]
+        },
+        {
+          "seconds": 13.798499668999284,
+          "tokens": [
+            270
+          ]
+        },
+        {
+          "seconds": 13.855730190996837,
+          "tokens": [
+            6822
+          ]
+        },
+        {
+          "seconds": 13.922049151995452,
+          "tokens": [
+            396
+          ]
+        },
+        {
+          "seconds": 13.97896114699688,
+          "tokens": [
+            38758
+          ]
+        },
+        {
+          "seconds": 14.043134920000739,
+          "tokens": [
+            85
+          ]
+        },
+        {
+          "seconds": 14.120105231995694,
+          "tokens": [
+            260
+          ]
+        },
+        {
+          "seconds": 14.186975462995179,
+          "tokens": [
+            11055
+          ]
+        },
+        {
+          "seconds": 14.258245261000411,
+          "tokens": [
+            2501
+          ]
+        },
+        {
+          "seconds": 14.314156483997067,
+          "tokens": [
+            538
+          ]
+        },
+        {
+          "seconds": 14.392923454994161,
+          "tokens": [
+            11782
+          ]
+        },
+        {
+          "seconds": 14.450842501995794,
+          "tokens": [
+            28303
+          ]
+        },
+        {
+          "seconds": 14.498242520996428,
+          "tokens": [
+            377
+          ]
+        },
+        {
+          "seconds": 14.575167380993662,
+          "tokens": [
+            12603
+          ]
+        }
+      ],
+      "ram_cache": {
+        "hits": 18674,
+        "misses": 10042,
+        "evictions": 3809,
+        "read_bytes": 128310681600,
+        "read_calls": 10042,
+        "peak_resident_bytes": 90191855616,
+        "buffer_reuses": 3234,
+        "demotions": 805,
+        "demote_bytes": 10576773120,
+        "duplicate_evictions": 2513
+      },
+      "gpu_cache": {
+        "hits": 34409,
+        "misses": 28716,
+        "evictions": 26676,
+        "failures": 0,
+        "peak_resident_bytes": 25580666880,
+        "split_calls": 5931,
+        "split_resident": 21187,
+        "split_missing": 14399
+      },
+      "gpu_peak_allocated_bytes": 31348644352,
+      "gpu_peak_reserved_bytes": 31385976832,
+      "device_free_bytes_after_request": 148832256,
+      "host_available_bytes": 14675066880,
+      "cgroup_memory_current": 94590709760,
+      "cgroup_memory_peak": 94591709184,
+      "cgroup_swap_current": 0
+    },
+    {
+      "id": "fresh-1",
+      "phase": "fresh",
+      "input_tokens": 31,
+      "output_tokens": 128,
+      "token_ids": [
+        5,
+        1730,
+        260,
+        4335,
+        10480,
+        6636,
+        4950,
+        305,
+        29043,
+        6530,
+        121239,
+        74058,
+        271,
+        2167,
+        70298,
+        18224,
+        965,
+        74668,
+        288,
+        270,
+        1975,
+        1990,
+        850,
+        1099,
+        4387,
+        965,
+        591,
+        3611,
+        270,
+        1473,
+        2953,
+        7236,
+        294,
+        48895,
+        1116,
+        295,
+        6783,
+        16,
+        4335,
+        54934,
+        5682,
+        566,
+        3295,
+        418,
+        260,
+        3096,
+        294,
+        7189,
+        41747,
+        3252,
+        2619,
+        266,
+        664,
+        289,
+        6728,
+        37628,
+        13510,
+        294,
+        778,
+        2619,
+        18110,
+        1241,
+        29172,
+        37628,
+        343,
+        37,
+        6204,
+        22604,
+        344,
+        270,
+        55390,
+        2511,
+        16,
+        1162,
+        3783,
+        16428,
+        1192,
+        260,
+        46144,
+        982,
+        14990,
+        4950,
+        12,
+        12529,
+        18224,
+        14,
+        1192,
+        436,
+        982,
+        49461,
+        6530,
+        12,
+        1066,
+        14,
+        28483,
+        1407,
+        15360,
+        7911,
+        7165,
+        509,
+        3586,
+        4563,
+        343,
+        19060,
+        14,
+        5217,
+        14,
+        305,
+        14790,
+        72383,
+        754,
+        305,
+        22707,
+        270,
+        15588,
+        396,
+        3144,
+        1305,
+        7944,
+        15866,
+        538,
+        1902,
+        62333,
+        14996,
+        339,
+        372,
+        223,
+        19
+      ],
+      "text": "# How a Compiler Detects and Optimizes Repeated Expressions\n\nRepeated expressions—computing the same value more than once—are among the most common sources of wasted work in programs. Compilers attack this problem with a family of techniques collectively called **redundancy elimination**, of which **common subexpression elimination (CSE)** is the canonical example. This article explains how a compiler *detects* repeated expressions, how it *optimizes* them, walks through concrete worked examples at several levels (local, global, and partial redundancy), and discusses the limitations that keep these optimizations from being universally applicable.\n\n## 1",
+      "ttft_seconds": 1.3976218610041542,
+      "seconds": 9.509118690999458,
+      "decode_tok_s": 15.656813361849082,
+      "events": [
+        {
+          "seconds": 1.3976218610041542,
+          "tokens": [
+            5
+          ]
+        },
+        {
+          "seconds": 1.4450121800036868,
+          "tokens": [
+            1730
+          ]
+        },
+        {
+          "seconds": 1.4998149890016066,
+          "tokens": [
+            260
+          ]
+        },
+        {
+          "seconds": 1.5531073560050572,
+          "tokens": [
+            4335
+          ]
+        },
+        {
+          "seconds": 1.6574753120003152,
+          "tokens": [
+            10480
+          ]
+        },
+        {
+          "seconds": 1.725317864002136,
+          "tokens": [
+            6636
+          ]
+        },
+        {
+          "seconds": 1.8100783840054646,
+          "tokens": [
+            4950
+          ]
+        },
+        {
+          "seconds": 1.8802690680022351,
+          "tokens": [
+            305
+          ]
+        },
+        {
+          "seconds": 1.9376432830031263,
+          "tokens": [
+            29043
+          ]
+        },
+        {
+          "seconds": 2.0058123330018134,
+          "tokens": [
+            6530
+          ]
+        },
+        {
+          "seconds": 2.0646842710048077,
+          "tokens": [
+            121239
+          ]
+        },
+        {
+          "seconds": 2.1340754970005946,
+          "tokens": [
+            74058
+          ]
+        },
+        {
+          "seconds": 2.2045251470044605,
+          "tokens": [
+            271
+          ]
+        },
+        {
+          "seconds": 2.260067221999634,
+          "tokens": [
+            2167
+          ]
+        },
+        {
+          "seconds": 2.3421033030026592,
+          "tokens": [
+            70298
+          ]
+        },
+        {
+          "seconds": 2.404901856003562,
+          "tokens": [
+            18224
+          ]
+        },
+        {
+          "seconds": 2.4493052500038175,
+          "tokens": [
+            965
+          ]
+        },
+        {
+          "seconds": 2.5008595190010965,
+          "tokens": [
+            74668
+          ]
+        },
+        {
+          "seconds": 2.5943297280027764,
+          "tokens": [
+            288
+          ]
+        },
+        {
+          "seconds": 2.6602248679992044,
+          "tokens": [
+            270
+          ]
+        },
+        {
+          "seconds": 2.72048075600469,
+          "tokens": [
+            1975
+          ]
+        },
+        {
+          "seconds": 2.7772097370034317,
+          "tokens": [
+            1990
+          ]
+        },
+        {
+          "seconds": 2.83971998400375,
+          "tokens": [
+            850
+          ]
+        },
+        {
+          "seconds": 2.9577687260025414,
+          "tokens": [
+            1099
+          ]
+        },
+        {
+          "seconds": 3.0356068559995038,
+          "tokens": [
+            4387
+          ]
+        },
+        {
+          "seconds": 3.0872932269994635,
+          "tokens": [
+            965
+          ]
+        },
+        {
+          "seconds": 3.1492430720027187,
+          "tokens": [
+            591
+          ]
+        },
+        {
+          "seconds": 3.209101961001579,
+          "tokens": [
+            3611
+          ]
+        },
+        {
+          "seconds": 3.2910517000054824,
+          "tokens": [
+            270
+          ]
+        },
+        {
+          "seconds": 3.339704616002564,
+          "tokens": [
+            1473
+          ]
+        },
+        {
+          "seconds": 3.409019580001768,
+          "tokens": [
+            2953
+          ]
+        },
+        {
+          "seconds": 3.521485991004738,
+          "tokens": [
+            7236
+          ]
+        },
+        {
+          "seconds": 3.6507535870041465,
+          "tokens": [
+            294
+          ]
+        },
+        {
+          "seconds": 3.719037439004751,
+          "tokens": [
+            48895
+          ]
+        },
+        {
+          "seconds": 3.7900139490011497,
+          "tokens": [
+            1116
+          ]
+        },
+        {
+          "seconds": 3.8522822400045698,
+          "tokens": [
+            295
+          ]
+        },
+        {
+          "seconds": 3.909090263005055,
+          "tokens": [
+            6783
+          ]
+        },
+        {
+          "seconds": 3.976003986004798,
+          "tokens": [
+            16
+          ]
+        },
+        {
+          "seconds": 4.031096901002456,
+          "tokens": [
+            4335
+          ]
+        },
+        {
+          "seconds": 4.092997675004881,
+          "tokens": [
+            54934
+          ]
+        },
+        {
+          "seconds": 4.149358478003705,
+          "tokens": [
+            5682
+          ]
+        },
+        {
+          "seconds": 4.2262099260042305,
+          "tokens": [
+            566
+          ]
+        },
+        {
+          "seconds": 4.275064895999094,
+          "tokens": [
+            3295
+          ]
+        },
+        {
+          "seconds": 4.337024091000785,
+          "tokens": [
+            418
+          ]
+        },
+        {
+          "seconds": 4.404113007003616,
+          "tokens": [
+            260
+          ]
+        },
+        {
+          "seconds": 4.459428718000709,
+          "tokens": [
+            3096
+          ]
+        },
+        {
+          "seconds": 4.529820064999512,
+          "tokens": [
+            294
+          ]
+        },
+        {
+          "seconds": 4.596323398000095,
+          "tokens": [
+            7189
+          ]
+        },
+        {
+          "seconds": 4.660147593000147,
+          "tokens": [
+            41747
+          ]
+        },
+        {
+          "seconds": 4.739248670004599,
+          "tokens": [
+            3252
+          ]
+        },
+        {
+          "seconds": 4.816589148002095,
+          "tokens": [
+            2619
+          ]
+        },
+        {
+          "seconds": 4.880179168001632,
+          "tokens": [
+            266
+          ]
+        },
+        {
+          "seconds": 4.923535068999627,
+          "tokens": [
+            664
+          ]
+        },
+        {
+          "seconds": 5.000687033003487,
+          "tokens": [
+            289
+          ]
+        },
+        {
+          "seconds": 5.06911000800028,
+          "tokens": [
+            6728
+          ]
+        },
+        {
+          "seconds": 5.124315865999961,
+          "tokens": [
+            37628
+          ]
+        },
+        {
+          "seconds": 5.214456042005622,
+          "tokens": [
+            13510
+          ]
+        },
+        {
+          "seconds": 5.260551983003097,
+          "tokens": [
+            294
+          ]
+        },
+        {
+          "seconds": 5.35292228700564,
+          "tokens": [
+            778
+          ]
+        },
+        {
+          "seconds": 5.435704474002705,
+          "tokens": [
+            2619
+          ]
+        },
+        {
+          "seconds": 5.494456249005452,
+          "tokens": [
+            18110
+          ]
+        },
+        {
+          "seconds": 5.5650503400029265,
+          "tokens": [
+            1241
+          ]
+        },
+        {
+          "seconds": 5.663076896998973,
+          "tokens": [
+            29172
+          ]
+        },
+        {
+          "seconds": 5.733277181003359,
+          "tokens": [
+            37628
+          ]
+        },
+        {
+          "seconds": 5.812428627999907,
+          "tokens": [
+            343
+          ]
+        },
+        {
+          "seconds": 5.920329610002227,
+          "tokens": [
+            37
+          ]
+        },
+        {
+          "seconds": 5.982000928001071,
+          "tokens": [
+            6204
+          ]
+        },
+        {
+          "seconds": 6.0732446080000955,
+          "tokens": [
+            22604
+          ]
+        },
+        {
+          "seconds": 6.128068386999075,
+          "tokens": [
+            344
+          ]
+        },
+        {
+          "seconds": 6.198908024998673,
+          "tokens": [
+            270
+          ]
+        },
+        {
+          "seconds": 6.252221900998848,
+          "tokens": [
+            55390
+          ]
+        },
+        {
+          "seconds": 6.301003120002861,
+          "tokens": [
+            2511
+          ]
+        },
+        {
+          "seconds": 6.368326831005106,
+          "tokens": [
+            16
+          ]
+        },
+        {
+          "seconds": 6.414535383002658,
+          "tokens": [
+            1162
+          ]
+        },
+        {
+          "seconds": 6.480179887999839,
+          "tokens": [
+            3783
+          ]
+        },
+        {
+          "seconds": 6.555823439004598,
+          "tokens": [
+            16428
+          ]
+        },
+        {
+          "seconds": 6.609663667004497,
+          "tokens": [
+            1192
+          ]
+        },
+        {
+          "seconds": 6.653465898001741,
+          "tokens": [
+            260
+          ]
+        },
+        {
+          "seconds": 6.701017289000447,
+          "tokens": [
+            46144
+          ]
+        },
+        {
+          "seconds": 6.760153993003769,
+          "tokens": [
+            982
+          ]
+        },
+        {
+          "seconds": 6.837857848004205,
+          "tokens": [
+            14990
+          ]
+        },
+        {
+          "seconds": 6.928924134001136,
+          "tokens": [
+            4950
+          ]
+        },
+        {
+          "seconds": 6.979703296005027,
+          "tokens": [
+            12
+          ]
+        },
+        {
+          "seconds": 7.016742079998949,
+          "tokens": [
+            12529
+          ]
+        },
+        {
+          "seconds": 7.066571770999872,
+          "tokens": [
+            18224
+          ]
+        },
+        {
+          "seconds": 7.130103659001179,
+          "tokens": [
+            14
+          ]
+        },
+        {
+          "seconds": 7.184228114005236,
+          "tokens": [
+            1192
+          ]
+        },
+        {
+          "seconds": 7.255002429003071,
+          "tokens": [
+            436
+          ]
+        },
+        {
+          "seconds": 7.325082039998961,
+          "tokens": [
+            982
+          ]
+        },
+        {
+          "seconds": 7.3812341680022655,
+          "tokens": [
+            49461
+          ]
+        },
+        {
+          "seconds": 7.436252302002686,
+          "tokens": [
+            6530
+          ]
+        },
+        {
+          "seconds": 7.4913896979996935,
+          "tokens": [
+            12
+          ]
+        },
+        {
+          "seconds": 7.536049327005458,
+          "tokens": [
+            1066
+          ]
+        },
+        {
+          "seconds": 7.595263772003818,
+          "tokens": [
+            14
+          ]
+        },
+        {
+          "seconds": 7.6352881800048635,
+          "tokens": [
+            28483
+          ]
+        },
+        {
+          "seconds": 7.700806752000062,
+          "tokens": [
+            1407
+          ]
+        },
+        {
+          "seconds": 7.742903865000699,
+          "tokens": [
+            15360
+          ]
+        },
+        {
+          "seconds": 7.785616052002297,
+          "tokens": [
+            7911
+          ]
+        },
+        {
+          "seconds": 7.82442770399939,
+          "tokens": [
+            7165
+          ]
+        },
+        {
+          "seconds": 7.862875488004647,
+          "tokens": [
+            509
+          ]
+        },
+        {
+          "seconds": 7.942926743999124,
+          "tokens": [
+            3586
+          ]
+        },
+        {
+          "seconds": 8.002493747000699,
+          "tokens": [
+            4563
+          ]
+        },
+        {
+          "seconds": 8.059890942000493,
+          "tokens": [
+            343
+          ]
+        },
+        {
+          "seconds": 8.108064567000838,
+          "tokens": [
+            19060
+          ]
+        },
+        {
+          "seconds": 8.167749202002597,
+          "tokens": [
+            14
+          ]
+        },
+        {
+          "seconds": 8.243139737998717,
+          "tokens": [
+            5217
+          ]
+        },
+        {
+          "seconds": 8.305761266004993,
+          "tokens": [
+            14
+          ]
+        },
+        {
+          "seconds": 8.352179033005086,
+          "tokens": [
+            305
+          ]
+        },
+        {
+          "seconds": 8.403917506002472,
+          "tokens": [
+            14790
+          ]
+        },
+        {
+          "seconds": 8.456702030998713,
+          "tokens": [
+            72383
+          ]
+        },
+        {
+          "seconds": 8.517533090998768,
+          "tokens": [
+            754
+          ]
+        },
+        {
+          "seconds": 8.59027643900481,
+          "tokens": [
+            305
+          ]
+        },
+        {
+          "seconds": 8.63867754900275,
+          "tokens": [
+            22707
+          ]
+        },
+        {
+          "seconds": 8.67863497500366,
+          "tokens": [
+            270
+          ]
+        },
+        {
+          "seconds": 8.725527262999094,
+          "tokens": [
+            15588
+          ]
+        },
+        {
+          "seconds": 8.774631487998704,
+          "tokens": [
+            396
+          ]
+        },
+        {
+          "seconds": 8.834454376003123,
+          "tokens": [
+            3144
+          ]
+        },
+        {
+          "seconds": 8.885865771000681,
+          "tokens": [
+            1305
+          ]
+        },
+        {
+          "seconds": 8.93199857199943,
+          "tokens": [
+            7944
+          ]
+        },
+        {
+          "seconds": 9.008780467003817,
+          "tokens": [
+            15866
+          ]
+        },
+        {
+          "seconds": 9.063518805000058,
+          "tokens": [
+            538
+          ]
+        },
+        {
+          "seconds": 9.137796795999748,
+          "tokens": [
+            1902
+          ]
+        },
+        {
+          "seconds": 9.190590721998888,
+          "tokens": [
+            62333
+          ]
+        },
+        {
+          "seconds": 9.240704059004202,
+          "tokens": [
+            14996
+          ]
+        },
+        {
+          "seconds": 9.316023213003064,
+          "tokens": [
+            339
+          ]
+        },
+        {
+          "seconds": 9.383701021004526,
+          "tokens": [
+            372
+          ]
+        },
+        {
+          "seconds": 9.454203260000213,
+          "tokens": [
+            223
+          ]
+        },
+        {
+          "seconds": 9.509106431003602,
+          "tokens": [
+            19
+          ]
+        }
+      ],
+      "ram_cache": {
+        "hits": 29029,
+        "misses": 11028,
+        "evictions": 5486,
+        "read_bytes": 141054586880,
+        "read_calls": 11028,
+        "peak_resident_bytes": 90194313216,
+        "buffer_reuses": 4615,
+        "demotions": 1479,
+        "demote_bytes": 19267043328,
+        "duplicate_evictions": 3187
+      },
+      "gpu_cache": {
+        "hits": 56422,
+        "misses": 40057,
+        "evictions": 38017,
+        "failures": 0,
+        "peak_resident_bytes": 25580666880,
+        "split_calls": 10340,
+        "split_resident": 38131,
+        "split_missing": 23909
+      },
+      "gpu_peak_allocated_bytes": 31348644352,
+      "gpu_peak_reserved_bytes": 31385976832,
+      "device_free_bytes_after_request": 148832256,
+      "host_available_bytes": 14490058752,
+      "cgroup_memory_current": 94601072640,
+      "cgroup_memory_peak": 94606848000,
+      "cgroup_swap_current": 0
+    },
+    {
+      "id": "fresh-2",
+      "phase": "fresh",
+      "input_tokens": 31,
+      "output_tokens": 128,
+      "token_ids": [
+        5,
+        41689,
+        8315,
+        5015,
+        11155,
+        28,
+        83042,
+        304,
+        49403,
+        21309,
+        12356,
+        271,
+        81624,
+        50997,
+        2703,
+        344,
+        270,
+        1341,
+        294,
+        15598,
+        396,
+        99502,
+        1192,
+        77881,
+        260,
+        34215,
+        12804,
+        85,
+        38774,
+        1055,
+        270,
+        4854,
+        16,
+        9182,
+        6672,
+        8851,
+        344,
+        396,
+        270,
+        4854,
+        734,
+        3510,
+        34393,
+        344,
+        13026,
+        14,
+        1014,
+        124573,
+        14,
+        305,
+        8900,
+        418,
+        915,
+        18290,
+        16,
+        41689,
+        2231,
+        6253,
+        982,
+        6047,
+        4746,
+        12,
+        7768,
+        79872,
+        965,
+        39634,
+        288,
+        31565,
+        3514,
+        4721,
+        469,
+        11570,
+        12472,
+        50997,
+        14,
+        1539,
+        41487,
+        1375,
+        965,
+        8848,
+        11499,
+        7370,
+        304,
+        27257,
+        18290,
+        305,
+        8281,
+        4128,
+        304,
+        1347,
+        270,
+        4912,
+        16,
+        1162,
+        15795,
+        16428,
+        270,
+        12187,
+        513,
+        778,
+        41689,
+        6708,
+        85,
+        304,
+        10046,
+        34393,
+        14,
+        2984,
+        1407,
+        15360,
+        19026,
+        7165,
+        14,
+        305,
+        22707,
+        270,
+        15588,
+        294,
+        270,
+        4090,
+        339,
+        372,
+        455,
+        17635,
+        45799,
+        52832,
+        271,
+        9173
+      ],
+      "text": "# TCP Congestion Control: Adaptation to Changing Bandwidth\n\nTCP congestion control is the set of algorithms that governs how aggressively a sender injects packets into the network. Its central challenge is that the network's available bandwidth is unknown, time-varying, and shared with other flows. TCP must therefore *discover* capacity empirically—probing upward until loss or delay signals congestion, then backing off—while remaining fair to competing flows and efficient enough to use the link. This essay explains the mechanisms by which TCP adapts to changing bandwidth, works through concrete numerical examples, and discusses the limitations of the approach.\n\n## The Core Feedback Loop\n\nClass",
+      "ttft_seconds": 1.3210461049966398,
+      "seconds": 10.17609137600084,
+      "decode_tok_s": 14.342132377110314,
+      "events": [
+        {
+          "seconds": 1.3210461049966398,
+          "tokens": [
+            5
+          ]
+        },
+        {
+          "seconds": 1.3768295150002814,
+          "tokens": [
+            41689
+          ]
+        },
+        {
+          "seconds": 1.4487972459974117,
+          "tokens": [
+            8315
+          ]
+        },
+        {
+          "seconds": 1.5358430339983897,
+          "tokens": [
+            5015
+          ]
+        },
+        {
+          "seconds": 1.6109577329989406,
+          "tokens": [
+            11155
+          ]
+        },
+        {
+          "seconds": 1.6612521040005959,
+          "tokens": [
+            28
+          ]
+        },
+        {
+          "seconds": 1.7256058999992092,
+          "tokens": [
+            83042
+          ]
+        },
+        {
+          "seconds": 1.7815604330025963,
+          "tokens": [
+            304
+          ]
+        },
+        {
+          "seconds": 1.8480734460026724,
+          "tokens": [
+            49403
+          ]
+        },
+        {
+          "seconds": 1.912223327002721,
+          "tokens": [
+            21309
+          ]
+        },
+        {
+          "seconds": 1.987377147001098,
+          "tokens": [
+            12356
+          ]
+        },
+        {
+          "seconds": 2.065714796000975,
+          "tokens": [
+            271
+          ]
+        },
+        {
+          "seconds": 2.120155397002236,
+          "tokens": [
+            81624
+          ]
+        },
+        {
+          "seconds": 2.2133925989983254,
+          "tokens": [
+            50997
+          ]
+        },
+        {
+          "seconds": 2.2717036940011894,
+          "tokens": [
+            2703
+          ]
+        },
+        {
+          "seconds": 2.313507369995932,
+          "tokens": [
+            344
+          ]
+        },
+        {
+          "seconds": 2.376611398998648,
+          "tokens": [
+            270
+          ]
+        },
+        {
+          "seconds": 2.430027857000823,
+          "tokens": [
+            1341
+          ]
+        },
+        {
+          "seconds": 2.5112228479993064,
+          "tokens": [
+            294
+          ]
+        },
+        {
+          "seconds": 2.608506837997993,
+          "tokens": [
+            15598
+          ]
+        },
+        {
+          "seconds": 2.6795239790008054,
+          "tokens": [
+            396
+          ]
+        },
+        {
+          "seconds": 2.7313256519992137,
+          "tokens": [
+            99502
+          ]
+        },
+        {
+          "seconds": 2.792762903998664,
+          "tokens": [
+            1192
+          ]
+        },
+        {
+          "seconds": 2.8467117239997606,
+          "tokens": [
+            77881
+          ]
+        },
+        {
+          "seconds": 2.939832033996936,
+          "tokens": [
+            260
+          ]
+        },
+        {
+          "seconds": 3.000312784999551,
+          "tokens": [
+            34215
+          ]
+        },
+        {
+          "seconds": 3.0794842729956144,
+          "tokens": [
+            12804
+          ]
+        },
+        {
+          "seconds": 3.177321803996165,
+          "tokens": [
+            85
+          ]
+        },
+        {
+          "seconds": 3.261482508998597,
+          "tokens": [
+            38774
+          ]
+        },
+        {
+          "seconds": 3.353534754998691,
+          "tokens": [
+            1055
+          ]
+        },
+        {
+          "seconds": 3.451237923996814,
+          "tokens": [
+            270
+          ]
+        },
+        {
+          "seconds": 3.5199573549980414,
+          "tokens": [
+            4854
+          ]
+        },
+        {
+          "seconds": 3.6104186059965286,
+          "tokens": [
+            16
+          ]
+        },
+        {
+          "seconds": 3.6874891569968895,
+          "tokens": [
+            9182
+          ]
+        },
+        {
+          "seconds": 3.771677463002561,
+          "tokens": [
+            6672
+          ]
+        },
+        {
+          "seconds": 3.851328871001897,
+          "tokens": [
+            8851
+          ]
+        },
+        {
+          "seconds": 3.9231407879997278,
+          "tokens": [
+            344
+          ]
+        },
+        {
+          "seconds": 3.977916946001642,
+          "tokens": [
+            396
+          ]
+        },
+        {
+          "seconds": 4.036159158000373,
+          "tokens": [
+            270
+          ]
+        },
+        {
+          "seconds": 4.110190464001789,
+          "tokens": [
+            4854
+          ]
+        },
+        {
+          "seconds": 4.175055300001986,
+          "tokens": [
+            734
+          ]
+        },
+        {
+          "seconds": 4.242647826002212,
+          "tokens": [
+            3510
+          ]
+        },
+        {
+          "seconds": 4.319353788996523,
+          "tokens": [
+            34393
+          ]
+        },
+        {
+          "seconds": 4.375646280001092,
+          "tokens": [
+            344
+          ]
+        },
+        {
+          "seconds": 4.433033823996084,
+          "tokens": [
+            13026
+          ]
+        },
+        {
+          "seconds": 4.518332793995796,
+          "tokens": [
+            14
+          ]
+        },
+        {
+          "seconds": 4.583434756001225,
+          "tokens": [
+            1014
+          ]
+        },
+        {
+          "seconds": 4.755042247001256,
+          "tokens": [
+            124573
+          ]
+        },
+        {
+          "seconds": 4.865293757000472,
+          "tokens": [
+            14
+          ]
+        },
+        {
+          "seconds": 4.95516556599614,
+          "tokens": [
+            305
+          ]
+        },
+        {
+          "seconds": 5.011354264999682,
+          "tokens": [
+            8900
+          ]
+        },
+        {
+          "seconds": 5.134185078000883,
+          "tokens": [
+            418
+          ]
+        },
+        {
+          "seconds": 5.253989224998804,
+          "tokens": [
+            915
+          ]
+        },
+        {
+          "seconds": 5.3393629170022905,
+          "tokens": [
+            18290
+          ]
+        },
+        {
+          "seconds": 5.411542472000292,
+          "tokens": [
+            16
+          ]
+        },
+        {
+          "seconds": 5.480443104999722,
+          "tokens": [
+            41689
+          ]
+        },
+        {
+          "seconds": 5.563200060001691,
+          "tokens": [
+            2231
+          ]
+        },
+        {
+          "seconds": 5.629987038002582,
+          "tokens": [
+            6253
+          ]
+        },
+        {
+          "seconds": 5.693487454998831,
+          "tokens": [
+            982
+          ]
+        },
+        {
+          "seconds": 5.755855586998223,
+          "tokens": [
+            6047
+          ]
+        },
+        {
+          "seconds": 5.823788419998891,
+          "tokens": [
+            4746
+          ]
+        },
+        {
+          "seconds": 5.903375485999277,
+          "tokens": [
+            12
+          ]
+        },
+        {
+          "seconds": 5.967336932000762,
+          "tokens": [
+            7768
+          ]
+        },
+        {
+          "seconds": 6.0208801929984475,
+          "tokens": [
+            79872
+          ]
+        },
+        {
+          "seconds": 6.087831263997941,
+          "tokens": [
+            965
+          ]
+        },
+        {
+          "seconds": 6.145355102002213,
+          "tokens": [
+            39634
+          ]
+        },
+        {
+          "seconds": 6.245552713997313,
+          "tokens": [
+            288
+          ]
+        },
+        {
+          "seconds": 6.303658833996451,
+          "tokens": [
+            31565
+          ]
+        },
+        {
+          "seconds": 6.392026980000082,
+          "tokens": [
+            3514
+          ]
+        },
+        {
+          "seconds": 6.457088420000218,
+          "tokens": [
+            4721
+          ]
+        },
+        {
+          "seconds": 6.537499573001696,
+          "tokens": [
+            469
+          ]
+        },
+        {
+          "seconds": 6.626321509000263,
+          "tokens": [
+            11570
+          ]
+        },
+        {
+          "seconds": 6.696623242998612,
+          "tokens": [
+            12472
+          ]
+        },
+        {
+          "seconds": 6.75589554799808,
+          "tokens": [
+            50997
+          ]
+        },
+        {
+          "seconds": 6.838022368996462,
+          "tokens": [
+            14
+          ]
+        },
+        {
+          "seconds": 6.910411388002103,
+          "tokens": [
+            1539
+          ]
+        },
+        {
+          "seconds": 6.985593527999299,
+          "tokens": [
+            41487
+          ]
+        },
+        {
+          "seconds": 7.0941414709959645,
+          "tokens": [
+            1375
+          ]
+        },
+        {
+          "seconds": 7.1601160319987684,
+          "tokens": [
+            965
+          ]
+        },
+        {
+          "seconds": 7.213537139999971,
+          "tokens": [
+            8848
+          ]
+        },
+        {
+          "seconds": 7.280683564997162,
+          "tokens": [
+            11499
+          ]
+        },
+        {
+          "seconds": 7.341537355001492,
+          "tokens": [
+            7370
+          ]
+        },
+        {
+          "seconds": 7.418010451998271,
+          "tokens": [
+            304
+          ]
+        },
+        {
+          "seconds": 7.484299008996459,
+          "tokens": [
+            27257
+          ]
+        },
+        {
+          "seconds": 7.545525556997745,
+          "tokens": [
+            18290
+          ]
+        },
+        {
+          "seconds": 7.615093034997699,
+          "tokens": [
+            305
+          ]
+        },
+        {
+          "seconds": 7.68771778899827,
+          "tokens": [
+            8281
+          ]
+        },
+        {
+          "seconds": 7.737063738997676,
+          "tokens": [
+            4128
+          ]
+        },
+        {
+          "seconds": 7.799987612997938,
+          "tokens": [
+            304
+          ]
+        },
+        {
+          "seconds": 7.862625690999266,
+          "tokens": [
+            1347
+          ]
+        },
+        {
+          "seconds": 7.94148598999891,
+          "tokens": [
+            270
+          ]
+        },
+        {
+          "seconds": 7.990426850999938,
+          "tokens": [
+            4912
+          ]
+        },
+        {
+          "seconds": 8.054897738998989,
+          "tokens": [
+            16
+          ]
+        },
+        {
+          "seconds": 8.11980291600048,
+          "tokens": [
+            1162
+          ]
+        },
+        {
+          "seconds": 8.199450542000704,
+          "tokens": [
+            15795
+          ]
+        },
+        {
+          "seconds": 8.283802291000029,
+          "tokens": [
+            16428
+          ]
+        },
+        {
+          "seconds": 8.325721959001385,
+          "tokens": [
+            270
+          ]
+        },
+        {
+          "seconds": 8.38523617899773,
+          "tokens": [
+            12187
+          ]
+        },
+        {
+          "seconds": 8.427399672997126,
+          "tokens": [
+            513
+          ]
+        },
+        {
+          "seconds": 8.506208491999132,
+          "tokens": [
+            778
+          ]
+        },
+        {
+          "seconds": 8.561686143999395,
+          "tokens": [
+            41689
+          ]
+        },
+        {
+          "seconds": 8.625759702998039,
+          "tokens": [
+            6708
+          ]
+        },
+        {
+          "seconds": 8.716545021001366,
+          "tokens": [
+            85
+          ]
+        },
+        {
+          "seconds": 8.760303368995665,
+          "tokens": [
+            304
+          ]
+        },
+        {
+          "seconds": 8.80738938000286,
+          "tokens": [
+            10046
+          ]
+        },
+        {
+          "seconds": 8.867072364002524,
+          "tokens": [
+            34393
+          ]
+        },
+        {
+          "seconds": 8.930743543998688,
+          "tokens": [
+            14
+          ]
+        },
+        {
+          "seconds": 8.98666950599727,
+          "tokens": [
+            2984
+          ]
+        },
+        {
+          "seconds": 9.046717598001123,
+          "tokens": [
+            1407
+          ]
+        },
+        {
+          "seconds": 9.101957284998207,
+          "tokens": [
+            15360
+          ]
+        },
+        {
+          "seconds": 9.141487061999214,
+          "tokens": [
+            19026
+          ]
+        },
+        {
+          "seconds": 9.230933161001303,
+          "tokens": [
+            7165
+          ]
+        },
+        {
+          "seconds": 9.279249788000016,
+          "tokens": [
+            14
+          ]
+        },
+        {
+          "seconds": 9.348432676997618,
+          "tokens": [
+            305
+          ]
+        },
+        {
+          "seconds": 9.40141818599659,
+          "tokens": [
+            22707
+          ]
+        },
+        {
+          "seconds": 9.453971205002745,
+          "tokens": [
+            270
+          ]
+        },
+        {
+          "seconds": 9.517843349000032,
+          "tokens": [
+            15588
+          ]
+        },
+        {
+          "seconds": 9.589498611996532,
+          "tokens": [
+            294
+          ]
+        },
+        {
+          "seconds": 9.649686987002497,
+          "tokens": [
+            270
+          ]
+        },
+        {
+          "seconds": 9.696975261998887,
+          "tokens": [
+            4090
+          ]
+        },
+        {
+          "seconds": 9.758908734002034,
+          "tokens": [
+            339
+          ]
+        },
+        {
+          "seconds": 9.830208970000967,
+          "tokens": [
+            372
+          ]
+        },
+        {
+          "seconds": 9.889362321999215,
+          "tokens": [
+            455
+          ]
+        },
+        {
+          "seconds": 9.940274674998363,
+          "tokens": [
+            17635
+          ]
+        },
+        {
+          "seconds": 9.980823753998266,
+          "tokens": [
+            45799
+          ]
+        },
+        {
+          "seconds": 10.041551160000381,
+          "tokens": [
+            52832
+          ]
+        },
+        {
+          "seconds": 10.107443847999093,
+          "tokens": [
+            271
+          ]
+        },
+        {
+          "seconds": 10.176075235998724,
+          "tokens": [
+            9173
+          ]
+        }
+      ],
+      "ram_cache": {
+        "hits": 38400,
+        "misses": 11777,
+        "evictions": 6585,
+        "read_bytes": 150641766400,
+        "read_calls": 11777,
+        "peak_resident_bytes": 90194313216,
+        "buffer_reuses": 5530,
+        "demotions": 1832,
+        "demote_bytes": 23809818624,
+        "duplicate_evictions": 3537
+      },
+      "gpu_cache": {
+        "hits": 79726,
+        "misses": 50177,
+        "evictions": 48137,
+        "failures": 0,
+        "peak_resident_bytes": 25580666880,
+        "split_calls": 14573,
+        "split_resident": 55184,
+        "split_missing": 32254
+      },
+      "gpu_peak_allocated_bytes": 31348644352,
+      "gpu_peak_reserved_bytes": 31385976832,
+      "device_free_bytes_after_request": 148832256,
+      "host_available_bytes": 14220845056,
+      "cgroup_memory_current": 94651015168,
+      "cgroup_memory_peak": 94656462848,
+      "cgroup_swap_current": 0
+    },
+    {
+      "id": "fresh-0",
+      "phase": "repeat",
+      "input_tokens": 30,
+      "output_tokens": 128,
+      "token_ids": [
+        5,
+        20884,
+        53776,
+        39652,
+        5057,
+        8856,
+        43475,
+        271,
+        35,
+        2333,
+        8977,
+        344,
+        270,
+        55390,
+        582,
+        18977,
+        1844,
+        4,
+        18553,
+        396,
+        1750,
+        126756,
+        8476,
+        2231,
+        18848,
+        16,
+        3245,
+        270,
+        8126,
+        42223,
+        2333,
+        14,
+        5675,
+        295,
+        38740,
+        6464,
+        2136,
+        270,
+        17437,
+        11761,
+        14,
+        270,
+        2912,
+        11104,
+        14,
+        295,
+        100815,
+        50944,
+        14,
+        305,
+        270,
+        2501,
+        294,
+        21847,
+        20739,
+        18061,
+        2136,
+        117895,
+        32613,
+        16,
+        14402,
+        270,
+        43888,
+        20342,
+        294,
+        14570,
+        2518,
+        343,
+        1805,
+        582,
+        38,
+        5925,
+        26510,
+        396,
+        1117,
+        17138,
+        396,
+        982,
+        3384,
+        4438,
+        12,
+        1936,
+        270,
+        29182,
+        344,
+        2413,
+        1031,
+        60739,
+        14,
+        305,
+        270,
+        22938,
+        481,
+        20342,
+        343,
+        1805,
+        582,
+        35,
+        5925,
+        26510,
+        396,
+        1117,
+        17138,
+        396,
+        515,
+        982,
+        2869,
+        12,
+        13792,
+        9120,
+        1119,
+        19685,
+        16,
+        39652,
+        344,
+        270,
+        6822,
+        396,
+        38758,
+        85,
+        260,
+        11055,
+        2501,
+        538,
+        11782,
+        28303,
+        377,
+        12603
+      ],
+      "text": "# Database Transaction Recovery After Power Failure\n\nA power failure is the canonical \"crash\" scenario that every transactional database must survive. When the machine loses power, everything in volatile memory — the buffer pool, the log tail, in-flight locks, and the state of partially executed transactions — vanishes instantly. Yet the durability guarantee of ACID (the \"D\") promises that any transaction that *committed* before the crash is still there afterward, and the atomicity guarantee (the \"A\") promises that any transaction that was *not* committed leaves no trace. Recovery is the mechanism that reconstructs a consistent state from whatever survived on stable",
+      "ttft_seconds": 0.925131779993535,
+      "seconds": 6.558939393995388,
+      "decode_tok_s": 22.542511935461977,
+      "events": [
+        {
+          "seconds": 0.925131779993535,
+          "tokens": [
+            5
+          ]
+        },
+        {
+          "seconds": 0.9616399709993857,
+          "tokens": [
+            20884
+          ]
+        },
+        {
+          "seconds": 0.9948164699962945,
+          "tokens": [
+            53776
+          ]
+        },
+        {
+          "seconds": 1.0259950059989933,
+          "tokens": [
+            39652
+          ]
+        },
+        {
+          "seconds": 1.0557857009989675,
+          "tokens": [
+            5057
+          ]
+        },
+        {
+          "seconds": 1.095010460994672,
+          "tokens": [
+            8856
+          ]
+        },
+        {
+          "seconds": 1.1314908219937934,
+          "tokens": [
+            43475
+          ]
+        },
+        {
+          "seconds": 1.1686205359947053,
+          "tokens": [
+            271
+          ]
+        },
+        {
+          "seconds": 1.201216472996748,
+          "tokens": [
+            35
+          ]
+        },
+        {
+          "seconds": 1.2323244769941084,
+          "tokens": [
+            2333
+          ]
+        },
+        {
+          "seconds": 1.2659803360002115,
+          "tokens": [
+            8977
+          ]
+        },
+        {
+          "seconds": 1.2985399019962642,
+          "tokens": [
+            344
+          ]
+        },
+        {
+          "seconds": 1.3366509080005926,
+          "tokens": [
+            270
+          ]
+        },
+        {
+          "seconds": 1.3857128509989707,
+          "tokens": [
+            55390
+          ]
+        },
+        {
+          "seconds": 1.4269794449937763,
+          "tokens": [
+            582
+          ]
+        },
+        {
+          "seconds": 1.4716954939940479,
+          "tokens": [
+            18977
+          ]
+        },
+        {
+          "seconds": 1.5219431029981934,
+          "tokens": [
+            1844
+          ]
+        },
+        {
+          "seconds": 1.5696405569979106,
+          "tokens": [
+            4
+          ]
+        },
+        {
+          "seconds": 1.6137301619965,
+          "tokens": [
+            18553
+          ]
+        },
+        {
+          "seconds": 1.6544416549950256,
+          "tokens": [
+            396
+          ]
+        },
+        {
+          "seconds": 1.6952466789953178,
+          "tokens": [
+            1750
+          ]
+        },
+        {
+          "seconds": 1.7362880379951093,
+          "tokens": [
+            126756
+          ]
+        },
+        {
+          "seconds": 1.77844390199607,
+          "tokens": [
+            8476
+          ]
+        },
+        {
+          "seconds": 1.8232123819980188,
+          "tokens": [
+            2231
+          ]
+        },
+        {
+          "seconds": 1.8748210499979905,
+          "tokens": [
+            18848
+          ]
+        },
+        {
+          "seconds": 1.9268125269954908,
+          "tokens": [
+            16
+          ]
+        },
+        {
+          "seconds": 1.970373190997634,
+          "tokens": [
+            3245
+          ]
+        },
+        {
+          "seconds": 2.0197952019952936,
+          "tokens": [
+            270
+          ]
+        },
+        {
+          "seconds": 2.0618046119998326,
+          "tokens": [
+            8126
+          ]
+        },
+        {
+          "seconds": 2.1054077169974335,
+          "tokens": [
+            42223
+          ]
+        },
+        {
+          "seconds": 2.1591929419955704,
+          "tokens": [
+            2333
+          ]
+        },
+        {
+          "seconds": 2.2053233419937897,
+          "tokens": [
+            14
+          ]
+        },
+        {
+          "seconds": 2.245963862995268,
+          "tokens": [
+            5675
+          ]
+        },
+        {
+          "seconds": 2.2875244530005148,
+          "tokens": [
+            295
+          ]
+        },
+        {
+          "seconds": 2.3355006929996307,
+          "tokens": [
+            38740
+          ]
+        },
+        {
+          "seconds": 2.3812527639965992,
+          "tokens": [
+            6464
+          ]
+        },
+        {
+          "seconds": 2.4237494449989754,
+          "tokens": [
+            2136
+          ]
+        },
+        {
+          "seconds": 2.466990701999748,
+          "tokens": [
+            270
+          ]
+        },
+        {
+          "seconds": 2.5058505439956207,
+          "tokens": [
+            17437
+          ]
+        },
+        {
+          "seconds": 2.5574999429954914,
+          "tokens": [
+            11761
+          ]
+        },
+        {
+          "seconds": 2.618482364996453,
+          "tokens": [
+            14
+          ]
+        },
+        {
+          "seconds": 2.676409159998002,
+          "tokens": [
+            270
+          ]
+        },
+        {
+          "seconds": 2.7255800149941933,
+          "tokens": [
+            2912
+          ]
+        },
+        {
+          "seconds": 2.786875644000247,
+          "tokens": [
+            11104
+          ]
+        },
+        {
+          "seconds": 2.8423985369954607,
+          "tokens": [
+            14
+          ]
+        },
+        {
+          "seconds": 2.8855746319968603,
+          "tokens": [
+            295
+          ]
+        },
+        {
+          "seconds": 2.9394091590002063,
+          "tokens": [
+            100815
+          ]
+        },
+        {
+          "seconds": 2.989820520997455,
+          "tokens": [
+            50944
+          ]
+        },
+        {
+          "seconds": 3.039674980995187,
+          "tokens": [
+            14
+          ]
+        },
+        {
+          "seconds": 3.0835961929988116,
+          "tokens": [
+            305
+          ]
+        },
+        {
+          "seconds": 3.1267840579967014,
+          "tokens": [
+            270
+          ]
+        },
+        {
+          "seconds": 3.165343133994611,
+          "tokens": [
+            2501
+          ]
+        },
+        {
+          "seconds": 3.207631439996476,
+          "tokens": [
+            294
+          ]
+        },
+        {
+          "seconds": 3.2484231339985854,
+          "tokens": [
+            21847
+          ]
+        },
+        {
+          "seconds": 3.296093036995444,
+          "tokens": [
+            20739
+          ]
+        },
+        {
+          "seconds": 3.3354213689963217,
+          "tokens": [
+            18061
+          ]
+        },
+        {
+          "seconds": 3.3780532729942934,
+          "tokens": [
+            2136
+          ]
+        },
+        {
+          "seconds": 3.4237890139993397,
+          "tokens": [
+            117895
+          ]
+        },
+        {
+          "seconds": 3.4708202929978142,
+          "tokens": [
+            32613
+          ]
+        },
+        {
+          "seconds": 3.513141479998012,
+          "tokens": [
+            16
+          ]
+        },
+        {
+          "seconds": 3.5565375999940443,
+          "tokens": [
+            14402
+          ]
+        },
+        {
+          "seconds": 3.6029264149983646,
+          "tokens": [
+            270
+          ]
+        },
+        {
+          "seconds": 3.6402646040005493,
+          "tokens": [
+            43888
+          ]
+        },
+        {
+          "seconds": 3.680115487994044,
+          "tokens": [
+            20342
+          ]
+        },
+        {
+          "seconds": 3.720398199999181,
+          "tokens": [
+            294
+          ]
+        },
+        {
+          "seconds": 3.765189460995316,
+          "tokens": [
+            14570
+          ]
+        },
+        {
+          "seconds": 3.8117436399988947,
+          "tokens": [
+            2518
+          ]
+        },
+        {
+          "seconds": 3.8622148629947333,
+          "tokens": [
+            343
+          ]
+        },
+        {
+          "seconds": 3.914018674993713,
+          "tokens": [
+            1805
+          ]
+        },
+        {
+          "seconds": 3.9554969139935565,
+          "tokens": [
+            582
+          ]
+        },
+        {
+          "seconds": 4.011834294993605,
+          "tokens": [
+            38
+          ]
+        },
+        {
+          "seconds": 4.061487629995099,
+          "tokens": [
+            5925
+          ]
+        },
+        {
+          "seconds": 4.111909732993809,
+          "tokens": [
+            26510
+          ]
+        },
+        {
+          "seconds": 4.155547668000509,
+          "tokens": [
+            396
+          ]
+        },
+        {
+          "seconds": 4.195756458997494,
+          "tokens": [
+            1117
+          ]
+        },
+        {
+          "seconds": 4.2376156259997515,
+          "tokens": [
+            17138
+          ]
+        },
+        {
+          "seconds": 4.2829916489936295,
+          "tokens": [
+            396
+          ]
+        },
+        {
+          "seconds": 4.324286293995101,
+          "tokens": [
+            982
+          ]
+        },
+        {
+          "seconds": 4.371193659993878,
+          "tokens": [
+            3384
+          ]
+        },
+        {
+          "seconds": 4.41566050399706,
+          "tokens": [
+            4438
+          ]
+        },
+        {
+          "seconds": 4.471658146998379,
+          "tokens": [
+            12
+          ]
+        },
+        {
+          "seconds": 4.512964071996976,
+          "tokens": [
+            1936
+          ]
+        },
+        {
+          "seconds": 4.566234555997653,
+          "tokens": [
+            270
+          ]
+        },
+        {
+          "seconds": 4.604927743996086,
+          "tokens": [
+            29182
+          ]
+        },
+        {
+          "seconds": 4.653092257998651,
+          "tokens": [
+            344
+          ]
+        },
+        {
+          "seconds": 4.6982205559979775,
+          "tokens": [
+            2413
+          ]
+        },
+        {
+          "seconds": 4.743147658999078,
+          "tokens": [
+            1031
+          ]
+        },
+        {
+          "seconds": 4.785979556996608,
+          "tokens": [
+            60739
+          ]
+        },
+        {
+          "seconds": 4.833791521996318,
+          "tokens": [
+            14
+          ]
+        },
+        {
+          "seconds": 4.87882133799576,
+          "tokens": [
+            305
+          ]
+        },
+        {
+          "seconds": 4.924827574999654,
+          "tokens": [
+            270
+          ]
+        },
+        {
+          "seconds": 4.966320592997363,
+          "tokens": [
+            22938
+          ]
+        },
+        {
+          "seconds": 5.010078901999805,
+          "tokens": [
+            481
+          ]
+        },
+        {
+          "seconds": 5.051948148997326,
+          "tokens": [
+            20342
+          ]
+        },
+        {
+          "seconds": 5.096014682996611,
+          "tokens": [
+            343
+          ]
+        },
+        {
+          "seconds": 5.156593526000506,
+          "tokens": [
+            1805
+          ]
+        },
+        {
+          "seconds": 5.198728338000365,
+          "tokens": [
+            582
+          ]
+        },
+        {
+          "seconds": 5.246689716994297,
+          "tokens": [
+            35
+          ]
+        },
+        {
+          "seconds": 5.30067079699802,
+          "tokens": [
+            5925
+          ]
+        },
+        {
+          "seconds": 5.344442334993801,
+          "tokens": [
+            26510
+          ]
+        },
+        {
+          "seconds": 5.391851511994901,
+          "tokens": [
+            396
+          ]
+        },
+        {
+          "seconds": 5.432252436999988,
+          "tokens": [
+            1117
+          ]
+        },
+        {
+          "seconds": 5.475185456998588,
+          "tokens": [
+            17138
+          ]
+        },
+        {
+          "seconds": 5.516774518000602,
+          "tokens": [
+            396
+          ]
+        },
+        {
+          "seconds": 5.559268038996379,
+          "tokens": [
+            515
+          ]
+        },
+        {
+          "seconds": 5.603300552997098,
+          "tokens": [
+            982
+          ]
+        },
+        {
+          "seconds": 5.645640199996706,
+          "tokens": [
+            2869
+          ]
+        },
+        {
+          "seconds": 5.6999203659943305,
+          "tokens": [
+            12
+          ]
+        },
+        {
+          "seconds": 5.747046147000219,
+          "tokens": [
+            13792
+          ]
+        },
+        {
+          "seconds": 5.789681089998339,
+          "tokens": [
+            9120
+          ]
+        },
+        {
+          "seconds": 5.8354597719953745,
+          "tokens": [
+            1119
+          ]
+        },
+        {
+          "seconds": 5.8790284959977726,
+          "tokens": [
+            19685
+          ]
+        },
+        {
+          "seconds": 5.922712111998408,
+          "tokens": [
+            16
+          ]
+        },
+        {
+          "seconds": 5.967659765999997,
+          "tokens": [
+            39652
+          ]
+        },
+        {
+          "seconds": 6.010692677999032,
+          "tokens": [
+            344
+          ]
+        },
+        {
+          "seconds": 6.053101016994333,
+          "tokens": [
+            270
+          ]
+        },
+        {
+          "seconds": 6.098816016994533,
+          "tokens": [
+            6822
+          ]
+        },
+        {
+          "seconds": 6.139537019000272,
+          "tokens": [
+            396
+          ]
+        },
+        {
+          "seconds": 6.186202199998661,
+          "tokens": [
+            38758
+          ]
+        },
+        {
+          "seconds": 6.2277701899947715,
+          "tokens": [
+            85
+          ]
+        },
+        {
+          "seconds": 6.27319536399591,
+          "tokens": [
+            260
+          ]
+        },
+        {
+          "seconds": 6.316189596000186,
+          "tokens": [
+            11055
+          ]
+        },
+        {
+          "seconds": 6.355829754000297,
+          "tokens": [
+            2501
+          ]
+        },
+        {
+          "seconds": 6.396715889997722,
+          "tokens": [
+            538
+          ]
+        },
+        {
+          "seconds": 6.442740986996796,
+          "tokens": [
+            11782
+          ]
+        },
+        {
+          "seconds": 6.483344125997974,
+          "tokens": [
+            28303
+          ]
+        },
+        {
+          "seconds": 6.522621796997555,
+          "tokens": [
+            377
+          ]
+        },
+        {
+          "seconds": 6.55893161399581,
+          "tokens": [
+            12603
+          ]
+        }
+      ],
+      "ram_cache": {
+        "hits": 47537,
+        "misses": 11780,
+        "evictions": 6824,
+        "read_bytes": 150681722880,
+        "read_calls": 11780,
+        "peak_resident_bytes": 90194313216,
+        "buffer_reuses": 5740,
+        "demotions": 2070,
+        "demote_bytes": 26891550720,
+        "duplicate_evictions": 3772
+      },
+      "gpu_cache": {
+        "hits": 103988,
+        "misses": 59317,
+        "evictions": 57277,
+        "failures": 0,
+        "peak_resident_bytes": 25580666880,
+        "split_calls": 18522,
+        "split_resident": 71386,
+        "split_missing": 39746
+      },
+      "gpu_peak_allocated_bytes": 31348644352,
+      "gpu_peak_reserved_bytes": 31385976832,
+      "device_free_bytes_after_request": 148832256,
+      "host_available_bytes": 13965639680,
+      "cgroup_memory_current": 94629974016,
+      "cgroup_memory_peak": 94656462848,
+      "cgroup_swap_current": 0
+    },
+    {
+      "id": "fresh-1",
+      "phase": "repeat",
+      "input_tokens": 31,
+      "output_tokens": 128,
+      "token_ids": [
+        5,
+        1730,
+        260,
+        4335,
+        10480,
+        6636,
+        4950,
+        305,
+        29043,
+        6530,
+        121239,
+        74058,
+        271,
+        2167,
+        70298,
+        18224,
+        965,
+        74668,
+        288,
+        270,
+        1975,
+        1990,
+        850,
+        1099,
+        4387,
+        965,
+        591,
+        3611,
+        270,
+        1473,
+        2953,
+        7236,
+        294,
+        48895,
+        1116,
+        295,
+        6783,
+        16,
+        4335,
+        54934,
+        5682,
+        566,
+        3295,
+        418,
+        260,
+        3096,
+        294,
+        7189,
+        41747,
+        3252,
+        2619,
+        266,
+        664,
+        289,
+        6728,
+        37628,
+        13510,
+        294,
+        778,
+        2619,
+        18110,
+        1241,
+        29172,
+        37628,
+        343,
+        37,
+        6204,
+        22604,
+        344,
+        270,
+        55390,
+        2511,
+        16,
+        1162,
+        3783,
+        16428,
+        1192,
+        260,
+        46144,
+        982,
+        14990,
+        4950,
+        12,
+        12529,
+        18224,
+        14,
+        1192,
+        436,
+        982,
+        49461,
+        6530,
+        12,
+        1066,
+        14,
+        28483,
+        1407,
+        15360,
+        7911,
+        7165,
+        509,
+        3586,
+        4563,
+        343,
+        19060,
+        14,
+        5217,
+        14,
+        305,
+        14790,
+        72383,
+        754,
+        305,
+        22707,
+        270,
+        15588,
+        396,
+        3144,
+        1305,
+        7944,
+        15866,
+        538,
+        1902,
+        62333,
+        14996,
+        339,
+        372,
+        223,
+        19
+      ],
+      "text": "# How a Compiler Detects and Optimizes Repeated Expressions\n\nRepeated expressions—computing the same value more than once—are among the most common sources of wasted work in programs. Compilers attack this problem with a family of techniques collectively called **redundancy elimination**, of which **common subexpression elimination (CSE)** is the canonical example. This article explains how a compiler *detects* repeated expressions, how it *optimizes* them, walks through concrete worked examples at several levels (local, global, and partial redundancy), and discusses the limitations that keep these optimizations from being universally applicable.\n\n## 1",
+      "ttft_seconds": 0.7786622460043873,
+      "seconds": 5.097536594999838,
+      "decode_tok_s": 29.40585500752854,
+      "events": [
+        {
+          "seconds": 0.7786622460043873,
+          "tokens": [
+            5
+          ]
+        },
+        {
+          "seconds": 0.8122654440012411,
+          "tokens": [
+            1730
+          ]
+        },
+        {
+          "seconds": 0.841774043001351,
+          "tokens": [
+            260
+          ]
+        },
+        {
+          "seconds": 0.8716153790010139,
+          "tokens": [
+            4335
+          ]
+        },
+        {
+          "seconds": 0.9092125030001625,
+          "tokens": [
+            10480
+          ]
+        },
+        {
+          "seconds": 0.9393512360038585,
+          "tokens": [
+            6636
+          ]
+        },
+        {
+          "seconds": 0.9732325500008301,
+          "tokens": [
+            4950
+          ]
+        },
+        {
+          "seconds": 1.0080759650008986,
+          "tokens": [
+            305
+          ]
+        },
+        {
+          "seconds": 1.0383071600008407,
+          "tokens": [
+            29043
+          ]
+        },
+        {
+          "seconds": 1.0749382530048024,
+          "tokens": [
+            6530
+          ]
+        },
+        {
+          "seconds": 1.1047087379993172,
+          "tokens": [
+            121239
+          ]
+        },
+        {
+          "seconds": 1.1379043370034196,
+          "tokens": [
+            74058
+          ]
+        },
+        {
+          "seconds": 1.1716029770032037,
+          "tokens": [
+            271
+          ]
+        },
+        {
+          "seconds": 1.2052165950008202,
+          "tokens": [
+            2167
+          ]
+        },
+        {
+          "seconds": 1.2370431240051403,
+          "tokens": [
+            70298
+          ]
+        },
+        {
+          "seconds": 1.2675439450031263,
+          "tokens": [
+            18224
+          ]
+        },
+        {
+          "seconds": 1.2992241210013162,
+          "tokens": [
+            965
+          ]
+        },
+        {
+          "seconds": 1.335192440004903,
+          "tokens": [
+            74668
+          ]
+        },
+        {
+          "seconds": 1.3737947260015062,
+          "tokens": [
+            288
+          ]
+        },
+        {
+          "seconds": 1.408452567004133,
+          "tokens": [
+            270
+          ]
+        },
+        {
+          "seconds": 1.4387018220004393,
+          "tokens": [
+            1975
+          ]
+        },
+        {
+          "seconds": 1.4703872780009988,
+          "tokens": [
+            1990
+          ]
+        },
+        {
+          "seconds": 1.5025308540061815,
+          "tokens": [
+            850
+          ]
+        },
+        {
+          "seconds": 1.542748305000714,
+          "tokens": [
+            1099
+          ]
+        },
+        {
+          "seconds": 1.584921439003665,
+          "tokens": [
+            4387
+          ]
+        },
+        {
+          "seconds": 1.617097095004283,
+          "tokens": [
+            965
+          ]
+        },
+        {
+          "seconds": 1.6504146970037255,
+          "tokens": [
+            591
+          ]
+        },
+        {
+          "seconds": 1.6807492240041029,
+          "tokens": [
+            3611
+          ]
+        },
+        {
+          "seconds": 1.717303085999447,
+          "tokens": [
+            270
+          ]
+        },
+        {
+          "seconds": 1.7472140940008103,
+          "tokens": [
+            1473
+          ]
+        },
+        {
+          "seconds": 1.7763506550036254,
+          "tokens": [
+            2953
+          ]
+        },
+        {
+          "seconds": 1.8051068380009383,
+          "tokens": [
+            7236
+          ]
+        },
+        {
+          "seconds": 1.8423776650015498,
+          "tokens": [
+            294
+          ]
+        },
+        {
+          "seconds": 1.8731239100015955,
+          "tokens": [
+            48895
+          ]
+        },
+        {
+          "seconds": 1.90250388700224,
+          "tokens": [
+            1116
+          ]
+        },
+        {
+          "seconds": 1.9321758290025173,
+          "tokens": [
+            295
+          ]
+        },
+        {
+          "seconds": 1.9664326010024524,
+          "tokens": [
+            6783
+          ]
+        },
+        {
+          "seconds": 2.0022502770007122,
+          "tokens": [
+            16
+          ]
+        },
+        {
+          "seconds": 2.033511764006107,
+          "tokens": [
+            4335
+          ]
+        },
+        {
+          "seconds": 2.0699891240001307,
+          "tokens": [
+            54934
+          ]
+        },
+        {
+          "seconds": 2.10124792100396,
+          "tokens": [
+            5682
+          ]
+        },
+        {
+          "seconds": 2.1332692350042635,
+          "tokens": [
+            566
+          ]
+        },
+        {
+          "seconds": 2.164303256999119,
+          "tokens": [
+            3295
+          ]
+        },
+        {
+          "seconds": 2.1933844770028372,
+          "tokens": [
+            418
+          ]
+        },
+        {
+          "seconds": 2.2270508460060228,
+          "tokens": [
+            260
+          ]
+        },
+        {
+          "seconds": 2.259267194000131,
+          "tokens": [
+            3096
+          ]
+        },
+        {
+          "seconds": 2.2913124680053443,
+          "tokens": [
+            294
+          ]
+        },
+        {
+          "seconds": 2.3240156960018794,
+          "tokens": [
+            7189
+          ]
+        },
+        {
+          "seconds": 2.3528884910047054,
+          "tokens": [
+            41747
+          ]
+        },
+        {
+          "seconds": 2.3928061260012328,
+          "tokens": [
+            3252
+          ]
+        },
+        {
+          "seconds": 2.4268246819992783,
+          "tokens": [
+            2619
+          ]
+        },
+        {
+          "seconds": 2.4581460900008096,
+          "tokens": [
+            266
+          ]
+        },
+        {
+          "seconds": 2.4894406080056797,
+          "tokens": [
+            664
+          ]
+        },
+        {
+          "seconds": 2.527234027002123,
+          "tokens": [
+            289
+          ]
+        },
+        {
+          "seconds": 2.5628904789991793,
+          "tokens": [
+            6728
+          ]
+        },
+        {
+          "seconds": 2.593331957999908,
+          "tokens": [
+            37628
+          ]
+        },
+        {
+          "seconds": 2.629129863002163,
+          "tokens": [
+            13510
+          ]
+        },
+        {
+          "seconds": 2.6612942700012354,
+          "tokens": [
+            294
+          ]
+        },
+        {
+          "seconds": 2.7028906010018545,
+          "tokens": [
+            778
+          ]
+        },
+        {
+          "seconds": 2.7381406540007447,
+          "tokens": [
+            2619
+          ]
+        },
+        {
+          "seconds": 2.776023325001006,
+          "tokens": [
+            18110
+          ]
+        },
+        {
+          "seconds": 2.8156593730018358,
+          "tokens": [
+            1241
+          ]
+        },
+        {
+          "seconds": 2.85512398800347,
+          "tokens": [
+            29172
+          ]
+        },
+        {
+          "seconds": 2.8895213230061927,
+          "tokens": [
+            37628
+          ]
+        },
+        {
+          "seconds": 2.9273873530037235,
+          "tokens": [
+            343
+          ]
+        },
+        {
+          "seconds": 2.967899950002902,
+          "tokens": [
+            37
+          ]
+        },
+        {
+          "seconds": 3.005147717005457,
+          "tokens": [
+            6204
+          ]
+        },
+        {
+          "seconds": 3.0459038490007515,
+          "tokens": [
+            22604
+          ]
+        },
+        {
+          "seconds": 3.0829766720053158,
+          "tokens": [
+            344
+          ]
+        },
+        {
+          "seconds": 3.1173813470013556,
+          "tokens": [
+            270
+          ]
+        },
+        {
+          "seconds": 3.147010168999259,
+          "tokens": [
+            55390
+          ]
+        },
+        {
+          "seconds": 3.17747087799944,
+          "tokens": [
+            2511
+          ]
+        },
+        {
+          "seconds": 3.2132919840005343,
+          "tokens": [
+            16
+          ]
+        },
+        {
+          "seconds": 3.246687777005718,
+          "tokens": [
+            1162
+          ]
+        },
+        {
+          "seconds": 3.285740083003475,
+          "tokens": [
+            3783
+          ]
+        },
+        {
+          "seconds": 3.319281829004467,
+          "tokens": [
+            16428
+          ]
+        },
+        {
+          "seconds": 3.348175215003721,
+          "tokens": [
+            1192
+          ]
+        },
+        {
+          "seconds": 3.378474951001408,
+          "tokens": [
+            260
+          ]
+        },
+        {
+          "seconds": 3.4108704030004446,
+          "tokens": [
+            46144
+          ]
+        },
+        {
+          "seconds": 3.4402466690007714,
+          "tokens": [
+            982
+          ]
+        },
+        {
+          "seconds": 3.474010810001346,
+          "tokens": [
+            14990
+          ]
+        },
+        {
+          "seconds": 3.5084703960019397,
+          "tokens": [
+            4950
+          ]
+        },
+        {
+          "seconds": 3.542624396002793,
+          "tokens": [
+            12
+          ]
+        },
+        {
+          "seconds": 3.5732121280016145,
+          "tokens": [
+            12529
+          ]
+        },
+        {
+          "seconds": 3.603906112999539,
+          "tokens": [
+            18224
+          ]
+        },
+        {
+          "seconds": 3.635151439004403,
+          "tokens": [
+            14
+          ]
+        },
+        {
+          "seconds": 3.6654087550050463,
+          "tokens": [
+            1192
+          ]
+        },
+        {
+          "seconds": 3.6988759490050143,
+          "tokens": [
+            436
+          ]
+        },
+        {
+          "seconds": 3.731778502005909,
+          "tokens": [
+            982
+          ]
+        },
+        {
+          "seconds": 3.7652016550055123,
+          "tokens": [
+            49461
+          ]
+        },
+        {
+          "seconds": 3.799048897999455,
+          "tokens": [
+            6530
+          ]
+        },
+        {
+          "seconds": 3.836143312000786,
+          "tokens": [
+            12
+          ]
+        },
+        {
+          "seconds": 3.86726570600149,
+          "tokens": [
+            1066
+          ]
+        },
+        {
+          "seconds": 3.901182699999481,
+          "tokens": [
+            14
+          ]
+        },
+        {
+          "seconds": 3.9321672410005704,
+          "tokens": [
+            28483
+          ]
+        },
+        {
+          "seconds": 3.968791904000682,
+          "tokens": [
+            1407
+          ]
+        },
+        {
+          "seconds": 3.9990359590010485,
+          "tokens": [
+            15360
+          ]
+        },
+        {
+          "seconds": 4.02746858500177,
+          "tokens": [
+            7911
+          ]
+        },
+        {
+          "seconds": 4.059743244004494,
+          "tokens": [
+            7165
+          ]
+        },
+        {
+          "seconds": 4.089097249001497,
+          "tokens": [
+            509
+          ]
+        },
+        {
+          "seconds": 4.1262604639996425,
+          "tokens": [
+            3586
+          ]
+        },
+        {
+          "seconds": 4.164749417002895,
+          "tokens": [
+            4563
+          ]
+        },
+        {
+          "seconds": 4.203579307999462,
+          "tokens": [
+            343
+          ]
+        },
+        {
+          "seconds": 4.238110916005098,
+          "tokens": [
+            19060
+          ]
+        },
+        {
+          "seconds": 4.274197687002015,
+          "tokens": [
+            14
+          ]
+        },
+        {
+          "seconds": 4.31572592700104,
+          "tokens": [
+            5217
+          ]
+        },
+        {
+          "seconds": 4.354851934003818,
+          "tokens": [
+            14
+          ]
+        },
+        {
+          "seconds": 4.387349397002254,
+          "tokens": [
+            305
+          ]
+        },
+        {
+          "seconds": 4.418217626000114,
+          "tokens": [
+            14790
+          ]
+        },
+        {
+          "seconds": 4.457341033004923,
+          "tokens": [
+            72383
+          ]
+        },
+        {
+          "seconds": 4.492036923998967,
+          "tokens": [
+            754
+          ]
+        },
+        {
+          "seconds": 4.53238728800352,
+          "tokens": [
+            305
+          ]
+        },
+        {
+          "seconds": 4.566495646002295,
+          "tokens": [
+            22707
+          ]
+        },
+        {
+          "seconds": 4.597497968003154,
+          "tokens": [
+            270
+          ]
+        },
+        {
+          "seconds": 4.6259063230027095,
+          "tokens": [
+            15588
+          ]
+        },
+        {
+          "seconds": 4.660105193004711,
+          "tokens": [
+            396
+          ]
+        },
+        {
+          "seconds": 4.69329777200619,
+          "tokens": [
+            3144
+          ]
+        },
+        {
+          "seconds": 4.729872184005217,
+          "tokens": [
+            1305
+          ]
+        },
+        {
+          "seconds": 4.7674258570041275,
+          "tokens": [
+            7944
+          ]
+        },
+        {
+          "seconds": 4.8053563380017295,
+          "tokens": [
+            15866
+          ]
+        },
+        {
+          "seconds": 4.841792837003595,
+          "tokens": [
+            538
+          ]
+        },
+        {
+          "seconds": 4.887048837001203,
+          "tokens": [
+            1902
+          ]
+        },
+        {
+          "seconds": 4.921780538999883,
+          "tokens": [
+            62333
+          ]
+        },
+        {
+          "seconds": 4.9543477240003995,
+          "tokens": [
+            14996
+          ]
+        },
+        {
+          "seconds": 4.988258748999215,
+          "tokens": [
+            339
+          ]
+        },
+        {
+          "seconds": 5.027227602004132,
+          "tokens": [
+            372
+          ]
+        },
+        {
+          "seconds": 5.0623083419995965,
+          "tokens": [
+            223
+          ]
+        },
+        {
+          "seconds": 5.097530035003729,
+          "tokens": [
+            19
+          ]
+        }
+      ],
+      "ram_cache": {
+        "hits": 56739,
+        "misses": 11780,
+        "evictions": 6989,
+        "read_bytes": 150681722880,
+        "read_calls": 11780,
+        "peak_resident_bytes": 90194313216,
+        "buffer_reuses": 5896,
+        "demotions": 2237,
+        "demote_bytes": 29076209664,
+        "duplicate_evictions": 3937
+      },
+      "gpu_cache": {
+        "hits": 128140,
+        "misses": 68519,
+        "evictions": 66479,
+        "failures": 0,
+        "peak_resident_bytes": 25580666880,
+        "split_calls": 22454,
+        "split_resident": 87517,
+        "split_missing": 47207
+      },
+      "gpu_peak_allocated_bytes": 31348644352,
+      "gpu_peak_reserved_bytes": 31385976832,
+      "device_free_bytes_after_request": 148832256,
+      "host_available_bytes": 14693527552,
+      "cgroup_memory_current": 94616141824,
+      "cgroup_memory_peak": 94656462848,
+      "cgroup_swap_current": 0
+    },
+    {
+      "id": "fresh-2",
+      "phase": "repeat",
+      "input_tokens": 31,
+      "output_tokens": 128,
+      "token_ids": [
+        5,
+        41689,
+        8315,
+        5015,
+        11155,
+        28,
+        83042,
+        304,
+        49403,
+        21309,
+        12356,
+        271,
+        81624,
+        50997,
+        2703,
+        344,
+        270,
+        1341,
+        294,
+        15598,
+        396,
+        99502,
+        1192,
+        77881,
+        260,
+        34215,
+        12804,
+        85,
+        38774,
+        1055,
+        270,
+        4854,
+        16,
+        9182,
+        6672,
+        8851,
+        344,
+        396,
+        270,
+        4854,
+        734,
+        3510,
+        34393,
+        344,
+        13026,
+        14,
+        1014,
+        124573,
+        14,
+        305,
+        8900,
+        418,
+        915,
+        18290,
+        16,
+        41689,
+        2231,
+        6253,
+        982,
+        6047,
+        4746,
+        12,
+        7768,
+        79872,
+        965,
+        39634,
+        288,
+        31565,
+        3514,
+        4721,
+        469,
+        11570,
+        12472,
+        50997,
+        14,
+        1539,
+        41487,
+        1375,
+        965,
+        8848,
+        11499,
+        7370,
+        304,
+        27257,
+        18290,
+        305,
+        8281,
+        4128,
+        304,
+        1347,
+        270,
+        4912,
+        16,
+        1162,
+        15795,
+        16428,
+        270,
+        12187,
+        513,
+        778,
+        41689,
+        6708,
+        85,
+        304,
+        10046,
+        34393,
+        14,
+        2984,
+        1407,
+        15360,
+        19026,
+        7165,
+        14,
+        305,
+        22707,
+        270,
+        15588,
+        294,
+        270,
+        4090,
+        339,
+        372,
+        455,
+        17635,
+        45799,
+        52832,
+        271,
+        9173
+      ],
+      "text": "# TCP Congestion Control: Adaptation to Changing Bandwidth\n\nTCP congestion control is the set of algorithms that governs how aggressively a sender injects packets into the network. Its central challenge is that the network's available bandwidth is unknown, time-varying, and shared with other flows. TCP must therefore *discover* capacity empirically—probing upward until loss or delay signals congestion, then backing off—while remaining fair to competing flows and efficient enough to use the link. This essay explains the mechanisms by which TCP adapts to changing bandwidth, works through concrete numerical examples, and discusses the limitations of the approach.\n\n## The Core Feedback Loop\n\nClass",
+      "ttft_seconds": 0.7983923360006884,
+      "seconds": 4.898180053001852,
+      "decode_tok_s": 30.97725958980849,
+      "events": [
+        {
+          "seconds": 0.7983923360006884,
+          "tokens": [
+            5
+          ]
+        },
+        {
+          "seconds": 0.833830403003958,
+          "tokens": [
+            41689
+          ]
+        },
+        {
+          "seconds": 0.8702145610004663,
+          "tokens": [
+            8315
+          ]
+        },
+        {
+          "seconds": 0.9132460020045983,
+          "tokens": [
+            5015
+          ]
+        },
+        {
+          "seconds": 0.9447032240059343,
+          "tokens": [
+            11155
+          ]
+        },
+        {
+          "seconds": 0.9746098210016498,
+          "tokens": [
+            28
+          ]
+        },
+        {
+          "seconds": 1.0062044850055827,
+          "tokens": [
+            83042
+          ]
+        },
+        {
+          "seconds": 1.038306509006361,
+          "tokens": [
+            304
+          ]
+        },
+        {
+          "seconds": 1.0709844369994244,
+          "tokens": [
+            49403
+          ]
+        },
+        {
+          "seconds": 1.1028566570021212,
+          "tokens": [
+            21309
+          ]
+        },
+        {
+          "seconds": 1.141563955003221,
+          "tokens": [
+            12356
+          ]
+        },
+        {
+          "seconds": 1.1773252990024048,
+          "tokens": [
+            271
+          ]
+        },
+        {
+          "seconds": 1.2115709010031424,
+          "tokens": [
+            81624
+          ]
+        },
+        {
+          "seconds": 1.248943610000424,
+          "tokens": [
+            50997
+          ]
+        },
+        {
+          "seconds": 1.2805278440064285,
+          "tokens": [
+            2703
+          ]
+        },
+        {
+          "seconds": 1.3065425870008767,
+          "tokens": [
+            344
+          ]
+        },
+        {
+          "seconds": 1.3350142540002707,
+          "tokens": [
+            270
+          ]
+        },
+        {
+          "seconds": 1.3634880200042971,
+          "tokens": [
+            1341
+          ]
+        },
+        {
+          "seconds": 1.3986112610000418,
+          "tokens": [
+            294
+          ]
+        },
+        {
+          "seconds": 1.4293509760027518,
+          "tokens": [
+            15598
+          ]
+        },
+        {
+          "seconds": 1.4597203040029854,
+          "tokens": [
+            396
+          ]
+        },
+        {
+          "seconds": 1.4879346840025391,
+          "tokens": [
+            99502
+          ]
+        },
+        {
+          "seconds": 1.5198947460012278,
+          "tokens": [
+            1192
+          ]
+        },
+        {
+          "seconds": 1.5483373919996666,
+          "tokens": [
+            77881
+          ]
+        },
+        {
+          "seconds": 1.5787588610037346,
+          "tokens": [
+            260
+          ]
+        },
+        {
+          "seconds": 1.611953239000286,
+          "tokens": [
+            34215
+          ]
+        },
+        {
+          "seconds": 1.647742264001863,
+          "tokens": [
+            12804
+          ]
+        },
+        {
+          "seconds": 1.6821997100050794,
+          "tokens": [
+            85
+          ]
+        },
+        {
+          "seconds": 1.7124272740038577,
+          "tokens": [
+            38774
+          ]
+        },
+        {
+          "seconds": 1.7460446020049858,
+          "tokens": [
+            1055
+          ]
+        },
+        {
+          "seconds": 1.7870959610008867,
+          "tokens": [
+            270
+          ]
+        },
+        {
+          "seconds": 1.8166909920037142,
+          "tokens": [
+            4854
+          ]
+        },
+        {
+          "seconds": 1.8500764240015997,
+          "tokens": [
+            16
+          ]
+        },
+        {
+          "seconds": 1.8813247810030589,
+          "tokens": [
+            9182
+          ]
+        },
+        {
+          "seconds": 1.9133543140051188,
+          "tokens": [
+            6672
+          ]
+        },
+        {
+          "seconds": 1.944383286005177,
+          "tokens": [
+            8851
+          ]
+        },
+        {
+          "seconds": 1.976165824002237,
+          "tokens": [
+            344
+          ]
+        },
+        {
+          "seconds": 2.005229683003563,
+          "tokens": [
+            396
+          ]
+        },
+        {
+          "seconds": 2.034500747002312,
+          "tokens": [
+            270
+          ]
+        },
+        {
+          "seconds": 2.064025446001324,
+          "tokens": [
+            4854
+          ]
+        },
+        {
+          "seconds": 2.094386494005448,
+          "tokens": [
+            734
+          ]
+        },
+        {
+          "seconds": 2.128337508002005,
+          "tokens": [
+            3510
+          ]
+        },
+        {
+          "seconds": 2.15982957000233,
+          "tokens": [
+            34393
+          ]
+        },
+        {
+          "seconds": 2.1899741730012465,
+          "tokens": [
+            344
+          ]
+        },
+        {
+          "seconds": 2.218643983003858,
+          "tokens": [
+            13026
+          ]
+        },
+        {
+          "seconds": 2.252906335001171,
+          "tokens": [
+            14
+          ]
+        },
+        {
+          "seconds": 2.2804795620031655,
+          "tokens": [
+            1014
+          ]
+        },
+        {
+          "seconds": 2.3209583980060415,
+          "tokens": [
+            124573
+          ]
+        },
+        {
+          "seconds": 2.354519145002996,
+          "tokens": [
+            14
+          ]
+        },
+        {
+          "seconds": 2.383470611006487,
+          "tokens": [
+            305
+          ]
+        },
+        {
+          "seconds": 2.413883300003363,
+          "tokens": [
+            8900
+          ]
+        },
+        {
+          "seconds": 2.4515785450057592,
+          "tokens": [
+            418
+          ]
+        },
+        {
+          "seconds": 2.487999334000051,
+          "tokens": [
+            915
+          ]
+        },
+        {
+          "seconds": 2.5208158240056946,
+          "tokens": [
+            18290
+          ]
+        },
+        {
+          "seconds": 2.5522610750049353,
+          "tokens": [
+            16
+          ]
+        },
+        {
+          "seconds": 2.585422403004486,
+          "tokens": [
+            41689
+          ]
+        },
+        {
+          "seconds": 2.618033719001687,
+          "tokens": [
+            2231
+          ]
+        },
+        {
+          "seconds": 2.6526991890059435,
+          "tokens": [
+            6253
+          ]
+        },
+        {
+          "seconds": 2.6819652330013923,
+          "tokens": [
+            982
+          ]
+        },
+        {
+          "seconds": 2.714998858005856,
+          "tokens": [
+            6047
+          ]
+        },
+        {
+          "seconds": 2.7510619180029607,
+          "tokens": [
+            4746
+          ]
+        },
+        {
+          "seconds": 2.7849536720023025,
+          "tokens": [
+            12
+          ]
+        },
+        {
+          "seconds": 2.8154951030010125,
+          "tokens": [
+            7768
+          ]
+        },
+        {
+          "seconds": 2.844998412001587,
+          "tokens": [
+            79872
+          ]
+        },
+        {
+          "seconds": 2.8757820280006854,
+          "tokens": [
+            965
+          ]
+        },
+        {
+          "seconds": 2.908102248002251,
+          "tokens": [
+            39634
+          ]
+        },
+        {
+          "seconds": 2.948287308005092,
+          "tokens": [
+            288
+          ]
+        },
+        {
+          "seconds": 2.980264910002006,
+          "tokens": [
+            31565
+          ]
+        },
+        {
+          "seconds": 3.0138189760036767,
+          "tokens": [
+            3514
+          ]
+        },
+        {
+          "seconds": 3.0442738160054432,
+          "tokens": [
+            4721
+          ]
+        },
+        {
+          "seconds": 3.076644626002235,
+          "tokens": [
+            469
+          ]
+        },
+        {
+          "seconds": 3.1099924980007927,
+          "tokens": [
+            11570
+          ]
+        },
+        {
+          "seconds": 3.142406580001989,
+          "tokens": [
+            12472
+          ]
+        },
+        {
+          "seconds": 3.1758246530007455,
+          "tokens": [
+            50997
+          ]
+        },
+        {
+          "seconds": 3.207841796000139,
+          "tokens": [
+            14
+          ]
+        },
+        {
+          "seconds": 3.2407022870029323,
+          "tokens": [
+            1539
+          ]
+        },
+        {
+          "seconds": 3.2743139150043135,
+          "tokens": [
+            41487
+          ]
+        },
+        {
+          "seconds": 3.311234904002049,
+          "tokens": [
+            1375
+          ]
+        },
+        {
+          "seconds": 3.3413621060026344,
+          "tokens": [
+            965
+          ]
+        },
+        {
+          "seconds": 3.3755926670055487,
+          "tokens": [
+            8848
+          ]
+        },
+        {
+          "seconds": 3.4069293749998906,
+          "tokens": [
+            11499
+          ]
+        },
+        {
+          "seconds": 3.4394794600011664,
+          "tokens": [
+            7370
+          ]
+        },
+        {
+          "seconds": 3.475781826004095,
+          "tokens": [
+            304
+          ]
+        },
+        {
+          "seconds": 3.512327046999417,
+          "tokens": [
+            27257
+          ]
+        },
+        {
+          "seconds": 3.5441586860033567,
+          "tokens": [
+            18290
+          ]
+        },
+        {
+          "seconds": 3.577086818004318,
+          "tokens": [
+            305
+          ]
+        },
+        {
+          "seconds": 3.6081857419994776,
+          "tokens": [
+            8281
+          ]
+        },
+        {
+          "seconds": 3.6414156410028227,
+          "tokens": [
+            4128
+          ]
+        },
+        {
+          "seconds": 3.673944525005936,
+          "tokens": [
+            304
+          ]
+        },
+        {
+          "seconds": 3.709105535999697,
+          "tokens": [
+            1347
+          ]
+        },
+        {
+          "seconds": 3.739406222004618,
+          "tokens": [
+            270
+          ]
+        },
+        {
+          "seconds": 3.7679422100045485,
+          "tokens": [
+            4912
+          ]
+        },
+        {
+          "seconds": 3.798650434000592,
+          "tokens": [
+            16
+          ]
+        },
+        {
+          "seconds": 3.837896704004379,
+          "tokens": [
+            1162
+          ]
+        },
+        {
+          "seconds": 3.8779563210046035,
+          "tokens": [
+            15795
+          ]
+        },
+        {
+          "seconds": 3.912571120003122,
+          "tokens": [
+            16428
+          ]
+        },
+        {
+          "seconds": 3.940623697002593,
+          "tokens": [
+            270
+          ]
+        },
+        {
+          "seconds": 3.9656922800058965,
+          "tokens": [
+            12187
+          ]
+        },
+        {
+          "seconds": 3.9928601380015607,
+          "tokens": [
+            513
+          ]
+        },
+        {
+          "seconds": 4.02670399100316,
+          "tokens": [
+            778
+          ]
+        },
+        {
+          "seconds": 4.055544885006384,
+          "tokens": [
+            41689
+          ]
+        },
+        {
+          "seconds": 4.090537222000421,
+          "tokens": [
+            6708
+          ]
+        },
+        {
+          "seconds": 4.125989390005998,
+          "tokens": [
+            85
+          ]
+        },
+        {
+          "seconds": 4.155467068005237,
+          "tokens": [
+            304
+          ]
+        },
+        {
+          "seconds": 4.185038658004487,
+          "tokens": [
+            10046
+          ]
+        },
+        {
+          "seconds": 4.219888272004027,
+          "tokens": [
+            34393
+          ]
+        },
+        {
+          "seconds": 4.252540649002185,
+          "tokens": [
+            14
+          ]
+        },
+        {
+          "seconds": 4.283864847006043,
+          "tokens": [
+            2984
+          ]
+        },
+        {
+          "seconds": 4.318023195999558,
+          "tokens": [
+            1407
+          ]
+        },
+        {
+          "seconds": 4.347390761002316,
+          "tokens": [
+            15360
+          ]
+        },
+        {
+          "seconds": 4.37482282500423,
+          "tokens": [
+            19026
+          ]
+        },
+        {
+          "seconds": 4.406302517003496,
+          "tokens": [
+            7165
+          ]
+        },
+        {
+          "seconds": 4.435405807002098,
+          "tokens": [
+            14
+          ]
+        },
+        {
+          "seconds": 4.469602397002745,
+          "tokens": [
+            305
+          ]
+        },
+        {
+          "seconds": 4.49882899899967,
+          "tokens": [
+            22707
+          ]
+        },
+        {
+          "seconds": 4.5275920320054865,
+          "tokens": [
+            270
+          ]
+        },
+        {
+          "seconds": 4.554792301001726,
+          "tokens": [
+            15588
+          ]
+        },
+        {
+          "seconds": 4.585990676001529,
+          "tokens": [
+            294
+          ]
+        },
+        {
+          "seconds": 4.617368555002031,
+          "tokens": [
+            270
+          ]
+        },
+        {
+          "seconds": 4.645421572000487,
+          "tokens": [
+            4090
+          ]
+        },
+        {
+          "seconds": 4.6781941410008585,
+          "tokens": [
+            339
+          ]
+        },
+        {
+          "seconds": 4.71585118600342,
+          "tokens": [
+            372
+          ]
+        },
+        {
+          "seconds": 4.747365789000469,
+          "tokens": [
+            455
+          ]
+        },
+        {
+          "seconds": 4.7756763310026145,
+          "tokens": [
+            17635
+          ]
+        },
+        {
+          "seconds": 4.804945225005213,
+          "tokens": [
+            45799
+          ]
+        },
+        {
+          "seconds": 4.83555768700171,
+          "tokens": [
+            52832
+          ]
+        },
+        {
+          "seconds": 4.865421954003978,
+          "tokens": [
+            271
+          ]
+        },
+        {
+          "seconds": 4.89817397200386,
+          "tokens": [
+            9173
+          ]
+        }
+      ],
+      "ram_cache": {
+        "hits": 65554,
+        "misses": 11780,
+        "evictions": 7107,
+        "read_bytes": 150681722880,
+        "read_calls": 11780,
+        "peak_resident_bytes": 90194313216,
+        "buffer_reuses": 6002,
+        "demotions": 2354,
+        "demote_bytes": 30616977408,
+        "duplicate_evictions": 4055
+      },
+      "gpu_cache": {
+        "hits": 152749,
+        "misses": 77334,
+        "evictions": 75294,
+        "failures": 0,
+        "peak_resident_bytes": 25580666880,
+        "split_calls": 26324,
+        "split_resident": 103646,
+        "split_missing": 54298
+      },
+      "gpu_peak_allocated_bytes": 31348644352,
+      "gpu_peak_reserved_bytes": 31385976832,
+      "device_free_bytes_after_request": 148832256,
+      "host_available_bytes": 14674653184,
+      "cgroup_memory_current": 94635335680,
+      "cgroup_memory_peak": 94656462848,
+      "cgroup_swap_current": 0
+    }
+  ],
+  "runtime_lock": {
+    "schema": 1,
+    "exllamav3": {
+      "repo": "https://github.com/vcruz305/exllamav3.git",
+      "revision": "954a8ca6e59d48c3e3462068ecf083fe9990f4dc"
+    },
+    "cache_components": {
+      "repo": "https://github.com/vcruz305/vllm-exl3.git",
+      "revision": "2a740a3773601c994072295fde45738ef8cea55e",
+      "files": {
+        "expert_store.py": "05a8d337f3eda5a4d451216ba69294c14f0d58211c91c0ec802f5646f45d156b",
+        "expert_cache.py": "688d64d3ea80232415165603a21e00f9fcae93645506c986de4bf80baf9bad84"
+      }
+    },
+    "base_image": {
+      "local_tag": "localhost/glm53-sm120:20261001",
+      "id": "801524faa7a980a44e912d17073210c86d9d4233152d8a295d1949296c75f5db"
+    },
+    "cuda_arch": "12.0",
+    "gpu_validation": "passed_5090_text_8192",
+    "validation_report": "results/20261018-target30/summary.json"
+  },
+  "gpu": "NVIDIA GeForce RTX 5090",
+  "torch": "2.13.0+cu130",
+  "cuda": "13.0",
+  "metric": "Streamed output tokens after first token / elapsed time after first token; fresh KV state each request",
+  "runtime_sources": {
+    "ExpertCache": {
+      "path": "runtime/cache.py",
+      "sha256": "b199d931d360a9f5905e7a4544283b663f12d82cdfc9c5463ae2089213e6568f"
+    },
+    "VictimExpertStore": {
+      "path": "runtime/victim_store.py",
+      "sha256": "6943cf5048fde362d0809174c52b49950f05557ef8a15411c916c1b5f891d2b0"
+    }
+  },
+  "grouped_dispatch": true,
+  "hc_graphs": true,
+  "gpu_policy": "lfu",
+  "victim_cache": true,
+  "gpu_only_limit_gib": 20,
+  "fast_guard": true,
+  "fused_reduce": true,
+  "overlap_loads": true,
+  "overlap_shared": true,
+  "grouped_source_sha256": {
+    "native_dispatch.cpp": "f5fc2a16796e2d1ba56a19b59476888c9d11747ca67ecde88a201230919bad7f",
+    "native_dispatch.py": "fa5926bae354d3549ea9de9827550df69d24fc90b1c551c426eba33f55b71ef4",
+    "grouped_dispatch.cu": "f1b855a6ca1304fe2f12fd59352545b8c2d0f95d83f6668442a5d5d74b21a2ad",
+    "grouped_dispatch.h": "86c077c27e7e10cff14b7f07c6a05a666c6bc7368d7af4b108a9b4d911721355",
+    "hc_graphs.py": "144cdafef6b60dc6d9590b8b81307375312ddf26879370af8467612581860987"
+  },
+  "tune_cache_path": "/kernel-cache/coop_autotune_v1.bin",
+  "tune_cache_sha256_before": "c2b593aebb088138651e56134e932b6dd4bc11f80e3bf3705bdfbbca1f60cdd0",
+  "load_seconds": 2.67827397200017,
+  "memory_after_load": {
+    "device_free_bytes": 778043392,
+    "device_total_bytes": 33708376064,
+    "torch_allocated_bytes": 30970916352,
+    "torch_reserved_bytes": 31006392320
+  },
+  "fixture_sha256": "937f844edefb590313d3423bf45f2887378b5b2ce5fe1aa245b318a593b78cb1",
+  "fresh_median_tok_s": 14.342132377110314,
+  "repeat_median_tok_s": 29.40585500752854,
+  "tune_cache_sha256_after": "c2b593aebb088138651e56134e932b6dd4bc11f80e3bf3705bdfbbca1f60cdd0"
+}

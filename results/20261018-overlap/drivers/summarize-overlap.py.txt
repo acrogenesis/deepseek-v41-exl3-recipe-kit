@@ -1,0 +1,39 @@
+from pathlib import Path
+import hashlib,json
+root=Path.cwd()
+out=root/'results/20261018-overlap'
+baseline=json.loads((root/'results/20261018-paging/fused-sum-full.json').read_text())
+summary={'goal_achieved':False,'goal_scope':'Above 30 tok/s on full repeat-prompt sweeps; fresh prompts reported separately','fresh_above_30':False,'default_changed':False,'full_runs':[],'score_comparisons':[],'unit_checks':[]}
+for name in ('full','block-full','dma-full','shared-full','shared-replica','affinity-full','engram-full','engram-replica'):
+ p=out/(name+'.json')
+ if not p.exists(): continue
+ r=json.loads(p.read_text())
+ if r['status']!='complete': continue
+ assert len(r['runs'])==len(baseline['runs'])==14
+ assert all((x['id'],x['phase'],x['token_ids'])==(y['id'],y['phase'],y['token_ids']) for x,y in zip(r['runs'],baseline['runs']))
+ row={'file':p.name,'fresh_tok_s':r['fresh_median_tok_s'],'repeat_tok_s':r['repeat_median_tok_s'],
+      'repeat_prompt_rates':[v['decode_tok_s'] for v in r['runs'] if v['phase']=='repeat'],
+      'identical_tokens':sum(len(v['token_ids']) for v in r['runs']),
+      'exact_checks':sum(v.get('passed',False) for v in r['runs']),
+      'peak_container_gib':max(v['cgroup_memory_peak'] for v in r['runs'])/2**30,
+      'minimum_sampled_host_available_gib':min(v['host_available_bytes'] for v in r['runs'])/2**30,
+      'peak_torch_gpu_gib':max(v['gpu_peak_allocated_bytes'] for v in r['runs'])/2**30,
+      'minimum_sampled_gpu_free_gib':min(v['device_free_bytes_after_request'] for v in r['runs'])/2**30,
+      'process_swap_bytes':max(v['cgroup_swap_current'] for v in r['runs'])}
+ assert row['exact_checks']==8 and row['process_swap_bytes']==0
+ if r.get('engram_cache_rows'):
+  row['engram_cache'] = r['runs'][-1]['engram_cache']
+ summary['full_runs'].append(row)
+for name in ('scores','block-scores','dma-scores','shared-scores','engram-scores'):
+ r=json.loads((out/name/'result.json').read_text()); assert r['status']=='complete'
+ assert all(v==0 for p in r['passes'] for v in p['max_absolute_error_by_position'])
+ arrays={p.name:hashlib.sha256(p.read_bytes()).hexdigest() for p in (out/name).glob('*.npy')}
+ assert len(set(arrays.values()))==1
+ summary['score_comparisons'].append({'directory':name,'positions':20,'vocabulary_scores_per_position':129280,'max_absolute_error':0,'array_sha256':arrays})
+for name in ('unit','dma-unit','dma-lifetime'):
+ r=json.loads((out/(name+'.json')).read_text());assert r['status']=='passed'
+ summary['unit_checks'].append({'file':name+'.json','cases':len(r['cases']),'status':r['status']})
+confirmed=[r for r in summary['full_runs'] if r['file'] in ('engram-full.json','engram-replica.json')]
+summary['goal_achieved'] = len(confirmed)==2 and all(min(r['repeat_prompt_rates'])>30 for r in confirmed)
+(out/'summary.json').write_text(json.dumps(summary,indent=2)+'\n')
+print(json.dumps(summary['full_runs'],indent=2))

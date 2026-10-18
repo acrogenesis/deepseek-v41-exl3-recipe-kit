@@ -1,0 +1,45 @@
+"""Observe garbage collection and host-core migration during the full fixture."""
+from pathlib import Path
+import ctypes, gc, hashlib, json, sys, time
+sys.path.insert(0, '/recipe')
+from exllamav3.generator import Generator
+libc = ctypes.CDLL(None)
+libc.sched_getcpu.restype = ctypes.c_int
+original_init, original_iterate = Generator.__init__, Generator.iterate
+requests = []
+active = None
+starts = {}
+
+def gc_event(phase, info):
+    generation = info['generation']
+    if phase == 'start':
+        starts[generation] = time.perf_counter()
+    elif active is not None and generation in starts:
+        active['gc_seconds'][generation] += time.perf_counter() - starts[generation]
+        active['gc_count'][generation] += 1
+
+def init(self, *a, **kw):
+    global active
+    original_init(self, *a, **kw)
+    active = {'request_index': len(requests), 'cores': {}, 'gc_seconds': [0., 0., 0.], 'gc_count': [0, 0, 0]}
+    requests.append(active)
+
+def iterate(self, *a, **kw):
+    cpu = str(libc.sched_getcpu())
+    active['cores'][cpu] = active['cores'].get(cpu, 0) + 1
+    return original_iterate(self, *a, **kw)
+
+Generator.__init__, Generator.iterate = init, iterate
+gc.callbacks.append(gc_event)
+from runtime.runner import main
+try:
+    main()
+finally:
+    gc.callbacks.remove(gc_event)
+    output = Path(sys.argv[sys.argv.index('--output')+1])
+    if output.exists():
+        r = json.loads(output.read_text())
+        r.update(diagnostic_only=True, host_probe=requests,
+                 host_probe_source_sha256=hashlib.sha256(Path(__file__).read_bytes()).hexdigest())
+        output.write_text(json.dumps(r,indent=2)+'\n')
+    print(json.dumps(requests), flush=True)

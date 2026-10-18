@@ -39,7 +39,7 @@ class Entry:
 
 
 class ExpertCache:
-    def __init__(self, store, capacity_bytes, *, layer_quotas=None, device='cuda:0', reserve_bytes=8*2**30, native_dispatch=False, grouped_dispatch=False, route_trace=False, policy='lru', fast_guard=False, fused_reduce=False):
+    def __init__(self, store, capacity_bytes, *, layer_quotas=None, device='cuda:0', reserve_bytes=8*2**30, native_dispatch=False, grouped_dispatch=False, route_trace=False, policy='lru', fast_guard=False, fused_reduce=False, overlap_loads=False, overlap_shared=False):
         if capacity_bytes <= 0 or capacity_bytes % ALIGN:
             raise ValueError('Cache capacity must be aligned')
         self.store = store
@@ -100,8 +100,16 @@ class ExpertCache:
         self.native_dispatch = None
         self.grouped_dispatch = grouped_dispatch
         self.fused_reduce = fused_reduce
+        self.overlap_loads = overlap_loads
+        if overlap_shared and not grouped_dispatch:
+            raise ValueError('Shared expert overlap requires grouped dispatch with private scratch')
+        self.shared_stream = torch.cuda.Stream(device=self.device) if overlap_shared else None
         if fused_reduce and not grouped_dispatch:
             raise ValueError('Fused reduction requires grouped dispatch')
+        if overlap_loads and not (grouped_dispatch and fused_reduce):
+            raise ValueError('Load overlap requires grouped dispatch and fused reduction')
+        if overlap_loads:
+            self.stats.update(split_calls=0, split_resident=0, split_missing=0)
         if native_dispatch or grouped_dispatch:
             from .native_dispatch import load_dispatch
             self.native_dispatch = load_dispatch()
@@ -224,7 +232,7 @@ class ExpertCache:
             raise
 
     @contextmanager
-    def lease(self, key, *, cancel=None):
+    def lease(self, key, *, cancel=None, wait_ready=True):
         """Lease one expert, bound to the CUDA stream current at acquisition.
 
         Stream contract: the owning stream is captured per LEASE in a local
@@ -236,6 +244,10 @@ class ExpertCache:
         on that same captured stream, so `_evict()`'s `event.synchronize()`
         covers the kernels the consumer actually enqueued even when the release
         happens after the caller's `torch.cuda.stream(s)` block has exited.
+
+        The internal overlap scheduler may defer readiness with wait_ready=False;
+        it must wait on entry.ready before reading weights. Release also waits
+        on readiness, so exceptional exits still protect DMA/slot lifetimes.
         """
         with torch.cuda.device(self.device), self.lock:
             if self.closed:
@@ -259,11 +271,14 @@ class ExpertCache:
                 self.layer_lru[int(key.split(':')[0])].move_to_end(key)
             entry.users += 1
             owning_stream = torch.cuda.current_stream(self.device)
-            owning_stream.wait_event(entry.ready)
+            if wait_ready:
+                owning_stream.wait_event(entry.ready)
         try:
             yield entry
         finally:
             with torch.cuda.device(self.device), self.lock:
+                if not wait_ready:
+                    owning_stream.wait_event(entry.ready)
                 event = torch.cuda.Event()
                 event.record(owning_stream)
                 entry.events.append(event)
@@ -275,7 +290,9 @@ class ExpertCache:
             raise ValueError('Invalid routing shapes')
         if x.device != self.device or ids.device != self.device or weights.device != self.device:
             raise ValueError('Routing and activations must use the cache device')
-        result = torch.zeros_like(x,dtype=torch.float32)
+        # The opt-in native path creates its own output. Preserve the default
+        # allocation behavior for comparisons with the original implementation.
+        result = None if self.overlap_loads else torch.zeros_like(x,dtype=torch.float32)
         # Decode routes one row. Copy its six IDs once and preserve the old
         # sorted expert order without six GPU nonzero/index_select operations.
         single = x.shape[0] == 1
@@ -287,13 +304,53 @@ class ExpertCache:
             self.route_trace.append([layer, [int(eid) for _, eid in ordered]])
         if single and self.native_dispatch is not None:
             with ExitStack() as leases:
-                projections = [leases.enter_context(self.lease(f'{layer}:{eid}')).projections for _, eid in ordered]
+                if self.overlap_loads:
+                    # Acquire resident leases atomically before any miss can
+                    # evict a selected expert. Each lease still belongs to the
+                    # current compute stream, and survives the final reduction.
+                    with self.lock:
+                        resident = [(i, eid) for i, (_, eid) in enumerate(ordered)
+                                    if f'{layer}:{eid}' in self.entries]
+                        hit_projections = [leases.enter_context(self.lease(f'{layer}:{eid}')).projections
+                                           for _, eid in resident]
+                    hits = {i for i, _ in resident}
+                    missing = [(i, eid) for i, (_, eid) in enumerate(ordered) if i not in hits]
+                    h = x.half().contiguous()
+                    def down(projections):
+                        return self.native_dispatch.grouped_down(h,
+                            [p['w1'].bc for p in projections], [p['w3'].bc for p in projections],
+                            [p['w2'].bc for p in projections], limit)
+                    if resident and missing:
+                        # Start DMA first, but defer the compute stream's ready
+                        # waits until after resident computation is queued. CPU
+                        # staging otherwise often outlasts the resident work and
+                        # the transfer begins too late to overlap it.
+                        miss_entries = [leases.enter_context(self.lease(f'{layer}:{eid}', wait_ready=False))
+                                        for _, eid in missing]
+                        first = down(hit_projections)
+                        stream = torch.cuda.current_stream(self.device)
+                        for entry in miss_entries:
+                            stream.wait_event(entry.ready)
+                        second = down([entry.projections for entry in miss_entries])
+                        rows = {index: row for row, (index, _) in enumerate(resident)}
+                        rows.update({index: -1-row for row, (index, _) in enumerate(missing)})
+                        self.stats['split_calls'] += 1
+                        self.stats['split_resident'] += len(resident)
+                        self.stats['split_missing'] += len(missing)
+                        return self.native_dispatch.reduce_split(first, second, weights,
+                            [position for position, _ in ordered], [rows[i] for i in range(len(ordered))])
+                    projections = hit_projections if resident else [
+                        leases.enter_context(self.lease(f'{layer}:{eid}')).projections for _, eid in ordered]
+                else:
+                    projections = [leases.enter_context(self.lease(f'{layer}:{eid}')).projections for _, eid in ordered]
                 dispatch = self.native_dispatch.grouped_experts if self.grouped_dispatch else self.native_dispatch.exact_experts
                 return dispatch(x.half().contiguous(), weights,
                     [position for position, _ in ordered],
                     [p['w1'].bc for p in projections], [p['w3'].bc for p in projections],
                     [p['w2'].bc for p in projections], limit,
                     **({'fused_reduce': True} if self.fused_reduce else {}))
+        if result is None:
+            result = torch.zeros_like(x,dtype=torch.float32)
         for position, eid in ordered:
             key = f'{layer}:{int(eid)}'
             if key not in self.store.records:
@@ -326,6 +383,8 @@ class ExpertCache:
 
     def close(self):
         with self.lock:
+            if self.shared_stream is not None:
+                self.shared_stream.synchronize()
             self.clear()
             for event in self.staging_events:
                 if event is not None:
