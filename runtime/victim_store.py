@@ -48,7 +48,7 @@ class VictimExpertStore(IndexedExpertStore):
             if key in self.duplicates:
                 heapq.heappush(self.hot_duplicates, (-count, key))
             if len(self.hot_duplicates) > 2 * len(self.gpu_owned) + len(self.records):
-                self.hot_duplicates = [(-self.frequencies[k], k) for k in self.duplicates]
+                self.hot_duplicates = [(-self.frequencies.get(k, 0), k) for k in self.duplicates]
                 heapq.heapify(self.hot_duplicates)
 
     def _evict(self, recycle_bytes=0):

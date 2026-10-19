@@ -2,6 +2,11 @@
 
 **30.68 tok/s on repeated prompts; 15.96 tok/s on fresh prompts**, pooled across
 two complete sweeps with 128 output tokens and an 8K context allocation.
+The opt-in [256K recipe](CONTEXT256K.md) measured **29.94 tok/s repeated / 9.51
+tok/s fresh with 262,015 actual input tokens**. It preserves useful expert and
+Engram cache entries across long prefills; every output token matches the
+full-window baseline. The repeated request still takes about 19 minutes to its
+first token.
 The [Hugging Face bundle](https://huggingface.co/acrogenesis/DeepSeek-V4.1-Flash-1017-EXL3-2.9bpw-5090)
 contains LibertAIDAI's unchanged quant and the required original 1017 Engram
 tables. Our contribution is the bounded streaming runtime and measurements.
@@ -65,7 +70,8 @@ The default 22 GiB run peaked at **89.20 GiB** of container RAM and **27.16 GiB*
 PyTorch GPU allocations, with no process swap. Post-request samples left at least
 **14.62 GiB** available host RAM and **2.21 GiB** free GPU memory. A 12 GiB
 host reserve is enforced; other workloads may force cache eviction or stop a run.
-Contexts beyond the tested 8K allocation still need validation.
+The separate [256K measurements](CONTEXT256K.md) use 22.5 GiB expert VRAM /
+80 GiB RAM, a smaller GPU arena during prefill, and opt-in cache protection.
 
 ## Model and memory
 

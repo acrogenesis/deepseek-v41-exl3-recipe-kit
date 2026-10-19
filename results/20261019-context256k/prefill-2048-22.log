@@ -1,0 +1,17 @@
+{
+  "ready_for_gpu_validation": true,
+  "gpu_used": false,
+  "download_status": "complete",
+  "verified_bytes": 413905629467,
+  "total_bytes": 413905629467,
+  "pending": []
+}
+ninja: no work to do.
+{"id": "context-8063", "phase": "fresh", "kv_positions": [2048], "output_tokens": 0, "seconds": 56.43587060899972}
+{"id": "context-8063", "phase": "fresh", "kv_positions": [6144], "output_tokens": 0, "seconds": 94.39812966299996}
+{"id": "context-8063", "phase": "fresh", "kv_positions": [8174], "output_tokens": 112, "seconds": 124.4098685099998}
+{"id": "context-8063", "phase": "fresh", "decode_tok_s": 9.98315903249751, "ttft_seconds": 112.83177930599959, "text": "```json\n{\n  \"cedar\": \"R8D2-JUNE\",\n  \"maple\": \"K3P7-NORTH\",\n  \"birch\": \"T6W1-SILVER\"\n}\n```\n\n## Failure Modes and Improvements for the Deployment Records\n\nThe deployment records describe a fleet of 202 records, each specifying a component (job queue, database replica, object store, API gateway, backup worker, event consumer), an operation (retry with backoff, verify checksum, write audit record, check lease, persist checkpoint, reject duplicate writes, refresh cache), a timeout, a tenant,"}
+{"id": "context-8063", "phase": "repeat", "kv_positions": [4096], "output_tokens": 0, "seconds": 43.52795031499954}
+{"id": "context-8063", "phase": "repeat", "kv_positions": [8138], "output_tokens": 76, "seconds": 73.60871902999952}
+{"id": "context-8063", "phase": "repeat", "decode_tok_s": 11.81332658205317, "ttft_seconds": 66.47781808199943, "text": "```json\n{\n  \"cedar\": \"R8D2-JUNE\",\n  \"maple\": \"K3P7-NORTH\",\n  \"birch\": \"T6W1-SILVER\"\n}\n```\n\n## Failure Modes and Improvements for the Deployment Records\n\nThe deployment records describe a fleet of 202 records, each specifying a component (job queue, database replica, object store, API gateway, backup worker, event consumer), an operation (retry with backoff, verify checksum, write audit record, check lease, persist checkpoint, reject duplicate writes, refresh cache), a timeout, a tenant,"}
+Saved /recipe/results/20261019-context256k/prefill-2048-22.json

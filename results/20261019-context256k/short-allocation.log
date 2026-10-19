@@ -1,0 +1,97 @@
+mise ERROR error parsing config file: ~/Work/.mise.toml
+mise ERROR Config files in ~/Work/.mise.toml are not trusted.
+Trust them with `mise trust`. See https://mise.jdx.dev/cli/trust.html for more information.
+mise ERROR Version: 2026.10.13 linux-x64 (2026-10-17)
+mise ERROR Run with --verbose or MISE_VERBOSE=1 for more information
+{
+  "ready_for_gpu_validation": false,
+  "gpu_used": false,
+  "download_status": "complete",
+  "verified_bytes": 0,
+  "total_bytes": 413905629467,
+  "pending": [
+    "Changed since verification: exl3/LICENSE",
+    "Changed since verification: exl3/README.md",
+    "Changed since verification: exl3/config.json",
+    "Changed since verification: exl3/exl3_k_map.json",
+    "Changed since verification: exl3/model-00001-of-00043.safetensors",
+    "Changed since verification: exl3/model-00002-of-00043.safetensors",
+    "Changed since verification: exl3/model-00003-of-00043.safetensors",
+    "Changed since verification: exl3/model-00004-of-00043.safetensors",
+    "Changed since verification: exl3/model-00005-of-00043.safetensors",
+    "Changed since verification: exl3/model-00006-of-00043.safetensors",
+    "Changed since verification: exl3/model-00007-of-00043.safetensors",
+    "Changed since verification: exl3/model-00008-of-00043.safetensors",
+    "Changed since verification: exl3/model-00009-of-00043.safetensors",
+    "Changed since verification: exl3/model-00010-of-00043.safetensors",
+    "Changed since verification: exl3/model-00011-of-00043.safetensors",
+    "Changed since verification: exl3/model-00012-of-00043.safetensors",
+    "Changed since verification: exl3/model-00013-of-00043.safetensors",
+    "Changed since verification: exl3/model-00014-of-00043.safetensors",
+    "Changed since verification: exl3/model-00015-of-00043.safetensors",
+    "Changed since verification: exl3/model-00016-of-00043.safetensors",
+    "Changed since verification: exl3/model-00017-of-00043.safetensors",
+    "Changed since verification: exl3/model-00018-of-00043.safetensors",
+    "Changed since verification: exl3/model-00019-of-00043.safetensors",
+    "Changed since verification: exl3/model-00020-of-00043.safetensors",
+    "Changed since verification: exl3/model-00021-of-00043.safetensors",
+    "Changed since verification: exl3/model-00022-of-00043.safetensors",
+    "Changed since verification: exl3/model-00023-of-00043.safetensors",
+    "Changed since verification: exl3/model-00024-of-00043.safetensors",
+    "Changed since verification: exl3/model-00025-of-00043.safetensors",
+    "Changed since verification: exl3/model-00026-of-00043.safetensors",
+    "Changed since verification: exl3/model-00027-of-00043.safetensors",
+    "Changed since verification: exl3/model-00028-of-00043.safetensors",
+    "Changed since verification: exl3/model-00029-of-00043.safetensors",
+    "Changed since verification: exl3/model-00030-of-00043.safetensors",
+    "Changed since verification: exl3/model-00031-of-00043.safetensors",
+    "Changed since verification: exl3/model-00032-of-00043.safetensors",
+    "Changed since verification: exl3/model-00033-of-00043.safetensors",
+    "Changed since verification: exl3/model-00034-of-00043.safetensors",
+    "Changed since verification: exl3/model-00035-of-00043.safetensors",
+    "Changed since verification: exl3/model-00036-of-00043.safetensors",
+    "Changed since verification: exl3/model-00037-of-00043.safetensors",
+    "Changed since verification: exl3/model-00038-of-00043.safetensors",
+    "Changed since verification: exl3/model-00039-of-00043.safetensors",
+    "Changed since verification: exl3/model-00040-of-00043.safetensors",
+    "Changed since verification: exl3/model-00041-of-00043.safetensors",
+    "Changed since verification: exl3/model-00042-of-00043.safetensors",
+    "Changed since verification: exl3/model-00043-of-00043.safetensors",
+    "Changed since verification: exl3/model.safetensors.index.json",
+    "Changed since verification: exl3/quantization_config.json",
+    "Changed since verification: exl3/tokenizer.json",
+    "Changed since verification: exl3/tokenizer_config.json",
+    "Changed since verification: engram/LICENSE",
+    "Changed since verification: engram/README.md",
+    "Changed since verification: engram/config.json",
+    "Changed since verification: engram/model-00047-of-00048.safetensors",
+    "Changed since verification: engram/model-00048-of-00048.safetensors",
+    "Changed since verification: engram/model.safetensors.index.json",
+    "Changed since verification: engram/tokenizer.json",
+    "Changed since verification: engram/tokenizer_config.json"
+  ]
+}
+{
+  "ready_for_gpu_validation": true,
+  "gpu_used": false,
+  "download_status": "complete",
+  "verified_bytes": 413905629467,
+  "total_bytes": 413905629467,
+  "pending": []
+}
+ninja: no work to do.
+{"id": "multiply", "phase": "check", "decode_tok_s": 3.4681662138816836, "ttft_seconds": 18.934711477000747, "text": "3973"}
+{"id": "remaining", "phase": "check", "decode_tok_s": null, "ttft_seconds": 6.462586059999921, "text": "30"}
+{"id": "percentage", "phase": "check", "decode_tok_s": 4.718127570309716, "ttft_seconds": 5.053508322999733, "text": "224.4"}
+{"id": "extract", "phase": "check", "decode_tok_s": 3.9149505289661293, "ttft_seconds": 8.961636285000168, "text": "K7N4"}
+{"id": "ordering", "phase": "check", "decode_tok_s": 7.962140277751147, "ttft_seconds": 3.486465885999678, "text": "Pia"}
+{"id": "json", "phase": "check", "decode_tok_s": 5.540845239406187, "ttft_seconds": 6.013926352999988, "text": "{\"count\": 3}"}
+{"id": "sort", "phase": "check", "decode_tok_s": 8.402586848955606, "ttft_seconds": 3.7247935089999373, "text": "[-3, 0, 8, 14, 14]"}
+{"id": "python", "phase": "check", "decode_tok_s": null, "ttft_seconds": 2.4900329969996164, "text": "35"}
+{"id": "fresh-0", "phase": "fresh", "decode_tok_s": 9.809788067250004, "ttft_seconds": 3.6008295809997435, "text": "# Database Transaction Recovery After Power Failure\n\nA power failure is the canonical \"crash\" scenario that every transactional database must survive. When the machine loses power, everything in volatile memory \u2014 the buffer pool, the log tail, in-flight locks, and the state of partially executed transactions \u2014 vanishes instantly. Yet the durability guarantee of ACID (the \"D\") promises that any transaction that *committed* before the crash is still there afterward, and the atomicity guarantee (the \"A\") promises that any transaction that was *not* committed leaves no trace. Recovery is the mechanism that reconstructs a consistent state from whatever survived on stable"}
+{"id": "fresh-1", "phase": "fresh", "decode_tok_s": 14.476365701552266, "ttft_seconds": 1.4453600650003864, "text": "# How a Compiler Detects and Optimizes Repeated Expressions\n\nRepeated expressions\u2014computing the same value more than once\u2014are among the most common sources of wasted work in programs. Compilers attack this problem with a family of techniques collectively called **redundancy elimination**, of which **common subexpression elimination (CSE)** is the canonical example. This article explains how a compiler *detects* repeated expressions, how it *optimizes* them, walks through concrete worked examples at several levels (local, global, and partial redundancy), and discusses the limitations that keep these optimizations from being universally applicable.\n\n## 1"}
+{"id": "fresh-2", "phase": "fresh", "decode_tok_s": 18.225796151213856, "ttft_seconds": 1.3844533869996667, "text": "# TCP Congestion Control: Adaptation to Changing Bandwidth\n\nTCP congestion control is the set of algorithms that governs how aggressively a sender injects packets into the network. Its central challenge is that the network's available bandwidth is unknown, time-varying, and shared with other flows. TCP must therefore *discover* capacity empirically\u2014probing upward until loss or delay signals congestion, then backing off\u2014while remaining fair to competing flows and efficient enough to use the link. This essay explains the mechanisms by which TCP adapts to changing bandwidth, works through concrete numerical examples, and discusses the limitations of the approach.\n\n## The Core Feedback Loop\n\nClass"}
+{"id": "fresh-0", "phase": "repeat", "decode_tok_s": 28.34650773103938, "ttft_seconds": 0.9872206529998948, "text": "# Database Transaction Recovery After Power Failure\n\nA power failure is the canonical \"crash\" scenario that every transactional database must survive. When the machine loses power, everything in volatile memory \u2014 the buffer pool, the log tail, in-flight locks, and the state of partially executed transactions \u2014 vanishes instantly. Yet the durability guarantee of ACID (the \"D\") promises that any transaction that *committed* before the crash is still there afterward, and the atomicity guarantee (the \"A\") promises that any transaction that was *not* committed leaves no trace. Recovery is the mechanism that reconstructs a consistent state from whatever survived on stable"}
+{"id": "fresh-1", "phase": "repeat", "decode_tok_s": 29.821320787440204, "ttft_seconds": 0.774816264999572, "text": "# How a Compiler Detects and Optimizes Repeated Expressions\n\nRepeated expressions\u2014computing the same value more than once\u2014are among the most common sources of wasted work in programs. Compilers attack this problem with a family of techniques collectively called **redundancy elimination**, of which **common subexpression elimination (CSE)** is the canonical example. This article explains how a compiler *detects* repeated expressions, how it *optimizes* them, walks through concrete worked examples at several levels (local, global, and partial redundancy), and discusses the limitations that keep these optimizations from being universally applicable.\n\n## 1"}
+{"id": "fresh-2", "phase": "repeat", "decode_tok_s": 31.176748679348243, "ttft_seconds": 0.8027679540000463, "text": "# TCP Congestion Control: Adaptation to Changing Bandwidth\n\nTCP congestion control is the set of algorithms that governs how aggressively a sender injects packets into the network. Its central challenge is that the network's available bandwidth is unknown, time-varying, and shared with other flows. TCP must therefore *discover* capacity empirically\u2014probing upward until loss or delay signals congestion, then backing off\u2014while remaining fair to competing flows and efficient enough to use the link. This essay explains the mechanisms by which TCP adapts to changing bandwidth, works through concrete numerical examples, and discusses the limitations of the approach.\n\n## The Core Feedback Loop\n\nClass"}
+Saved /recipe/results/20261019-context256k/short-allocation.json

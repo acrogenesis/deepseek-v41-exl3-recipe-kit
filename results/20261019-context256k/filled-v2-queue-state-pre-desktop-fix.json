@@ -1,0 +1,15 @@
+{
+  "status": "failed",
+  "pid": 606173,
+  "baseline_unit": "deepseek41-context256k-engram-v2-queue.service",
+  "snapshot": "/home/archogenesis/Work/deepseek-v41-exl3-recipe-kit/work/context-engram-v2-snapshot",
+  "updated_at": 1792428575.8007143,
+  "upstream_unit_state": {
+    "ActiveState": "active",
+    "SubState": "running",
+    "MainPID": "593554",
+    "ExecMainStatus": "0"
+  },
+  "upstream_status": "waiting_priority",
+  "error": "RuntimeError(\"Engram validation terminated without completion: {'ActiveState': 'failed', 'SubState': 'failed', 'MainPID': '0', 'ExecMainStatus': '1'}\")"
+}

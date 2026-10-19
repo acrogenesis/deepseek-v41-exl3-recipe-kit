@@ -1,0 +1,95 @@
+{
+  "status": "complete",
+  "fresh_median_tok_s": 14.476365701552266,
+  "repeat_median_tok_s": 29.821320787440204,
+  "kv_pool_bytes": 838860800,
+  "all_outputs_equal": true,
+  "total_tokens": 802,
+  "cases": [
+    {
+      "id": "multiply",
+      "phase": "check",
+      "tokens": 2,
+      "equal": true
+    },
+    {
+      "id": "remaining",
+      "phase": "check",
+      "tokens": 1,
+      "equal": true
+    },
+    {
+      "id": "percentage",
+      "phase": "check",
+      "tokens": 3,
+      "equal": true
+    },
+    {
+      "id": "extract",
+      "phase": "check",
+      "tokens": 4,
+      "equal": true
+    },
+    {
+      "id": "ordering",
+      "phase": "check",
+      "tokens": 2,
+      "equal": true
+    },
+    {
+      "id": "json",
+      "phase": "check",
+      "tokens": 6,
+      "equal": true
+    },
+    {
+      "id": "sort",
+      "phase": "check",
+      "tokens": 15,
+      "equal": true
+    },
+    {
+      "id": "python",
+      "phase": "check",
+      "tokens": 1,
+      "equal": true
+    },
+    {
+      "id": "fresh-0",
+      "phase": "fresh",
+      "tokens": 128,
+      "equal": true
+    },
+    {
+      "id": "fresh-1",
+      "phase": "fresh",
+      "tokens": 128,
+      "equal": true
+    },
+    {
+      "id": "fresh-2",
+      "phase": "fresh",
+      "tokens": 128,
+      "equal": true
+    },
+    {
+      "id": "fresh-0",
+      "phase": "repeat",
+      "tokens": 128,
+      "equal": true
+    },
+    {
+      "id": "fresh-1",
+      "phase": "repeat",
+      "tokens": 128,
+      "equal": true
+    },
+    {
+      "id": "fresh-2",
+      "phase": "repeat",
+      "tokens": 128,
+      "equal": true
+    }
+  ],
+  "baseline": "results/20261018-overlap/engram-full.json"
+}

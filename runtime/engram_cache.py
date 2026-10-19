@@ -13,6 +13,18 @@ class RowCache:
         self.lock = threading.RLock()
         self.stats = dict(hits=0, misses=0, evictions=0, peak_rows=0, peak_payload_bytes=0)
 
+    def _touch(self, key):
+        self.rows.move_to_end(key)
+
+    def _evict_one(self):
+        _, old = self.rows.popitem(last=False)
+        self.payload_bytes -= len(old)
+        self.stats['evictions'] += 1
+
+    def _insert(self, key, value):
+        self.rows[key] = value
+        self.payload_bytes += len(value)
+
     def gather(self, original, handle, ids, nbytes):
         if nbytes <= 0:
             raise ValueError('Row width must be positive')
@@ -26,7 +38,7 @@ class RowCache:
                     continue
                 if key in self.rows:
                     found[key] = self.rows[key]
-                    self.rows.move_to_end(key)
+                    self._touch(key)
                     self.stats['hits'] += 1
                 else:
                     missing.append(key)
@@ -40,11 +52,8 @@ class RowCache:
                     value = bytes(blob[i*nbytes:(i+1)*nbytes])
                     found[key] = value
                     while len(self.rows) >= self.capacity:
-                        _, old = self.rows.popitem(last=False)
-                        self.payload_bytes -= len(old)
-                        self.stats['evictions'] += 1
-                    self.rows[key] = value
-                    self.payload_bytes += len(value)
+                        self._evict_one()
+                    self._insert(key, value)
                 self.stats['peak_rows'] = max(self.stats['peak_rows'], len(self.rows))
                 self.stats['peak_payload_bytes'] = max(self.stats['peak_payload_bytes'], self.payload_bytes)
             return b''.join(found[key] for key in keys)
@@ -55,11 +64,64 @@ class RowCache:
             self.payload_bytes = 0
 
 
-def configure(model, capacity):
+class DecodeRowCache(RowCache):
+    """Protect observed generation rows from prefill scans, with fixed capacity.
+
+    Half the entries can be protected. The rest remain available for new rows;
+    a decode hit promotes a row, while prefill cannot refresh protected recency.
+    Only replacement order changes. Original immutable row bytes are retained.
+    """
+    def __init__(self, capacity):
+        super().__init__(capacity)
+        self.protected_capacity = capacity // 2
+        self.protected = OrderedDict()
+        self.probation = OrderedDict()
+        self.phase = 'prefill'
+
+    def set_phase(self, phase):
+        if phase not in ('prefill', 'decode'):
+            raise ValueError('Unknown Engram cache phase')
+        with self.lock:
+            self.phase = phase
+
+    def _touch(self, key):
+        if self.phase == 'decode' and self.protected_capacity:
+            self.probation.pop(key, None)
+            self.protected[key] = None
+            self.protected.move_to_end(key)
+            if len(self.protected) > self.protected_capacity:
+                old, _ = self.protected.popitem(last=False)
+                self.probation[old] = None
+        elif key in self.probation:
+            self.probation.move_to_end(key)
+
+    def _insert(self, key, value):
+        super()._insert(key, value)
+        self.probation[key] = None
+        self._touch(key)
+
+    def _evict_one(self):
+        # At least one unprotected slot exists, including capacity == 1.
+        key, _ = self.probation.popitem(last=False)
+        old = self.rows.pop(key)
+        self.payload_bytes -= len(old)
+        self.stats['evictions'] += 1
+
+    def clear(self):
+        with self.lock:
+            super().clear()
+            self.protected.clear()
+            self.probation.clear()
+
+
+def configure(model, capacity, *, protect_decode=False):
+    if protect_decode and capacity == 0:
+        raise ValueError('Decode protection requires a positive row capacity')
     if capacity == 0 and not hasattr(model, '_recipe_engram_cache'):
         return None
     from exllamav3.modules.engram import EngramLayer
-    cache = RowCache(capacity) if capacity else None
+    cache_type = DecodeRowCache if protect_decode else RowCache
+    cache = cache_type(capacity) if capacity else None
     count = 0
     for module in model:
         if not isinstance(module, EngramLayer):

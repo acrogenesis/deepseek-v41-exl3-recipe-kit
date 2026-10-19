@@ -1,0 +1,162 @@
+{
+  "status": "failed",
+  "profile": {
+    "hardware": "RTX 5090 32 GB, Ryzen 9950X3D, 128 GB RAM, Samsung 990 PRO NVMe",
+    "gpu_expert_cache_bytes": 24696061952,
+    "ram_expert_cache_bytes": 90194313216,
+    "host_reserve_bytes": 12884901888,
+    "container_memory": "96g",
+    "container_memory_swap": "96g",
+    "context_tokens": 262144,
+    "prefill_chunk_tokens": 8192,
+    "max_batch_size": 1,
+    "draft": false,
+    "text_only": true,
+    "status": "experimental context or prefill override; consult this run for validation",
+    "pinned_ram": true
+  },
+  "inventory": {
+    "model": "LibertAIDAI/DeepSeek-V4.1-Flash-1017-EXL3-2.9bpw",
+    "revision": "c178a01284fc5c0e859d8668cffaac81ca8f4042",
+    "experts": 15360,
+    "tensor_count": 184320,
+    "projection_K_counts": {
+      "3": 40320,
+      "2": 5760
+    },
+    "packed_record_bytes": 196104683520,
+    "largest_record_bytes": 13320192,
+    "payload_verified": false,
+    "header_source": "local_shards",
+    "gpu_used": false
+  },
+  "runs": [],
+  "runtime_lock": {
+    "schema": 1,
+    "exllamav3": {
+      "repo": "https://github.com/vcruz305/exllamav3.git",
+      "revision": "954a8ca6e59d48c3e3462068ecf083fe9990f4dc"
+    },
+    "cache_components": {
+      "repo": "https://github.com/vcruz305/vllm-exl3.git",
+      "revision": "2a740a3773601c994072295fde45738ef8cea55e",
+      "files": {
+        "expert_store.py": "05a8d337f3eda5a4d451216ba69294c14f0d58211c91c0ec802f5646f45d156b",
+        "expert_cache.py": "688d64d3ea80232415165603a21e00f9fcae93645506c986de4bf80baf9bad84"
+      }
+    },
+    "base_image": {
+      "local_tag": "localhost/glm53-sm120:20261001",
+      "id": "801524faa7a980a44e912d17073210c86d9d4233152d8a295d1949296c75f5db"
+    },
+    "cuda_arch": "12.0",
+    "gpu_validation": "passed_5090_text_8192",
+    "validation_report": "results/20261018-target30/summary.json"
+  },
+  "gpu": "NVIDIA GeForce RTX 5090",
+  "torch": "2.13.0+cu130",
+  "cuda": "13.0",
+  "metric": "Streamed output tokens after first token / elapsed time after first token; fresh KV state each request",
+  "runtime_sources": {
+    "ExpertCache": {
+      "path": "runtime/cache.py",
+      "sha256": "be9ced79259e6a0a4a84ae2af2089b7f1df3876d58705c1a68a9c309442b7937"
+    },
+    "PhaseExpertStore": {
+      "path": "runtime/phase_store.py",
+      "sha256": "311a8157b815932446c73ad5b8dc3ffeed0c3f2d5ce5b8f3eb6199c29343f1a8"
+    }
+  },
+  "runtime_sha256": {
+    "__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "indexed_store.py": "1eb5803dd2f7cc8201b2b1a4d27cb18d6f96a8d7bebd7ad788dfda1347aef6f7",
+    "memory_budget.py": "10103cc5bb746aefc60b2b1cc34fb94cf176abe68065a6eedc727eb954013a26",
+    "cache.py": "be9ced79259e6a0a4a84ae2af2089b7f1df3876d58705c1a68a9c309442b7937",
+    "native_adapter.py": "8935799dfc386e7820ca5f8db49ff8c69232120928fccf10a2cb0ec7a042f191",
+    "runner.py": "f048053c0881a8764d2220963b3354f2428e789fe6ce1c3056eb2cc46cd43536",
+    "diagnostic.py": "daf9076718914cc0cb5e87016171ac970c88e64276c52b14614efc1d9d7d2bde",
+    "speculative_probe.py": "46254f5a0578b26da645fddfe265fe565761ed927167990cb32c2b05ac5f78eb",
+    "native_dispatch.cpp": "f5fc2a16796e2d1ba56a19b59476888c9d11747ca67ecde88a201230919bad7f",
+    "native_dispatch.py": "fa5926bae354d3549ea9de9827550df69d24fc90b1c551c426eba33f55b71ef4",
+    "grouped_dispatch.cu": "f1b855a6ca1304fe2f12fd59352545b8c2d0f95d83f6668442a5d5d74b21a2ad",
+    "grouped_dispatch.h": "86c077c27e7e10cff14b7f07c6a05a666c6bc7368d7af4b108a9b4d911721355",
+    "hc_graphs.py": "144cdafef6b60dc6d9590b8b81307375312ddf26879370af8467612581860987",
+    "paging_probe.py": "1910d98c4cdef25fb3536bc7020c12d6fd82e8e0035f3c912f7a2e64034717bc",
+    "victim_store.py": "cdc38d61b939cc2fb75fe5405f3eb944e67e398b073551467c8b420381a36c50",
+    "engram_cache.py": "0e1e8bed5b7fb46f6fc92af6d8787075bbcf548172cbf063840c49dd864aaa4d",
+    "quality.py": "29a2121f489c2e38b89b8cdbd05dcad3dd3363e9311fb9af379b1cfc1c5db1ac",
+    "long_context.py": "edada8b7dd823fe31cca1759c2aaa9a8d1428bbf1a5c31f6a2445758cc9e9617",
+    "elastic_cache.py": "5ecbb4792d04adb723e66057c2661b7eea9fc4ff95b3f58b04702a0a24624389",
+    "decode_priority.py": "e3c6c9a0d760157ebe86fa4c365f8dd8771929ffe7e3830222d3b5deb82b2f9a",
+    "phase_store.py": "311a8157b815932446c73ad5b8dc3ffeed0c3f2d5ce5b8f3eb6199c29343f1a8"
+  },
+  "grouped_dispatch": true,
+  "hc_graphs": true,
+  "gpu_policy": "lfu",
+  "victim_cache": true,
+  "gpu_only_limit_gib": 19,
+  "fast_guard": true,
+  "fused_reduce": true,
+  "overlap_loads": true,
+  "overlap_shared": true,
+  "fused_indexer": true,
+  "verify_indexer_first_token": true,
+  "prefill_gpu_cache_gib": 18,
+  "decode_priority": true,
+  "preserve_gpu_on_resize": true,
+  "engram_cache_rows": 65536,
+  "engram_protect_decode": true,
+  "runtime_source_sha256": {
+    "__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "cache.py": "be9ced79259e6a0a4a84ae2af2089b7f1df3876d58705c1a68a9c309442b7937",
+    "decode_priority.py": "e3c6c9a0d760157ebe86fa4c365f8dd8771929ffe7e3830222d3b5deb82b2f9a",
+    "diagnostic.py": "daf9076718914cc0cb5e87016171ac970c88e64276c52b14614efc1d9d7d2bde",
+    "elastic_cache.py": "5ecbb4792d04adb723e66057c2661b7eea9fc4ff95b3f58b04702a0a24624389",
+    "engram_cache.py": "0e1e8bed5b7fb46f6fc92af6d8787075bbcf548172cbf063840c49dd864aaa4d",
+    "grouped_dispatch.cu": "f1b855a6ca1304fe2f12fd59352545b8c2d0f95d83f6668442a5d5d74b21a2ad",
+    "grouped_dispatch.h": "86c077c27e7e10cff14b7f07c6a05a666c6bc7368d7af4b108a9b4d911721355",
+    "hc_graphs.py": "144cdafef6b60dc6d9590b8b81307375312ddf26879370af8467612581860987",
+    "indexed_store.py": "1eb5803dd2f7cc8201b2b1a4d27cb18d6f96a8d7bebd7ad788dfda1347aef6f7",
+    "long_context.py": "edada8b7dd823fe31cca1759c2aaa9a8d1428bbf1a5c31f6a2445758cc9e9617",
+    "memory_budget.py": "10103cc5bb746aefc60b2b1cc34fb94cf176abe68065a6eedc727eb954013a26",
+    "native_adapter.py": "8935799dfc386e7820ca5f8db49ff8c69232120928fccf10a2cb0ec7a042f191",
+    "native_dispatch.cpp": "f5fc2a16796e2d1ba56a19b59476888c9d11747ca67ecde88a201230919bad7f",
+    "native_dispatch.py": "fa5926bae354d3549ea9de9827550df69d24fc90b1c551c426eba33f55b71ef4",
+    "paging_probe.py": "1910d98c4cdef25fb3536bc7020c12d6fd82e8e0035f3c912f7a2e64034717bc",
+    "phase_store.py": "311a8157b815932446c73ad5b8dc3ffeed0c3f2d5ce5b8f3eb6199c29343f1a8",
+    "quality.py": "29a2121f489c2e38b89b8cdbd05dcad3dd3363e9311fb9af379b1cfc1c5db1ac",
+    "runner.py": "f048053c0881a8764d2220963b3354f2428e789fe6ce1c3056eb2cc46cd43536",
+    "speculative_probe.py": "46254f5a0578b26da645fddfe265fe565761ed927167990cb32c2b05ac5f78eb",
+    "victim_store.py": "cdc38d61b939cc2fb75fe5405f3eb944e67e398b073551467c8b420381a36c50"
+  },
+  "grouped_source_sha256": {
+    "native_dispatch.cpp": "f5fc2a16796e2d1ba56a19b59476888c9d11747ca67ecde88a201230919bad7f",
+    "native_dispatch.py": "fa5926bae354d3549ea9de9827550df69d24fc90b1c551c426eba33f55b71ef4",
+    "grouped_dispatch.cu": "f1b855a6ca1304fe2f12fd59352545b8c2d0f95d83f6668442a5d5d74b21a2ad",
+    "grouped_dispatch.h": "86c077c27e7e10cff14b7f07c6a05a666c6bc7368d7af4b108a9b4d911721355",
+    "hc_graphs.py": "144cdafef6b60dc6d9590b8b81307375312ddf26879370af8467612581860987"
+  },
+  "tune_cache_path": "/kernel-cache/coop_autotune_v1.bin",
+  "tune_cache_sha256_before": "c2b593aebb088138651e56134e932b6dd4bc11f80e3bf3705bdfbbca1f60cdd0",
+  "kv_pool_bytes": 838860800,
+  "load_seconds": 8.927407634000701,
+  "memory_after_load": {
+    "device_free_bytes": 6321078272,
+    "device_total_bytes": 33763426304,
+    "torch_allocated_bytes": 25341111808,
+    "torch_reserved_bytes": 25360859136
+  },
+  "fixture_sha256": "f3023ee0c97d5e2b2e9451516e5d81021e0fed38a411b4f93288458b1a13ac16",
+  "progress": {
+    "id": "context-262015",
+    "phase": "fresh",
+    "kv_positions": [
+      122880
+    ],
+    "output_tokens": 0,
+    "seconds": 719.2103319670005
+  },
+  "error": "RuntimeError(\"{'job': Generator job #0, 'serial': 0, 'stage': 'error', 'eos': True, 'error': MemoryError('Host RAM reserve reached')}\")",
+  "indexer_verification": [],
+  "tune_cache_sha256_after": "c2b593aebb088138651e56134e932b6dd4bc11f80e3bf3705bdfbbca1f60cdd0"
+}

@@ -1,0 +1,14 @@
+{
+  "status": "waiting_priority",
+  "pid": 582582,
+  "baseline_unit": "deepseek41-context256k-priority-queue.service",
+  "snapshot": "/home/archogenesis/Work/deepseek-v41-exl3-recipe-kit/work/context-engram-snapshot",
+  "updated_at": 1792427616.8383949,
+  "upstream_unit_state": {
+    "ActiveState": "active",
+    "SubState": "running",
+    "MainPID": "516529",
+    "ExecMainStatus": "0"
+  },
+  "upstream_status": "waiting_baseline"
+}

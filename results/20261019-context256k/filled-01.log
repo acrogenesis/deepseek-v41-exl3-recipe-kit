@@ -1,0 +1,76 @@
+{
+  "ready_for_gpu_validation": true,
+  "gpu_used": false,
+  "download_status": "complete",
+  "verified_bytes": 413905629467,
+  "total_bytes": 413905629467,
+  "pending": []
+}
+ninja: no work to do.
+{"id": "context-262015", "phase": "fresh", "kv_positions": [8192], "output_tokens": 0, "seconds": 71.11815960100012}
+{"id": "context-262015", "phase": "fresh", "kv_positions": [16384], "output_tokens": 0, "seconds": 116.6126923869997}
+{"id": "context-262015", "phase": "fresh", "kv_positions": [24576], "output_tokens": 0, "seconds": 161.2019653870002}
+{"id": "context-262015", "phase": "fresh", "kv_positions": [32768], "output_tokens": 0, "seconds": 206.08369760999994}
+{"id": "context-262015", "phase": "fresh", "kv_positions": [40960], "output_tokens": 0, "seconds": 249.74910203400032}
+{"id": "context-262015", "phase": "fresh", "kv_positions": [49152], "output_tokens": 0, "seconds": 292.08262734799973}
+{"id": "context-262015", "phase": "fresh", "kv_positions": [57344], "output_tokens": 0, "seconds": 336.43607865600006}
+{"id": "context-262015", "phase": "fresh", "kv_positions": [65536], "output_tokens": 0, "seconds": 380.86296655499973}
+{"id": "context-262015", "phase": "fresh", "kv_positions": [73728], "output_tokens": 0, "seconds": 426.0127107919998}
+{"id": "context-262015", "phase": "fresh", "kv_positions": [81920], "output_tokens": 0, "seconds": 469.3520922480002}
+{"id": "context-262015", "phase": "fresh", "kv_positions": [90112], "output_tokens": 0, "seconds": 511.8228476009999}
+{"id": "context-262015", "phase": "fresh", "kv_positions": [98304], "output_tokens": 0, "seconds": 555.4543718679997}
+{"id": "context-262015", "phase": "fresh", "kv_positions": [106496], "output_tokens": 0, "seconds": 598.800940569}
+{"id": "context-262015", "phase": "fresh", "kv_positions": [114688], "output_tokens": 0, "seconds": 644.4711489789997}
+{"id": "context-262015", "phase": "fresh", "kv_positions": [122880], "output_tokens": 0, "seconds": 691.0937115859997}
+{"id": "context-262015", "phase": "fresh", "kv_positions": [131072], "output_tokens": 0, "seconds": 737.0720063669996}
+{"id": "context-262015", "phase": "fresh", "kv_positions": [139264], "output_tokens": 0, "seconds": 781.2775432649996}
+{"id": "context-262015", "phase": "fresh", "kv_positions": [147456], "output_tokens": 0, "seconds": 824.6850183400002}
+{"id": "context-262015", "phase": "fresh", "kv_positions": [155648], "output_tokens": 0, "seconds": 868.3100730260003}
+{"id": "context-262015", "phase": "fresh", "kv_positions": [163840], "output_tokens": 0, "seconds": 913.6043417170004}
+{"id": "context-262015", "phase": "fresh", "kv_positions": [172032], "output_tokens": 0, "seconds": 958.3473296989996}
+{"id": "context-262015", "phase": "fresh", "kv_positions": [180224], "output_tokens": 0, "seconds": 1003.0317813849997}
+{"id": "context-262015", "phase": "fresh", "kv_positions": [188416], "output_tokens": 0, "seconds": 1047.1014472019997}
+{"id": "context-262015", "phase": "fresh", "kv_positions": [196608], "output_tokens": 0, "seconds": 1091.1192402779998}
+{"id": "context-262015", "phase": "fresh", "kv_positions": [204800], "output_tokens": 0, "seconds": 1135.6035395070003}
+{"id": "context-262015", "phase": "fresh", "kv_positions": [212992], "output_tokens": 0, "seconds": 1179.4402251310003}
+{"id": "context-262015", "phase": "fresh", "kv_positions": [221184], "output_tokens": 0, "seconds": 1223.7182845300003}
+{"id": "context-262015", "phase": "fresh", "kv_positions": [229376], "output_tokens": 0, "seconds": 1268.056783086}
+{"id": "context-262015", "phase": "fresh", "kv_positions": [237568], "output_tokens": 0, "seconds": 1314.6042052230005}
+{"id": "context-262015", "phase": "fresh", "kv_positions": [245760], "output_tokens": 0, "seconds": 1360.2554288049996}
+{"id": "context-262015", "phase": "fresh", "kv_positions": [253952], "output_tokens": 0, "seconds": 1405.233511939}
+{"id": "context-262015", "phase": "fresh", "kv_positions": [261888], "output_tokens": 0, "seconds": 1449.2002250719997}
+{"id": "context-262015", "phase": "fresh", "decode_tok_s": 10.010489415664305, "ttft_seconds": 1463.8217072839998, "text": "```json\n{\n  \"cedar\": \"R8D2-JUNE\",\n  \"maple\": \"K3P7-NORTH\",\n  \"birch\": \"T6W1-SILVER\"\n}\n```\n\n## Failure modes and improvements for these deployment systems\n\nThe three special registry entries \u2014 cedar (`R8D2-JUNE`), maple (`K3P7-NORTH`), and birch (`T6W1-SILVER`) \u2014 sit inside a very large corpus of deployment records. Each record describes a component (job queue, database replica, object store, API gateway, backup worker, event"}
+{"id": "context-262015", "phase": "repeat", "kv_positions": [8192], "output_tokens": 0, "seconds": 41.864587317999394}
+{"id": "context-262015", "phase": "repeat", "kv_positions": [16384], "output_tokens": 0, "seconds": 84.10168188599982}
+{"id": "context-262015", "phase": "repeat", "kv_positions": [24576], "output_tokens": 0, "seconds": 127.19953714299936}
+{"id": "context-262015", "phase": "repeat", "kv_positions": [32768], "output_tokens": 0, "seconds": 172.46531888699974}
+{"id": "context-262015", "phase": "repeat", "kv_positions": [40960], "output_tokens": 0, "seconds": 216.41517989399927}
+{"id": "context-262015", "phase": "repeat", "kv_positions": [49152], "output_tokens": 0, "seconds": 257.6101766949996}
+{"id": "context-262015", "phase": "repeat", "kv_positions": [57344], "output_tokens": 0, "seconds": 299.50714027899994}
+{"id": "context-262015", "phase": "repeat", "kv_positions": [65536], "output_tokens": 0, "seconds": 341.9655109539999}
+{"id": "context-262015", "phase": "repeat", "kv_positions": [73728], "output_tokens": 0, "seconds": 384.34454563599957}
+{"id": "context-262015", "phase": "repeat", "kv_positions": [81920], "output_tokens": 0, "seconds": 427.8513998569997}
+{"id": "context-262015", "phase": "repeat", "kv_positions": [90112], "output_tokens": 0, "seconds": 471.5141983479998}
+{"id": "context-262015", "phase": "repeat", "kv_positions": [98304], "output_tokens": 0, "seconds": 516.0194977049996}
+{"id": "context-262015", "phase": "repeat", "kv_positions": [106496], "output_tokens": 0, "seconds": 562.6860089719994}
+{"id": "context-262015", "phase": "repeat", "kv_positions": [114688], "output_tokens": 0, "seconds": 609.0475834409999}
+{"id": "context-262015", "phase": "repeat", "kv_positions": [122880], "output_tokens": 0, "seconds": 655.301047854}
+{"id": "context-262015", "phase": "repeat", "kv_positions": [131072], "output_tokens": 0, "seconds": 703.812917798}
+{"id": "context-262015", "phase": "repeat", "kv_positions": [139264], "output_tokens": 0, "seconds": 749.9033930789992}
+{"id": "context-262015", "phase": "repeat", "kv_positions": [147456], "output_tokens": 0, "seconds": 795.6639643909994}
+{"id": "context-262015", "phase": "repeat", "kv_positions": [155648], "output_tokens": 0, "seconds": 843.2062971429996}
+{"id": "context-262015", "phase": "repeat", "kv_positions": [163840], "output_tokens": 0, "seconds": 889.9609622029993}
+{"id": "context-262015", "phase": "repeat", "kv_positions": [172032], "output_tokens": 0, "seconds": 936.2720903749996}
+{"id": "context-262015", "phase": "repeat", "kv_positions": [180224], "output_tokens": 0, "seconds": 981.527933755}
+{"id": "context-262015", "phase": "repeat", "kv_positions": [188416], "output_tokens": 0, "seconds": 1027.6747334259999}
+{"id": "context-262015", "phase": "repeat", "kv_positions": [196608], "output_tokens": 0, "seconds": 1072.5101119369992}
+{"id": "context-262015", "phase": "repeat", "kv_positions": [204800], "output_tokens": 0, "seconds": 1118.6770774369998}
+{"id": "context-262015", "phase": "repeat", "kv_positions": [212992], "output_tokens": 0, "seconds": 1163.4765676989991}
+{"id": "context-262015", "phase": "repeat", "kv_positions": [221184], "output_tokens": 0, "seconds": 1208.7443621109996}
+{"id": "context-262015", "phase": "repeat", "kv_positions": [229376], "output_tokens": 0, "seconds": 1253.8896950399994}
+{"id": "context-262015", "phase": "repeat", "kv_positions": [237568], "output_tokens": 0, "seconds": 1302.1028850619987}
+{"id": "context-262015", "phase": "repeat", "kv_positions": [245760], "output_tokens": 0, "seconds": 1348.6683316189992}
+{"id": "context-262015", "phase": "repeat", "kv_positions": [253952], "output_tokens": 0, "seconds": 1395.9176007059996}
+{"id": "context-262015", "phase": "repeat", "kv_positions": [261888], "output_tokens": 0, "seconds": 1443.5279204919989}
+{"id": "context-262015", "phase": "repeat", "decode_tok_s": 9.093245338305922, "ttft_seconds": 1458.7900043459995, "text": "```json\n{\n  \"cedar\": \"R8D2-JUNE\",\n  \"maple\": \"K3P7-NORTH\",\n  \"birch\": \"T6W1-SILVER\"\n}\n```\n\n## Failure modes and improvements for these deployment systems\n\nThe three special registry entries \u2014 cedar (`R8D2-JUNE`), maple (`K3P7-NORTH`), and birch (`T6W1-SILVER`) \u2014 sit inside a very large corpus of deployment records. Each record describes a component (job queue, database replica, object store, API gateway, backup worker, event"}
+Saved /recipe/results/20261019-context256k/filled-01.json

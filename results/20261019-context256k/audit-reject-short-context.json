@@ -1,0 +1,58 @@
+{
+  "evidence_valid": false,
+  "scope": "Negative control: valid 8K prompt, matching baseline tokens and 256K allocation; rejected solely for insufficient context coverage",
+  "source": "results/20261019-context256k/desktop-8k.json",
+  "source_sha256": "94d867044b213814633a6c95e4170aaa80b36e191a846c6db9359df32460efc5",
+  "fixture_sha256": "de8573ab23c9832922b77f359cf071f50fff83153a64a2152e7dc7d1a5ff9d7d",
+  "baseline_sha256": "74506a4924311a505d98be07e3ad04736e4946cd35812ee15de84e400c593568",
+  "snapshot_manifest_sha256": "fec540b43827ccdf26a64de6208500d1fb08905eff5b4d770f286dce1d8f29fb",
+  "errors": [
+    "Fixture must contain 262015 input tokens",
+    "Native indexer must use the filled prompt: layer 2",
+    "Native indexer must use the filled prompt: layer 8",
+    "Native indexer must use the filled prompt: layer 14",
+    "Native indexer must use the filled prompt: layer 20",
+    "Native indexer must use the filled prompt: layer 24",
+    "Native indexer must use the filled prompt: layer 28",
+    "Native indexer must use the filled prompt: layer 32",
+    "Native indexer must use the filled prompt: layer 36",
+    "fresh: full input and output sizes required",
+    "fresh: final KV position must cover the full prompt",
+    "repeat: full input and output sizes required",
+    "repeat: final KV position must cover the full prompt"
+  ],
+  "measurements": [
+    {
+      "phase": "fresh",
+      "input_tokens": 8063,
+      "output_tokens": 128,
+      "decode_tok_s": 10.013278226647232,
+      "difference_from_30_percent": -66.6224059111759,
+      "baseline_tokens_equal": true,
+      "ttft_seconds": 88.03289791499992,
+      "expert_disk_bytes": 28285845504,
+      "engram": {
+        "hits": 938,
+        "misses": 11254,
+        "evictions": 11254
+      },
+      "host_available_bytes": 19385319424
+    },
+    {
+      "phase": "repeat",
+      "input_tokens": 8063,
+      "output_tokens": 128,
+      "decode_tok_s": 27.318111945222064,
+      "difference_from_30_percent": -8.939626849259785,
+      "baseline_tokens_equal": true,
+      "ttft_seconds": 48.27153960800024,
+      "expert_disk_bytes": 0,
+      "engram": {
+        "hits": 12192,
+        "misses": 0,
+        "evictions": 0
+      },
+      "host_available_bytes": 19004530688
+    }
+  ]
+}

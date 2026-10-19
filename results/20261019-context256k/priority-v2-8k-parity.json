@@ -1,0 +1,15 @@
+{
+  "comparisons": [
+    {
+      "phase": "fresh",
+      "tokens": 128,
+      "equal": true
+    },
+    {
+      "phase": "repeat",
+      "tokens": 128,
+      "equal": true
+    }
+  ],
+  "passed": true
+}

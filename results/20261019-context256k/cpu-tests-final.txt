@@ -1,0 +1,24 @@
+test_larger_cache_requires_unchanged_output (test_campaign.ComparisonTests.test_larger_cache_requires_unchanged_output) ... ok
+test_small_or_negative_change_does_not_change_recommendation (test_campaign.ComparisonTests.test_small_or_negative_change_does_not_change_recommendation) ... ok
+test_batch_larger_than_capacity_and_lru (test_engram_cache.RowCacheTests.test_batch_larger_than_capacity_and_lru) ... ok
+test_failed_read_does_not_cache_partial_bytes (test_engram_cache.RowCacheTests.test_failed_read_does_not_cache_partial_bytes) ... ok
+test_order_duplicates_hits_and_handle_identity (test_engram_cache.RowCacheTests.test_order_duplicates_hits_and_handle_identity) ... ok
+test_buffered_roundtrip_eviction (test_indexed_store.StoreTests.test_buffered_roundtrip_eviction) ... ok
+test_cancel (test_indexed_store.StoreTests.test_cancel) ... ok
+test_changed_file (test_indexed_store.StoreTests.test_changed_file) ... ok
+test_direct_roundtrip_eviction (test_indexed_store.StoreTests.test_direct_roundtrip_eviction) ... ok
+test_incomplete_projection (test_indexed_store.StoreTests.test_incomplete_projection) ... ok
+test_missing_expert (test_indexed_store.StoreTests.test_missing_expert) ... ok
+test_out_of_bounds (test_indexed_store.StoreTests.test_out_of_bounds) ... ok
+test_split_shard_and_noncontiguous_extent (test_indexed_store.StoreTests.test_split_shard_and_noncontiguous_extent) ... ok
+test_truncated_header (test_indexed_store.StoreTests.test_truncated_header) ... ok
+test_truncated_payload_is_not_cached (test_indexed_store.StoreTests.test_truncated_payload_is_not_cached) ... ok
+test_wrong_codebook (test_indexed_store.StoreTests.test_wrong_codebook) ... ok
+test_host_reserve (test_memory_budget.BudgetTests.test_host_reserve) ... ok
+test_persistent_guard_reads_changes_and_closes (test_memory_budget.BudgetTests.test_persistent_guard_reads_changes_and_closes) ... ok
+test_zero_process_swap_and_reserve (test_memory_budget.BudgetTests.test_zero_process_swap_and_reserve) ... ok
+
+----------------------------------------------------------------------
+Ran 19 tests in 0.005s
+
+OK

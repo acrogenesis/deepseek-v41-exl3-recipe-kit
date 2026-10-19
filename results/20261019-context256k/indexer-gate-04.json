@@ -1,0 +1,163 @@
+{
+  "status": "passed",
+  "scope": "Synthetic indexer correctness and microbenchmark, not model tok/s",
+  "gpu": "NVIDIA GeForce RTX 5090",
+  "cases": [
+    {
+      "entries": 257,
+      "queries": 1,
+      "rate": 1,
+      "max_score_error": 5.960464477539062e-07,
+      "score_eager_ms": 0.04502989995671669,
+      "score_fused_ms": 0.013218200001574587,
+      "roles": [
+        {
+          "role": null,
+          "exact_indices": true,
+          "mismatching_positions": 0
+        },
+        {
+          "role": "source",
+          "exact_indices": true,
+          "mismatching_positions": 0
+        },
+        {
+          "role": "consumer",
+          "exact_indices": true,
+          "mismatching_positions": 0
+        }
+      ],
+      "candidate_mask_equal": true
+    },
+    {
+      "entries": 2048,
+      "queries": 17,
+      "rate": 2,
+      "max_score_error": 1.3113021850585938e-06,
+      "score_eager_ms": 0.04551190004349337,
+      "score_fused_ms": 0.012613200033229077,
+      "roles": [
+        {
+          "role": null,
+          "exact_indices": true,
+          "mismatching_positions": 0
+        },
+        {
+          "role": "source",
+          "exact_indices": true,
+          "mismatching_positions": 0
+        },
+        {
+          "role": "consumer",
+          "exact_indices": true,
+          "mismatching_positions": 0
+        }
+      ],
+      "candidate_mask_equal": true
+    },
+    {
+      "entries": 20005,
+      "queries": 17,
+      "rate": 1,
+      "max_score_error": 1.6689300537109375e-06,
+      "score_eager_ms": 0.11992939998890506,
+      "score_fused_ms": 0.02561350001997198,
+      "roles": [
+        {
+          "role": null,
+          "exact_indices": true,
+          "mismatching_positions": 0
+        },
+        {
+          "role": "source",
+          "exact_indices": true,
+          "mismatching_positions": 0
+        },
+        {
+          "role": "consumer",
+          "exact_indices": true,
+          "mismatching_positions": 0
+        }
+      ],
+      "candidate_mask_equal": true
+    },
+    {
+      "entries": 131072,
+      "queries": 1,
+      "rate": 2,
+      "max_score_error": 1.430511474609375e-06,
+      "score_eager_ms": 0.15924720000839443,
+      "score_fused_ms": 0.013527200007956708,
+      "roles": [
+        {
+          "role": null,
+          "exact_indices": true,
+          "mismatching_positions": 0
+        },
+        {
+          "role": "source",
+          "exact_indices": true,
+          "mismatching_positions": 0
+        },
+        {
+          "role": "consumer",
+          "exact_indices": true,
+          "mismatching_positions": 0
+        }
+      ],
+      "candidate_mask_equal": true
+    },
+    {
+      "entries": 262144,
+      "queries": 1,
+      "rate": 1,
+      "max_score_error": 1.6689300537109375e-06,
+      "score_eager_ms": 0.27691049999702955,
+      "score_fused_ms": 0.020993399994040374,
+      "roles": [
+        {
+          "role": null,
+          "exact_indices": true,
+          "mismatching_positions": 0
+        },
+        {
+          "role": "source",
+          "exact_indices": true,
+          "mismatching_positions": 0
+        },
+        {
+          "role": "consumer",
+          "exact_indices": true,
+          "mismatching_positions": 0
+        }
+      ],
+      "candidate_mask_equal": true
+    },
+    {
+      "entries": 262144,
+      "queries": 5,
+      "rate": 1,
+      "max_score_error": 1.9073486328125e-06,
+      "score_eager_ms": 0.7975859999532986,
+      "score_fused_ms": 0.09614989994588541,
+      "roles": [
+        {
+          "role": null,
+          "exact_indices": true,
+          "mismatching_positions": 0
+        },
+        {
+          "role": "source",
+          "exact_indices": true,
+          "mismatching_positions": 0
+        },
+        {
+          "role": "consumer",
+          "exact_indices": true,
+          "mismatching_positions": 0
+        }
+      ],
+      "candidate_mask_equal": true
+    }
+  ]
+}

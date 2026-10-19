@@ -1,0 +1,23 @@
+{
+  "status": "failed",
+  "pid": 593553,
+  "baseline_unit": "deepseek41-context256k-filled-01.service",
+  "snapshot": "/home/archogenesis/Work/deepseek-v41-exl3-recipe-kit/work/context-priority-v2-snapshot",
+  "updated_at": 1792428556.1704352,
+  "baseline_state": {
+    "ActiveState": "active",
+    "SubState": "running",
+    "MainPID": "450416",
+    "ExecMainStatus": "0"
+  },
+  "baseline_progress": {
+    "id": "context-262015",
+    "phase": "repeat",
+    "kv_positions": [
+      261888
+    ],
+    "output_tokens": 0,
+    "seconds": 1443.5279204919989
+  },
+  "error": "RuntimeError('GPU is occupied by another job; validation was not started')"
+}

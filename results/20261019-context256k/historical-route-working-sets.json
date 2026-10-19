@@ -1,0 +1,30 @@
+{
+  "source": "results/20261018-native/hc-full.json",
+  "scope": "Historical short prompts, 127 decode steps inferred from trailing complete 40-layer trace. Retrospective static-cache upper estimates, not runtime speed, not long-context evidence.",
+  "runs": [
+    {
+      "id": "fresh-0",
+      "unique_experts": 5115,
+      "unique_bytes": 65217576960,
+      "accesses": 30480,
+      "retrospective_equal_quota_gpu_hits": 0.7988517060367454,
+      "retrospective_global_quota_gpu_hits": 0.8079068241469817
+    },
+    {
+      "id": "fresh-1",
+      "unique_experts": 5241,
+      "unique_bytes": 67006513152,
+      "accesses": 30480,
+      "retrospective_equal_quota_gpu_hits": 0.7971784776902887,
+      "retrospective_global_quota_gpu_hits": 0.8038057742782152
+    },
+    {
+      "id": "fresh-2",
+      "unique_experts": 5017,
+      "unique_bytes": 63952011264,
+      "accesses": 30480,
+      "retrospective_equal_quota_gpu_hits": 0.8146653543307086,
+      "retrospective_global_quota_gpu_hits": 0.8202755905511812
+    }
+  ]
+}

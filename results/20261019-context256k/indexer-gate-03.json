@@ -1,0 +1,163 @@
+{
+  "status": "passed",
+  "scope": "Synthetic indexer correctness and microbenchmark, not model tok/s",
+  "gpu": "NVIDIA GeForce RTX 5090",
+  "cases": [
+    {
+      "entries": 257,
+      "queries": 1,
+      "rate": 1,
+      "max_score_error": 5.960464477539062e-07,
+      "score_eager_ms": 0.04812699999092729,
+      "score_fused_ms": 0.012074200003553415,
+      "roles": [
+        {
+          "role": null,
+          "exact_indices": true,
+          "mismatching_positions": 0
+        },
+        {
+          "role": "source",
+          "exact_indices": true,
+          "mismatching_positions": 0
+        },
+        {
+          "role": "consumer",
+          "exact_indices": true,
+          "mismatching_positions": 0
+        }
+      ],
+      "candidate_mask_equal": true
+    },
+    {
+      "entries": 2048,
+      "queries": 17,
+      "rate": 2,
+      "max_score_error": 1.3113021850585938e-06,
+      "score_eager_ms": 0.04071379999004421,
+      "score_fused_ms": 0.011396199988666922,
+      "roles": [
+        {
+          "role": null,
+          "exact_indices": true,
+          "mismatching_positions": 0
+        },
+        {
+          "role": "source",
+          "exact_indices": true,
+          "mismatching_positions": 0
+        },
+        {
+          "role": "consumer",
+          "exact_indices": true,
+          "mismatching_positions": 0
+        }
+      ],
+      "candidate_mask_equal": true
+    },
+    {
+      "entries": 20005,
+      "queries": 17,
+      "rate": 1,
+      "max_score_error": 1.6689300537109375e-06,
+      "score_eager_ms": 0.11940340000364813,
+      "score_fused_ms": 0.02586150003480725,
+      "roles": [
+        {
+          "role": null,
+          "exact_indices": true,
+          "mismatching_positions": 0
+        },
+        {
+          "role": "source",
+          "exact_indices": true,
+          "mismatching_positions": 0
+        },
+        {
+          "role": "consumer",
+          "exact_indices": true,
+          "mismatching_positions": 0
+        }
+      ],
+      "candidate_mask_equal": true
+    },
+    {
+      "entries": 131072,
+      "queries": 1,
+      "rate": 2,
+      "max_score_error": 1.430511474609375e-06,
+      "score_eager_ms": 0.15933020004013088,
+      "score_fused_ms": 0.013761300033365842,
+      "roles": [
+        {
+          "role": null,
+          "exact_indices": true,
+          "mismatching_positions": 0
+        },
+        {
+          "role": "source",
+          "exact_indices": true,
+          "mismatching_positions": 0
+        },
+        {
+          "role": "consumer",
+          "exact_indices": true,
+          "mismatching_positions": 0
+        }
+      ],
+      "candidate_mask_equal": true
+    },
+    {
+      "entries": 262144,
+      "queries": 1,
+      "rate": 1,
+      "max_score_error": 1.6689300537109375e-06,
+      "score_eager_ms": 0.3147763000015402,
+      "score_fused_ms": 0.022716399962519063,
+      "roles": [
+        {
+          "role": null,
+          "exact_indices": true,
+          "mismatching_positions": 0
+        },
+        {
+          "role": "source",
+          "exact_indices": true,
+          "mismatching_positions": 0
+        },
+        {
+          "role": "consumer",
+          "exact_indices": true,
+          "mismatching_positions": 0
+        }
+      ],
+      "candidate_mask_equal": true
+    },
+    {
+      "entries": 262144,
+      "queries": 5,
+      "rate": 1,
+      "max_score_error": 1.9073486328125e-06,
+      "score_eager_ms": 0.781654599995818,
+      "score_fused_ms": 0.0962910000453121,
+      "roles": [
+        {
+          "role": null,
+          "exact_indices": true,
+          "mismatching_positions": 0
+        },
+        {
+          "role": "source",
+          "exact_indices": true,
+          "mismatching_positions": 0
+        },
+        {
+          "role": "consumer",
+          "exact_indices": true,
+          "mismatching_positions": 0
+        }
+      ],
+      "candidate_mask_equal": true
+    }
+  ]
+}

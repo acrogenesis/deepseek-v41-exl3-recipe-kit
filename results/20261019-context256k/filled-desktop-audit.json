@@ -1,0 +1,44 @@
+{
+  "evidence_valid": true,
+  "scope": "Receipt audit; throughput goal must be assessed separately",
+  "source": "results/20261019-context256k/filled-desktop.json",
+  "source_sha256": "d17432a79f6d01c875a24e3f0f9508f768cecd68ff62ea07fc14b9ab8a5ef730",
+  "fixture_sha256": "f3023ee0c97d5e2b2e9451516e5d81021e0fed38a411b4f93288458b1a13ac16",
+  "baseline_sha256": "06013adb26d0a567920fc03fc429056a54ad9a1f895691110c851831e9027b3d",
+  "snapshot_manifest_sha256": "fec540b43827ccdf26a64de6208500d1fb08905eff5b4d770f286dce1d8f29fb",
+  "errors": [],
+  "measurements": [
+    {
+      "phase": "fresh",
+      "input_tokens": 262015,
+      "output_tokens": 128,
+      "decode_tok_s": 9.51292540597768,
+      "difference_from_30_percent": -68.29024864674108,
+      "baseline_tokens_equal": true,
+      "ttft_seconds": 1532.290253352001,
+      "expert_disk_bytes": 32100286464,
+      "engram": {
+        "hits": 2042,
+        "misses": 10150,
+        "evictions": 10150
+      },
+      "host_available_bytes": 18385018880
+    },
+    {
+      "phase": "repeat",
+      "input_tokens": 262015,
+      "output_tokens": 128,
+      "decode_tok_s": 29.939670100764648,
+      "difference_from_30_percent": -0.20109966411784308,
+      "baseline_tokens_equal": true,
+      "ttft_seconds": 1148.586006607,
+      "expert_disk_bytes": 0,
+      "engram": {
+        "hits": 12192,
+        "misses": 0,
+        "evictions": 0
+      },
+      "host_available_bytes": 18313207808
+    }
+  ]
+}

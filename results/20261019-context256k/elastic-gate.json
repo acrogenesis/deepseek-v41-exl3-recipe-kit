@@ -1,0 +1,111 @@
+{
+  "status": "passed",
+  "checks": [
+    {
+      "round": 0,
+      "key": "0:0",
+      "byte_exact": true
+    },
+    {
+      "round": 0,
+      "key": "0:1",
+      "byte_exact": true
+    },
+    {
+      "round": 0,
+      "key": "18:0",
+      "byte_exact": true
+    },
+    {
+      "round": 0,
+      "key": "18:1",
+      "byte_exact": true
+    },
+    {
+      "round": 1,
+      "key": "0:0",
+      "byte_exact": true
+    },
+    {
+      "round": 1,
+      "key": "0:1",
+      "byte_exact": true
+    },
+    {
+      "round": 1,
+      "key": "18:0",
+      "byte_exact": true
+    },
+    {
+      "round": 1,
+      "key": "18:1",
+      "byte_exact": true
+    },
+    {
+      "round": 2,
+      "key": "0:0",
+      "byte_exact": true
+    },
+    {
+      "round": 2,
+      "key": "0:1",
+      "byte_exact": true
+    },
+    {
+      "round": 2,
+      "key": "18:0",
+      "byte_exact": true
+    },
+    {
+      "round": 2,
+      "key": "18:1",
+      "byte_exact": true
+    },
+    {
+      "round": 3,
+      "key": "0:0",
+      "byte_exact": true
+    },
+    {
+      "round": 3,
+      "key": "0:1",
+      "byte_exact": true
+    },
+    {
+      "round": 3,
+      "key": "18:0",
+      "byte_exact": true
+    },
+    {
+      "round": 3,
+      "key": "18:1",
+      "byte_exact": true
+    }
+  ],
+  "resizes": [
+    {
+      "from_bytes": 26640384,
+      "to_bytes": 53280768,
+      "evicted_gpu_bytes": 22216704,
+      "seconds": 0.068897866000043
+    },
+    {
+      "from_bytes": 53280768,
+      "to_bytes": 26640384,
+      "evicted_gpu_bytes": 44433408,
+      "seconds": 0.07149305700022524
+    },
+    {
+      "from_bytes": 26640384,
+      "to_bytes": 79921152,
+      "evicted_gpu_bytes": 22216704,
+      "seconds": 0.05881351799962431
+    },
+    {
+      "from_bytes": 79921152,
+      "to_bytes": 26640384,
+      "evicted_gpu_bytes": 44433408,
+      "seconds": 0.06376303500019276
+    }
+  ]
+}

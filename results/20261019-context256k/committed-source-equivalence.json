@@ -1,0 +1,12 @@
+{
+  "all_other_runtime_files_byte_identical": true,
+  "changes": [
+    {
+      "file": "runtime/decode_priority.py",
+      "tested_sha256": "e3c6c9a0d760157ebe86fa4c365f8dd8771929ffe7e3830222d3b5deb82b2f9a",
+      "committed_sha256": "9ce382954f9da9aec850a7665e22226ce4628cdbe1a61e4e5abb286e574eb5d4",
+      "change": "Remove one empty line at end of file",
+      "ast_identical": true
+    }
+  ]
+}

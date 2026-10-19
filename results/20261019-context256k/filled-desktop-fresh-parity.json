@@ -1,0 +1,68 @@
+{
+  "scope": "Completed fresh phase only; repeated phase still running",
+  "source": "filled-desktop.json",
+  "baseline": "filled-01.json",
+  "phase": "fresh",
+  "tokens": 128,
+  "tokens_equal": true,
+  "input_tokens": 262015,
+  "final_kv_positions": [
+    262142
+  ],
+  "retrieval": {
+    "passed": true,
+    "expected": {
+      "cedar": "R8D2-JUNE",
+      "maple": "K3P7-NORTH",
+      "birch": "T6W1-SILVER"
+    },
+    "actual": {
+      "cedar": "R8D2-JUNE",
+      "maple": "K3P7-NORTH",
+      "birch": "T6W1-SILVER"
+    },
+    "marker_token_offsets": {
+      "cedar": 25601,
+      "maple": 130427,
+      "birch": 235608
+    },
+    "format": "fenced_json"
+  },
+  "decode_tok_s": 9.51292540597768,
+  "ttft_seconds": 1532.290253352001,
+  "decode_cache_delta": {
+    "ram_cache": {
+      "hits": 7558,
+      "misses": 2497,
+      "evictions": 3321,
+      "read_bytes": 32100286464,
+      "read_calls": 2497,
+      "peak_resident_bytes": 0,
+      "buffer_reuses": 2894,
+      "demotions": 829,
+      "demote_bytes": 10865491968,
+      "duplicate_evictions": 2402,
+      "decode_observations": 30480,
+      "priority_evictions": 919
+    },
+    "gpu_cache": {
+      "hits": 20425,
+      "misses": 10055,
+      "evictions": 9821,
+      "failures": 0,
+      "peak_resident_bytes": 2909011968,
+      "split_calls": 4293,
+      "split_resident": 16063,
+      "split_missing": 9695,
+      "resizes": 0
+    },
+    "engram_cache": {
+      "hits": 2042,
+      "misses": 10150,
+      "evictions": 10150
+    }
+  },
+  "host_available_bytes": 18385018880,
+  "device_free_bytes": 551288832,
+  "cgroup_swap_current": 0
+}

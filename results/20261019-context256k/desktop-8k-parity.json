@@ -1,0 +1,98 @@
+{
+  "passed": true,
+  "comparisons": [
+    {
+      "phase": "fresh",
+      "tokens": 128,
+      "equal": true
+    },
+    {
+      "phase": "repeat",
+      "tokens": 128,
+      "equal": true
+    }
+  ],
+  "indexers": [
+    {
+      "layer": 2,
+      "position": 8062,
+      "entries": 4031,
+      "role": null,
+      "k": 512,
+      "indices_equal": true,
+      "differing_positions": 0,
+      "differences": []
+    },
+    {
+      "layer": 8,
+      "position": 8062,
+      "entries": 4031,
+      "role": null,
+      "k": 512,
+      "indices_equal": true,
+      "differing_positions": 0,
+      "differences": []
+    },
+    {
+      "layer": 14,
+      "position": 8062,
+      "entries": 4031,
+      "role": null,
+      "k": 512,
+      "indices_equal": true,
+      "differing_positions": 0,
+      "differences": []
+    },
+    {
+      "layer": 20,
+      "position": 8062,
+      "entries": 8063,
+      "role": "source",
+      "k": 512,
+      "indices_equal": true,
+      "differing_positions": 0,
+      "differences": [],
+      "candidate_mask_equal": true
+    },
+    {
+      "layer": 24,
+      "position": 8062,
+      "entries": 8063,
+      "role": "consumer",
+      "k": 512,
+      "indices_equal": true,
+      "differing_positions": 0,
+      "differences": []
+    },
+    {
+      "layer": 28,
+      "position": 8062,
+      "entries": 8063,
+      "role": "consumer",
+      "k": 512,
+      "indices_equal": true,
+      "differing_positions": 0,
+      "differences": []
+    },
+    {
+      "layer": 32,
+      "position": 8062,
+      "entries": 8063,
+      "role": "consumer",
+      "k": 512,
+      "indices_equal": true,
+      "differing_positions": 0,
+      "differences": []
+    },
+    {
+      "layer": 36,
+      "position": 8062,
+      "entries": 8063,
+      "role": "consumer",
+      "k": 512,
+      "indices_equal": true,
+      "differing_positions": 0,
+      "differences": []
+    }
+  ]
+}

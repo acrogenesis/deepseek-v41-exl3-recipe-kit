@@ -152,7 +152,7 @@ class ExpertCache:
         while offset is None:
             candidates = (k for k in self.layer_lru[layer] if self.entries[k].users == 0)
             candidate = (next(candidates, None) if self.policy == 'lru'
-                else min(candidates, key=self.frequencies.__getitem__, default=None))
+                else min(candidates, key=lambda k: self.frequencies.get(k, 0), default=None))
             if candidate is None:
                 raise CacheBusy('All eviction candidates are in use')
             self._evict(candidate)
@@ -256,7 +256,8 @@ class ExpertCache:
                 raise KeyError(key)
             if cancel is not None and cancel.is_set():
                 raise InterruptedError('Expert lease cancelled')
-            if self.policy != 'lru':
+            if (self.policy != 'lru' and (not getattr(self.store, 'prioritize_decode', False)
+                    or self.store.phase == 'decode')):
                 self.frequencies[key] = self.frequencies.get(key, 0) + 1
             if self.writeback_stream is not None:
                 self.store.touch_gpu(key)

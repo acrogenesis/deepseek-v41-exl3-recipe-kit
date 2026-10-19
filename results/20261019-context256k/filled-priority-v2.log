@@ -1,0 +1,27 @@
+ninja: no work to do.
+{"id": "context-262015", "phase": "fresh", "kv_positions": [8192], "output_tokens": 0, "seconds": 69.47608339999897}
+{"id": "context-262015", "phase": "fresh", "kv_positions": [16384], "output_tokens": 0, "seconds": 113.57257652199951}
+{"id": "context-262015", "phase": "fresh", "kv_positions": [24576], "output_tokens": 0, "seconds": 157.65787813099996}
+{"id": "context-262015", "phase": "fresh", "kv_positions": [32768], "output_tokens": 0, "seconds": 205.03280948499923}
+{"id": "context-262015", "phase": "fresh", "kv_positions": [40960], "output_tokens": 0, "seconds": 250.58984673899977}
+{"id": "context-262015", "phase": "fresh", "kv_positions": [49152], "output_tokens": 0, "seconds": 298.8013171820003}
+{"id": "context-262015", "phase": "fresh", "kv_positions": [57344], "output_tokens": 0, "seconds": 344.2090353349995}
+{"id": "context-262015", "phase": "fresh", "kv_positions": [65536], "output_tokens": 0, "seconds": 393.28345425099906}
+{"id": "context-262015", "phase": "fresh", "kv_positions": [73728], "output_tokens": 0, "seconds": 438.02556346299934}
+{"id": "context-262015", "phase": "fresh", "kv_positions": [81920], "output_tokens": 0, "seconds": 483.84021244199903}
+{"id": "context-262015", "phase": "fresh", "kv_positions": [90112], "output_tokens": 0, "seconds": 530.9728368060005}
+{"id": "context-262015", "phase": "fresh", "kv_positions": [98304], "output_tokens": 0, "seconds": 576.7279338839999}
+{"id": "context-262015", "phase": "fresh", "kv_positions": [106496], "output_tokens": 0, "seconds": 624.305220795999}
+{"id": "context-262015", "phase": "fresh", "kv_positions": [114688], "output_tokens": 0, "seconds": 670.930919769}
+{"id": "context-262015", "phase": "fresh", "kv_positions": [122880], "output_tokens": 0, "seconds": 719.2103319670005}
+Saved /recipe/results/20261019-context256k/filled-priority-v2.json
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/recipe/runtime/runner.py", line 384, in <module>
+    main()
+  File "/recipe/runtime/runner.py", line 359, in main
+    run(case, phase, fixture["output_cap"])
+  File "/recipe/runtime/runner.py", line 249, in run
+    raise RuntimeError(str(event))
+RuntimeError: {'job': Generator job #0, 'serial': 0, 'stage': 'error', 'eos': True, 'error': MemoryError('Host RAM reserve reached')}

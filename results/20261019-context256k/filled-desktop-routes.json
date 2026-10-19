@@ -1,0 +1,600 @@
+{
+  "source": "results/20261019-context256k/filled-desktop.json",
+  "scope": "Observed decode routes; static hit estimate is retrospective, not achieved speed",
+  "runs": [
+    {
+      "id": "context-262015",
+      "phase": "fresh",
+      "input_tokens": 262015,
+      "measured_decode_steps": 127,
+      "decode_tok_s": 9.51292540597768,
+      "unique_experts": 6069,
+      "unique_expert_bytes": 77610958848,
+      "expert_accesses": 30480,
+      "measured_gpu_hit_fraction": 0.6701115485564304,
+      "disk_bytes": 32100286464,
+      "disk_bytes_per_decode_step": 252758161.13385826,
+      "disk_bytes_per_second_needed_at_30": 7582744834.015748,
+      "retrospective_static_gpu_hit_fraction": 0.7350393700787402,
+      "layers": [
+        {
+          "layer": 0,
+          "unique_experts": 207,
+          "unique_bytes": 2757279744,
+          "accesses": 762,
+          "retrospective_static_gpu_hits": 419
+        },
+        {
+          "layer": 1,
+          "unique_experts": 185,
+          "unique_bytes": 2464235520,
+          "accesses": 762,
+          "retrospective_static_gpu_hits": 489
+        },
+        {
+          "layer": 2,
+          "unique_experts": 157,
+          "unique_bytes": 2091270144,
+          "accesses": 762,
+          "retrospective_static_gpu_hits": 526
+        },
+        {
+          "layer": 3,
+          "unique_experts": 162,
+          "unique_bytes": 2157871104,
+          "accesses": 762,
+          "retrospective_static_gpu_hits": 533
+        },
+        {
+          "layer": 4,
+          "unique_experts": 170,
+          "unique_bytes": 2264432640,
+          "accesses": 762,
+          "retrospective_static_gpu_hits": 510
+        },
+        {
+          "layer": 5,
+          "unique_experts": 146,
+          "unique_bytes": 1944748032,
+          "accesses": 762,
+          "retrospective_static_gpu_hits": 531
+        },
+        {
+          "layer": 6,
+          "unique_experts": 116,
+          "unique_bytes": 1545142272,
+          "accesses": 762,
+          "retrospective_static_gpu_hits": 624
+        },
+        {
+          "layer": 7,
+          "unique_experts": 124,
+          "unique_bytes": 1651703808,
+          "accesses": 762,
+          "retrospective_static_gpu_hits": 616
+        },
+        {
+          "layer": 8,
+          "unique_experts": 138,
+          "unique_bytes": 1838186496,
+          "accesses": 762,
+          "retrospective_static_gpu_hits": 591
+        },
+        {
+          "layer": 9,
+          "unique_experts": 127,
+          "unique_bytes": 1691664384,
+          "accesses": 762,
+          "retrospective_static_gpu_hits": 600
+        },
+        {
+          "layer": 10,
+          "unique_experts": 117,
+          "unique_bytes": 1558462464,
+          "accesses": 762,
+          "retrospective_static_gpu_hits": 637
+        },
+        {
+          "layer": 11,
+          "unique_experts": 146,
+          "unique_bytes": 1944748032,
+          "accesses": 762,
+          "retrospective_static_gpu_hits": 555
+        },
+        {
+          "layer": 12,
+          "unique_experts": 140,
+          "unique_bytes": 1864826880,
+          "accesses": 762,
+          "retrospective_static_gpu_hits": 577
+        },
+        {
+          "layer": 13,
+          "unique_experts": 167,
+          "unique_bytes": 2224472064,
+          "accesses": 762,
+          "retrospective_static_gpu_hits": 499
+        },
+        {
+          "layer": 14,
+          "unique_experts": 132,
+          "unique_bytes": 1758265344,
+          "accesses": 762,
+          "retrospective_static_gpu_hits": 565
+        },
+        {
+          "layer": 15,
+          "unique_experts": 197,
+          "unique_bytes": 2624077824,
+          "accesses": 762,
+          "retrospective_static_gpu_hits": 437
+        },
+        {
+          "layer": 16,
+          "unique_experts": 123,
+          "unique_bytes": 1638383616,
+          "accesses": 762,
+          "retrospective_static_gpu_hits": 586
+        },
+        {
+          "layer": 17,
+          "unique_experts": 140,
+          "unique_bytes": 1864826880,
+          "accesses": 762,
+          "retrospective_static_gpu_hits": 593
+        },
+        {
+          "layer": 18,
+          "unique_experts": 139,
+          "unique_bytes": 1236615168,
+          "accesses": 762,
+          "retrospective_static_gpu_hits": 645
+        },
+        {
+          "layer": 19,
+          "unique_experts": 205,
+          "unique_bytes": 1823784960,
+          "accesses": 762,
+          "retrospective_static_gpu_hits": 513
+        },
+        {
+          "layer": 20,
+          "unique_experts": 126,
+          "unique_bytes": 1120960512,
+          "accesses": 762,
+          "retrospective_static_gpu_hits": 679
+        },
+        {
+          "layer": 21,
+          "unique_experts": 122,
+          "unique_bytes": 1085374464,
+          "accesses": 762,
+          "retrospective_static_gpu_hits": 668
+        },
+        {
+          "layer": 22,
+          "unique_experts": 138,
+          "unique_bytes": 1227718656,
+          "accesses": 762,
+          "retrospective_static_gpu_hits": 667
+        },
+        {
+          "layer": 23,
+          "unique_experts": 185,
+          "unique_bytes": 2464235520,
+          "accesses": 762,
+          "retrospective_static_gpu_hits": 492
+        },
+        {
+          "layer": 24,
+          "unique_experts": 140,
+          "unique_bytes": 1864826880,
+          "accesses": 762,
+          "retrospective_static_gpu_hits": 563
+        },
+        {
+          "layer": 25,
+          "unique_experts": 133,
+          "unique_bytes": 1771585536,
+          "accesses": 762,
+          "retrospective_static_gpu_hits": 623
+        },
+        {
+          "layer": 26,
+          "unique_experts": 121,
+          "unique_bytes": 1611743232,
+          "accesses": 762,
+          "retrospective_static_gpu_hits": 621
+        },
+        {
+          "layer": 27,
+          "unique_experts": 150,
+          "unique_bytes": 1998028800,
+          "accesses": 762,
+          "retrospective_static_gpu_hits": 571
+        },
+        {
+          "layer": 28,
+          "unique_experts": 121,
+          "unique_bytes": 1611743232,
+          "accesses": 762,
+          "retrospective_static_gpu_hits": 628
+        },
+        {
+          "layer": 29,
+          "unique_experts": 136,
+          "unique_bytes": 1811546112,
+          "accesses": 762,
+          "retrospective_static_gpu_hits": 597
+        },
+        {
+          "layer": 30,
+          "unique_experts": 142,
+          "unique_bytes": 1891467264,
+          "accesses": 762,
+          "retrospective_static_gpu_hits": 579
+        },
+        {
+          "layer": 31,
+          "unique_experts": 150,
+          "unique_bytes": 1998028800,
+          "accesses": 762,
+          "retrospective_static_gpu_hits": 572
+        },
+        {
+          "layer": 32,
+          "unique_experts": 170,
+          "unique_bytes": 2264432640,
+          "accesses": 762,
+          "retrospective_static_gpu_hits": 546
+        },
+        {
+          "layer": 33,
+          "unique_experts": 165,
+          "unique_bytes": 2197831680,
+          "accesses": 762,
+          "retrospective_static_gpu_hits": 542
+        },
+        {
+          "layer": 34,
+          "unique_experts": 163,
+          "unique_bytes": 2171191296,
+          "accesses": 762,
+          "retrospective_static_gpu_hits": 536
+        },
+        {
+          "layer": 35,
+          "unique_experts": 156,
+          "unique_bytes": 2077949952,
+          "accesses": 762,
+          "retrospective_static_gpu_hits": 534
+        },
+        {
+          "layer": 36,
+          "unique_experts": 165,
+          "unique_bytes": 2197831680,
+          "accesses": 762,
+          "retrospective_static_gpu_hits": 527
+        },
+        {
+          "layer": 37,
+          "unique_experts": 169,
+          "unique_bytes": 2251112448,
+          "accesses": 762,
+          "retrospective_static_gpu_hits": 501
+        },
+        {
+          "layer": 38,
+          "unique_experts": 187,
+          "unique_bytes": 2490875904,
+          "accesses": 762,
+          "retrospective_static_gpu_hits": 458
+        },
+        {
+          "layer": 39,
+          "unique_experts": 192,
+          "unique_bytes": 2557476864,
+          "accesses": 762,
+          "retrospective_static_gpu_hits": 454
+        }
+      ]
+    },
+    {
+      "id": "context-262015",
+      "phase": "repeat",
+      "input_tokens": 262015,
+      "measured_decode_steps": 127,
+      "decode_tok_s": 29.939670100764648,
+      "unique_experts": 6069,
+      "unique_expert_bytes": 77610958848,
+      "expert_accesses": 30480,
+      "measured_gpu_hit_fraction": 0.7336942257217848,
+      "disk_bytes": 0,
+      "disk_bytes_per_decode_step": 0.0,
+      "disk_bytes_per_second_needed_at_30": 0.0,
+      "retrospective_static_gpu_hit_fraction": 0.7350393700787402,
+      "layers": [
+        {
+          "layer": 0,
+          "unique_experts": 207,
+          "unique_bytes": 2757279744,
+          "accesses": 762,
+          "retrospective_static_gpu_hits": 419
+        },
+        {
+          "layer": 1,
+          "unique_experts": 185,
+          "unique_bytes": 2464235520,
+          "accesses": 762,
+          "retrospective_static_gpu_hits": 489
+        },
+        {
+          "layer": 2,
+          "unique_experts": 157,
+          "unique_bytes": 2091270144,
+          "accesses": 762,
+          "retrospective_static_gpu_hits": 526
+        },
+        {
+          "layer": 3,
+          "unique_experts": 162,
+          "unique_bytes": 2157871104,
+          "accesses": 762,
+          "retrospective_static_gpu_hits": 533
+        },
+        {
+          "layer": 4,
+          "unique_experts": 170,
+          "unique_bytes": 2264432640,
+          "accesses": 762,
+          "retrospective_static_gpu_hits": 510
+        },
+        {
+          "layer": 5,
+          "unique_experts": 146,
+          "unique_bytes": 1944748032,
+          "accesses": 762,
+          "retrospective_static_gpu_hits": 531
+        },
+        {
+          "layer": 6,
+          "unique_experts": 116,
+          "unique_bytes": 1545142272,
+          "accesses": 762,
+          "retrospective_static_gpu_hits": 624
+        },
+        {
+          "layer": 7,
+          "unique_experts": 124,
+          "unique_bytes": 1651703808,
+          "accesses": 762,
+          "retrospective_static_gpu_hits": 616
+        },
+        {
+          "layer": 8,
+          "unique_experts": 138,
+          "unique_bytes": 1838186496,
+          "accesses": 762,
+          "retrospective_static_gpu_hits": 591
+        },
+        {
+          "layer": 9,
+          "unique_experts": 127,
+          "unique_bytes": 1691664384,
+          "accesses": 762,
+          "retrospective_static_gpu_hits": 600
+        },
+        {
+          "layer": 10,
+          "unique_experts": 117,
+          "unique_bytes": 1558462464,
+          "accesses": 762,
+          "retrospective_static_gpu_hits": 637
+        },
+        {
+          "layer": 11,
+          "unique_experts": 146,
+          "unique_bytes": 1944748032,
+          "accesses": 762,
+          "retrospective_static_gpu_hits": 555
+        },
+        {
+          "layer": 12,
+          "unique_experts": 140,
+          "unique_bytes": 1864826880,
+          "accesses": 762,
+          "retrospective_static_gpu_hits": 577
+        },
+        {
+          "layer": 13,
+          "unique_experts": 167,
+          "unique_bytes": 2224472064,
+          "accesses": 762,
+          "retrospective_static_gpu_hits": 499
+        },
+        {
+          "layer": 14,
+          "unique_experts": 132,
+          "unique_bytes": 1758265344,
+          "accesses": 762,
+          "retrospective_static_gpu_hits": 565
+        },
+        {
+          "layer": 15,
+          "unique_experts": 197,
+          "unique_bytes": 2624077824,
+          "accesses": 762,
+          "retrospective_static_gpu_hits": 437
+        },
+        {
+          "layer": 16,
+          "unique_experts": 123,
+          "unique_bytes": 1638383616,
+          "accesses": 762,
+          "retrospective_static_gpu_hits": 586
+        },
+        {
+          "layer": 17,
+          "unique_experts": 140,
+          "unique_bytes": 1864826880,
+          "accesses": 762,
+          "retrospective_static_gpu_hits": 593
+        },
+        {
+          "layer": 18,
+          "unique_experts": 139,
+          "unique_bytes": 1236615168,
+          "accesses": 762,
+          "retrospective_static_gpu_hits": 645
+        },
+        {
+          "layer": 19,
+          "unique_experts": 205,
+          "unique_bytes": 1823784960,
+          "accesses": 762,
+          "retrospective_static_gpu_hits": 513
+        },
+        {
+          "layer": 20,
+          "unique_experts": 126,
+          "unique_bytes": 1120960512,
+          "accesses": 762,
+          "retrospective_static_gpu_hits": 679
+        },
+        {
+          "layer": 21,
+          "unique_experts": 122,
+          "unique_bytes": 1085374464,
+          "accesses": 762,
+          "retrospective_static_gpu_hits": 668
+        },
+        {
+          "layer": 22,
+          "unique_experts": 138,
+          "unique_bytes": 1227718656,
+          "accesses": 762,
+          "retrospective_static_gpu_hits": 667
+        },
+        {
+          "layer": 23,
+          "unique_experts": 185,
+          "unique_bytes": 2464235520,
+          "accesses": 762,
+          "retrospective_static_gpu_hits": 492
+        },
+        {
+          "layer": 24,
+          "unique_experts": 140,
+          "unique_bytes": 1864826880,
+          "accesses": 762,
+          "retrospective_static_gpu_hits": 563
+        },
+        {
+          "layer": 25,
+          "unique_experts": 133,
+          "unique_bytes": 1771585536,
+          "accesses": 762,
+          "retrospective_static_gpu_hits": 623
+        },
+        {
+          "layer": 26,
+          "unique_experts": 121,
+          "unique_bytes": 1611743232,
+          "accesses": 762,
+          "retrospective_static_gpu_hits": 621
+        },
+        {
+          "layer": 27,
+          "unique_experts": 150,
+          "unique_bytes": 1998028800,
+          "accesses": 762,
+          "retrospective_static_gpu_hits": 571
+        },
+        {
+          "layer": 28,
+          "unique_experts": 121,
+          "unique_bytes": 1611743232,
+          "accesses": 762,
+          "retrospective_static_gpu_hits": 628
+        },
+        {
+          "layer": 29,
+          "unique_experts": 136,
+          "unique_bytes": 1811546112,
+          "accesses": 762,
+          "retrospective_static_gpu_hits": 597
+        },
+        {
+          "layer": 30,
+          "unique_experts": 142,
+          "unique_bytes": 1891467264,
+          "accesses": 762,
+          "retrospective_static_gpu_hits": 579
+        },
+        {
+          "layer": 31,
+          "unique_experts": 150,
+          "unique_bytes": 1998028800,
+          "accesses": 762,
+          "retrospective_static_gpu_hits": 572
+        },
+        {
+          "layer": 32,
+          "unique_experts": 170,
+          "unique_bytes": 2264432640,
+          "accesses": 762,
+          "retrospective_static_gpu_hits": 546
+        },
+        {
+          "layer": 33,
+          "unique_experts": 165,
+          "unique_bytes": 2197831680,
+          "accesses": 762,
+          "retrospective_static_gpu_hits": 542
+        },
+        {
+          "layer": 34,
+          "unique_experts": 163,
+          "unique_bytes": 2171191296,
+          "accesses": 762,
+          "retrospective_static_gpu_hits": 536
+        },
+        {
+          "layer": 35,
+          "unique_experts": 156,
+          "unique_bytes": 2077949952,
+          "accesses": 762,
+          "retrospective_static_gpu_hits": 534
+        },
+        {
+          "layer": 36,
+          "unique_experts": 165,
+          "unique_bytes": 2197831680,
+          "accesses": 762,
+          "retrospective_static_gpu_hits": 527
+        },
+        {
+          "layer": 37,
+          "unique_experts": 169,
+          "unique_bytes": 2251112448,
+          "accesses": 762,
+          "retrospective_static_gpu_hits": 501
+        },
+        {
+          "layer": 38,
+          "unique_experts": 187,
+          "unique_bytes": 2490875904,
+          "accesses": 762,
+          "retrospective_static_gpu_hits": 458
+        },
+        {
+          "layer": 39,
+          "unique_experts": 192,
+          "unique_bytes": 2557476864,
+          "accesses": 762,
+          "retrospective_static_gpu_hits": 454
+        }
+      ]
+    }
+  ]
+}

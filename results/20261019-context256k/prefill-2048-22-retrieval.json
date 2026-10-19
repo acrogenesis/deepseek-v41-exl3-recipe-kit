@@ -1,0 +1,26 @@
+{
+  "source": "results/20261019-context256k/prefill-2048-22.json",
+  "note": "Original scorer required bare JSON; accept an opening JSON code fence and record its format. Raw generation and original scores preserved.",
+  "rows": [
+    {
+      "phase": "fresh",
+      "retrieval_passed": true,
+      "actual": {
+        "cedar": "R8D2-JUNE",
+        "maple": "K3P7-NORTH",
+        "birch": "T6W1-SILVER"
+      },
+      "format": "fenced_json"
+    },
+    {
+      "phase": "repeat",
+      "retrieval_passed": true,
+      "actual": {
+        "cedar": "R8D2-JUNE",
+        "maple": "K3P7-NORTH",
+        "birch": "T6W1-SILVER"
+      },
+      "format": "fenced_json"
+    }
+  ]
+}

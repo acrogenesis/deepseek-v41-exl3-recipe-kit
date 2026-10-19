@@ -1,0 +1,7 @@
+{
+  "gate": "results/20261019-context256k/indexer-gate-04.json",
+  "source_sha256": {
+    "runtime/long_context.py": "941710175dd0a0c51eefbde1c3e37dbf934da9fa762d3bf29102b620264af019",
+    "tests/gpu_long_indexer.py": "4131ab87ecc0aeeb8ba04fcff634659ebe877fc1e69f53b2024d375641e3df3b"
+  }
+}

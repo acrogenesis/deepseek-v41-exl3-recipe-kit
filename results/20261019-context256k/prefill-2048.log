@@ -1,0 +1,22 @@
+{
+  "ready_for_gpu_validation": true,
+  "gpu_used": false,
+  "download_status": "complete",
+  "verified_bytes": 413905629467,
+  "total_bytes": 413905629467,
+  "pending": []
+}
+ninja: no work to do.
+[W1019 15:47:41.192478975 CUDACachingAllocator.cpp:508] expandable_segments: memory mapping failed with OOM on device 0 while trying to map 20971520 bytes (free: 49610752, total: 33763426304).
+[W1019 15:47:41.201076556 CUDACachingAllocator.cpp:508] expandable_segments: memory mapping failed with OOM on device 0 while trying to map 20971520 bytes (free: 55902208, total: 33763426304).
+Saved /recipe/results/20261019-context256k/prefill-2048.json
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/recipe/runtime/runner.py", line 296, in <module>
+    main()
+  File "/recipe/runtime/runner.py", line 275, in main
+    run(case, phase, fixture["output_cap"])
+  File "/recipe/runtime/runner.py", line 188, in run
+    raise RuntimeError(str(event))
+RuntimeError: {'job': Generator job #0, 'serial': 0, 'stage': 'error', 'eos': True, 'error': OutOfMemoryError('CUDA out of memory. Tried to allocate 160.00 MiB. GPU 0 has a total capacity of 31.44 GiB of which 113.31 MiB is free. Including non-PyTorch memory, this process has 30.12 GiB memory in use. Of the allocated memory 29.34 GiB is allocated by PyTorch, and 58.20 MiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://docs.pytorch.org/docs/stable/notes/cuda.html#optimizing-memory-usage-with-pytorch-cuda-alloc-conf)')}

@@ -1,0 +1,14 @@
+{
+  "ready_for_gpu_validation": true,
+  "gpu_used": false,
+  "download_status": "complete",
+  "verified_bytes": 413905629467,
+  "total_bytes": 413905629467,
+  "pending": []
+}
+ninja: no work to do.
+{"id": "context-8063", "phase": "fresh", "kv_positions": [7936], "output_tokens": 0, "seconds": 72.88027039400004}
+{"id": "context-8063", "phase": "fresh", "decode_tok_s": 10.2689650686385, "ttft_seconds": 89.80068688400024, "text": "```json\n{\n  \"cedar\": \"R8D2-JUNE\",\n  \"maple\": \"K3P7-NORTH\",\n  \"birch\": \"T6W1-SILVER\"\n}\n```\n\n## Failure Modes and Improvements for the Deployment Records\n\nThe deployment records describe a fleet of 202 records, each specifying a component (job queue, database replica, object store, API gateway, backup worker, event consumer), an operation (retry with backoff, verify checksum, write audit record, check lease, persist checkpoint, reject duplicate writes, refresh cache), a timeout, a tenant,"}
+{"id": "context-8063", "phase": "repeat", "kv_positions": [7936], "output_tokens": 0, "seconds": 45.15564732299936}
+{"id": "context-8063", "phase": "repeat", "decode_tok_s": 9.80180881196787, "ttft_seconds": 60.383535107999705, "text": "```json\n{\n  \"cedar\": \"R8D2-JUNE\",\n  \"maple\": \"K3P7-NORTH\",\n  \"birch\": \"T6W1-SILVER\"\n}\n```\n\n## Failure Modes and Improvements for the Deployment Records\n\nThe deployment records describe a fleet of 202 records, each specifying a component (job queue, database replica, object store, API gateway, backup worker, event consumer), an operation (retry with backoff, verify checksum, write audit record, check lease, persist checkpoint, reject duplicate writes, refresh cache), a timeout, a tenant,"}
+Saved /recipe/results/20261019-context256k/elastic-8192.json

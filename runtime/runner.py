@@ -17,7 +17,8 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("mode", choices=["smoke", "bench"])
     parser.add_argument("--allow-gpu", action="store_true")
-    parser.add_argument("--gpu-cache-gib", type=int, choices=range(1, 25))
+    parser.add_argument("--gpu-cache-gib", type=float, choices=tuple(i / 2 for i in range(2, 49)),
+        help='Expert GPU cache in half-GiB steps, leaving room for desktop allocations')
     parser.add_argument("--ram-cache-gib", type=int, choices=range(16, 85))
     parser.add_argument("--pinned-ram", action=argparse.BooleanOptionalAction, default=None)
     parser.add_argument("--grouped-dispatch", action="store_true", help="Experimental grouped K2/K3 expert GEMV")
@@ -31,11 +32,30 @@ def main():
     parser.add_argument("--overlap-loads", action="store_true")
     parser.add_argument("--overlap-shared", action="store_true")
     parser.add_argument("--engram-cache-rows", type=int, choices=(0, 16384, 65536), default=0)
+    parser.add_argument('--engram-protect-decode', action='store_true',
+        help='Protect previously generated Engram rows from prefill scans within the same row budget')
+    parser.add_argument("--context-tokens", type=int, help="Opt-in total KV capacity, including generated tokens")
+    parser.add_argument("--prefill-chunk-tokens", type=int, help="Opt-in prefill chunk size, a multiple of 256")
+    parser.add_argument("--fused-indexer", action="store_true", help="Experimental bounded-workspace DSV4.1 indexer")
+    parser.add_argument('--verify-indexer-first-token', action='store_true',
+        help='Compare all eight indexers against eager torch on actual first-output activations; cost included in TTFT')
+    parser.add_argument("--prefill-gpu-cache-gib", type=int, choices=range(4, 25),
+        help="Experimental smaller expert cache during prefill; restored before first generated token")
+    parser.add_argument('--decode-priority', action='store_true', help='Learn RAM/GPU cache frequencies from decode only')
+    parser.add_argument('--preserve-gpu-on-resize', action='store_true', help='Restore the hottest resident experts across resize')
     parser.add_argument("--output", type=Path)
     parser.add_argument("--fixture", type=Path, default=ROOT / 'fixtures/paired-gguf.json')
     args = parser.parse_args()
     if args.gpu_only_gib is not None and not args.victim_cache:
         parser.error('--gpu-only-gib requires --victim-cache')
+    if args.decode_priority and not args.victim_cache:
+        parser.error('--decode-priority requires --victim-cache')
+    if args.preserve_gpu_on_resize and args.prefill_gpu_cache_gib is None:
+        parser.error('--preserve-gpu-on-resize requires --prefill-gpu-cache-gib')
+    if args.verify_indexer_first_token and not args.fused_indexer:
+        parser.error('--verify-indexer-first-token requires --fused-indexer')
+    if args.engram_protect_decode and args.engram_cache_rows == 0:
+        parser.error('--engram-protect-decode requires --engram-cache-rows')
     if not args.allow_gpu:
         raise SystemExit("GPU work is on hold. Run scripts/run.sh only after the GPU is free.")
     from scripts.preflight import check
@@ -43,6 +63,14 @@ def main():
     if not report["ready_for_gpu_validation"]:
         raise SystemExit(json.dumps(report, indent=2))
     profile = json.loads((ROOT / "profiles/5090.json").read_text())
+    if args.context_tokens is not None:
+        if args.context_tokens < 256 or args.context_tokens > 1048576 or args.context_tokens % 256:
+            parser.error('--context-tokens must be a multiple of 256 between 256 and 1048576')
+        profile['context_tokens'] = args.context_tokens
+    if args.prefill_chunk_tokens is not None:
+        profile['prefill_chunk_tokens'] = args.prefill_chunk_tokens
+    if args.context_tokens is not None or args.prefill_chunk_tokens is not None:
+        profile['status'] = 'experimental context or prefill override; consult this run for validation'
     # Native prefill rounds its end down to a complete 256-token page.
     if profile["prefill_chunk_tokens"] < 256 or profile["prefill_chunk_tokens"] % 256:
         raise ValueError("Prefill chunks must be positive multiples of the native 256-token page")
@@ -58,11 +86,13 @@ def main():
     from .indexed_store import inventory, IndexedExpertStore
     if args.victim_cache:
         from .victim_store import VictimExpertStore as IndexedExpertStore
+    if args.decode_priority:
+        from .phase_store import PhaseExpertStore as IndexedExpertStore
     from .cache import ExpertCache
     from .native_adapter import attach_engram, build_model
     from .memory_budget import guard_memory
     if args.gpu_cache_gib is not None:
-        profile["gpu_expert_cache_bytes"] = args.gpu_cache_gib * 2**30
+        profile["gpu_expert_cache_bytes"] = int(args.gpu_cache_gib * 2**30)
     if args.ram_cache_gib is not None:
         profile["ram_expert_cache_bytes"] = args.ram_cache_gib * 2**30
     if args.pinned_ram is not None:
@@ -74,7 +104,10 @@ def main():
     store_options = {'gpu_only_limit_bytes': args.gpu_only_gib * 2**30} if args.gpu_only_gib is not None else {}
     store = IndexedExpertStore(ROOT / "work/models/exl3", records, profile["ram_expert_cache_bytes"],
         reserve_bytes=profile["host_reserve_bytes"], pinned=profile.get('pinned_ram', False), **store_options)
-    capacity = profile["gpu_expert_cache_bytes"]
+    decode_capacity = profile['gpu_expert_cache_bytes']
+    capacity = args.prefill_gpu_cache_gib * 2**30 if args.prefill_gpu_cache_gib is not None else decode_capacity
+    if capacity > decode_capacity:
+        parser.error('--prefill-gpu-cache-gib must not exceed the decode GPU cache')
     per_layer = capacity // (40 * 4096) * 4096
     quotas = {l: per_layer for l in range(40)}
     quotas[39] += capacity - sum(quotas.values())
@@ -93,6 +126,8 @@ def main():
         "gpu": torch.cuda.get_device_name(0), "torch": torch.__version__, "cuda": torch.version.cuda,
         "metric": "Streamed output tokens after first token / elapsed time after first token; fresh KV state each request"}
     result['runtime_sources'] = {}
+    result['runtime_sha256'] = {p.name: hashlib.sha256(p.read_bytes()).hexdigest()
+        for p in (ROOT / 'runtime').iterdir() if p.suffix in ('.py', '.cpp', '.cu', '.h')}
     result['grouped_dispatch'] = args.grouped_dispatch
     result['hc_graphs'] = args.hc_graphs
     result['gpu_policy'] = args.gpu_policy
@@ -102,7 +137,13 @@ def main():
     result['fused_reduce'] = args.fused_reduce
     result['overlap_loads'] = args.overlap_loads
     result['overlap_shared'] = args.overlap_shared
+    result['fused_indexer'] = args.fused_indexer
+    result['verify_indexer_first_token'] = args.verify_indexer_first_token
+    result['prefill_gpu_cache_gib'] = args.prefill_gpu_cache_gib
+    result['decode_priority'] = args.decode_priority
+    result['preserve_gpu_on_resize'] = args.preserve_gpu_on_resize
     result['engram_cache_rows'] = args.engram_cache_rows
+    result['engram_protect_decode'] = args.engram_protect_decode
     result['runtime_source_sha256'] = {p.name: hashlib.sha256(p.read_bytes()).hexdigest()
         for p in sorted((ROOT/'runtime').iterdir()) if p.suffix in ('.py', '.cpp', '.cu', '.h')}
     if args.grouped_dispatch:
@@ -128,14 +169,18 @@ def main():
         config.infer_params.no_reconstruct = True
         attach_engram(config, ROOT / "work/models/engram")
         model = build_model(config, experts)
+        if args.fused_indexer:
+            from .long_context import configure as configure_indexer
+            configure_indexer(model, verify_first_decode=args.verify_indexer_first_token)
         kv = Cache(model, max_num_tokens=profile["context_tokens"], max_batch_size=1)
+        result['kv_pool_bytes'] = sum(layer.storage_size() for layer in kv.layers.values())
         started = time.perf_counter()
         model.load("cuda:0", progressbar=False)
         if args.hc_graphs:
             from .hc_graphs import configure
             configure(model, True)
         from .engram_cache import configure as configure_rows
-        row_cache = configure_rows(model, args.engram_cache_rows)
+        row_cache = configure_rows(model, args.engram_cache_rows, protect_decode=args.engram_protect_decode)
         result["load_seconds"] = time.perf_counter() - started
         free, total = torch.cuda.mem_get_info()
         result["memory_after_load"] = {"device_free_bytes": free, "device_total_bytes": total,
@@ -161,10 +206,44 @@ def main():
             generator.enqueue(job)
             tokens, chunks, events = [], [], []
             start = time.perf_counter()
+            transitions = []
+            if args.prefill_gpu_cache_gib is not None or args.decode_priority or args.engram_protect_decode:
+                from .elastic_cache import resize
+                if args.decode_priority:
+                    store.set_phase('prefill')
+                if args.engram_protect_decode:
+                    row_cache.set_phase('prefill')
+                def transition(target, stage):
+                    if experts.arena.numel() == target:
+                        return
+                    previous_phase = store.phase if args.decode_priority else None
+                    if args.decode_priority:
+                        store.set_phase('transition')
+                    try:
+                        changed = resize(experts, target, preserve=args.preserve_gpu_on_resize)
+                    finally:
+                        if args.decode_priority:
+                            store.set_phase(previous_phase)
+                    if changed is not None:
+                        transitions.append(dict(changed, stage=stage))
+                transition(capacity, 'prefill')
+                original_iterate_gen = generator.iterate_gen
+                def iterate_gen(*a, **kw):
+                    if all(seq.prefill_complete for seq in job.sequences):
+                        transition(decode_capacity, 'decode')
+                        if args.decode_priority:
+                            store.set_phase('decode')
+                        if args.engram_protect_decode:
+                            row_cache.set_phase('decode')
+                    return original_iterate_gen(*a, **kw)
+                generator.iterate_gen = iterate_gen
             first = last = None
             first_count = 0
+            first_counters = None
+            first_trace_length = None
             previous_progress = None
             last_progress_at = time.monotonic()
+            last_report_at = time.monotonic()
             while generator.num_remaining_jobs():
                 for event in generator.iterate():
                     if event.get("stage") == "error":
@@ -180,6 +259,11 @@ def main():
                     now = time.perf_counter() - start
                     if first is None:
                         first, first_count = now, emitted.numel()
+                        first_counters = dict(ram_cache=dict(store.stats), gpu_cache=dict(experts.stats))
+                        if row_cache is not None:
+                            first_counters['engram_cache'] = dict(row_cache.stats)
+                        if experts.route_trace is not None:
+                            first_trace_length = len(experts.route_trace)
                     last = now
                     token_ids = emitted.flatten().tolist()
                     tokens.extend(token_ids)
@@ -189,6 +273,13 @@ def main():
                     previous_progress, last_progress_at = progress, time.monotonic()
                 elif time.monotonic() - last_progress_at > 120:
                     raise RuntimeError("Generation made no progress for 120 seconds")
+                if time.monotonic() - last_report_at >= 30:
+                    result['progress'] = dict(id=case['id'], phase=phase,
+                        kv_positions=list(progress[0]), output_tokens=len(tokens),
+                        seconds=time.perf_counter() - start)
+                    save()
+                    print(json.dumps(result['progress']), flush=True)
+                    last_report_at = time.monotonic()
             duration = time.perf_counter() - start
             rate = (len(tokens) - first_count) / (last - first) if first is not None and last > first else None
             row = {"id": case["id"], "phase": phase, "input_tokens": len(case["input_ids"]),
@@ -196,10 +287,21 @@ def main():
                 "ttft_seconds": first, "seconds": duration, "decode_tok_s": rate, "events": events,
                 "ram_cache": dict(store.stats), "gpu_cache": dict(experts.stats),
                 "gpu_peak_allocated_bytes": torch.cuda.max_memory_allocated()}
+            row['final_kv_positions'] = [seq.kv_position for seq in job.sequences]
+            if tokens and any(position < len(case['input_ids']) for position in row['final_kv_positions']):
+                raise RuntimeError('Generation finished without consuming the complete prompt')
             row["gpu_peak_reserved_bytes"] = torch.cuda.max_memory_reserved()
+            row['expert_cache_transitions'] = transitions
+            row['decode_cache_delta'] = ({name: {key: value - first_counters[name].get(key, 0)
+                for key, value in counters.items()} for name, counters in
+                (('ram_cache', store.stats), ('gpu_cache', experts.stats))} if first_counters is not None else None)
             if row_cache is not None:
                 row['engram_cache'] = dict(row_cache.stats, resident_rows=len(row_cache.rows),
                     payload_bytes=row_cache.payload_bytes)
+                if first_counters is not None:
+                    row['decode_cache_delta']['engram_cache'] = {
+                        key: row_cache.stats[key] - first_counters['engram_cache'][key]
+                        for key in ('hits', 'misses', 'evictions')}
             row["device_free_bytes_after_request"] = torch.cuda.mem_get_info()[0]
             from .memory_budget import available_memory, cgroup_path
             group = cgroup_path()
@@ -222,14 +324,29 @@ def main():
                     except (InvalidOperation, TypeError):
                         passed = False
                 row.update(passed=passed, expected=expected)
+            if 'expected_registry' in case:
+                answer = row['text'].lstrip()
+                format_ = 'plain_json'
+                if answer.startswith('```json\n') or answer.startswith('```\n'):
+                    answer = answer.split('\n', 1)[1]
+                    format_ = 'fenced_json'
+                try:
+                    registry, _ = json.JSONDecoder().raw_decode(answer.lstrip())
+                except ValueError:
+                    registry = None
+                row['retrieval'] = dict(passed=registry == case['expected_registry'],
+                    expected=case['expected_registry'], actual=registry,
+                    marker_token_offsets=case['marker_token_offsets'], format=format_)
             if experts.route_trace is not None:
                 row['route_trace'] = experts.route_trace
+                row['first_token_route_trace_length'] = first_trace_length
                 experts.route_trace = []
             result["runs"].append(row)
             save()
             print(json.dumps({k: row[k] for k in ("id", "phase", "decode_tok_s", "ttft_seconds", "text")}), flush=True)
 
         result["status"] = "running"
+        save()
         with torch.inference_mode():
             if args.mode == "smoke":
                 run(fixture["checks"][3], "smoke", 16)
@@ -246,11 +363,15 @@ def main():
                     if not rates or any(r is None or r <= 0 for r in rates):
                         raise RuntimeError("Missing usable benchmark measurements")
                     result[phase + "_median_tok_s"] = statistics.median(rates)
+        if args.verify_indexer_first_token and len(model._recipe_indexer_checks) != 8:
+            raise RuntimeError('The first-token verification did not exercise all eight indexers')
         result["status"] = "complete"
     except BaseException as exc:
         result.update(status="failed", error=repr(exc))
         raise
     finally:
+        if model is not None and hasattr(model, '_recipe_indexer_checks'):
+            result['indexer_verification'] = model._recipe_indexer_checks
         result['tune_cache_sha256_after'] = hashlib.sha256(Path(tune_path).read_bytes()).hexdigest() if tune_path and Path(tune_path).exists() else None
         save()
         if model is not None:

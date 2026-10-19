@@ -1,0 +1,8 @@
+{
+  "reason": "Inspection found LFU and hot-duplicate paths indexing absent prefill frequency; stopped waiting workers before GPU use; v2 uses zero defaults and LFU prefill-first GPU gate",
+  "units": [
+    "deepseek41-context256k-priority-queue.service",
+    "deepseek41-context256k-engram-queue.service"
+  ],
+  "gpu_jobs_started_by_these_queues": false
+}

@@ -1,0 +1,540 @@
+{
+  "status": "passed",
+  "files": 59,
+  "bytes": 413905629467,
+  "seconds": 88.06621196499964,
+  "reason": "Filesystem device ID changed; all 59 source digests reverified",
+  "verified": {
+    "exl3/LICENSE": {
+      "identity": [
+        55,
+        93836060,
+        1084,
+        1792275953421776211
+      ],
+      "digest": "d62e3bef9f054f21b7fc616365850fbf879a99ff"
+    },
+    "exl3/README.md": {
+      "identity": [
+        55,
+        93836068,
+        11290,
+        1792275953726783537
+      ],
+      "digest": "7417149e463efb849ae0699eca924864b0642cb6"
+    },
+    "exl3/config.json": {
+      "identity": [
+        55,
+        93836076,
+        3628,
+        1792275954058791512
+      ],
+      "digest": "136a40c7ed455dc4e385aaf713445259878ad022"
+    },
+    "exl3/exl3_k_map.json": {
+      "identity": [
+        55,
+        93836085,
+        1409,
+        1792275954381799270
+      ],
+      "digest": "f05a045d5221b789a7bd7edb2e129343c4d3a080"
+    },
+    "exl3/model-00001-of-00043.safetensors": {
+      "identity": [
+        55,
+        93840895,
+        1323827293,
+        1792276231438758922
+      ],
+      "digest": "ba5ccb4d39882d08800e856150bce42b23584f3d9943520ae4cff5647d5a3045"
+    },
+    "exl3/model-00002-of-00043.safetensors": {
+      "identity": [
+        55,
+        93841286,
+        5322748742,
+        1792276349946003102
+      ],
+      "digest": "11ed8a0cb267169a5f3ea0ceebb24ab09fb5b84b98e4d4c86dc2f06f1f5e0d40"
+    },
+    "exl3/model-00003-of-00043.safetensors": {
+      "identity": [
+        55,
+        93844532,
+        5223069939,
+        1792276460108182634
+      ],
+      "digest": "1de02ee6b4d909eb5936e08e7c3825cbf2fa65693c5674deade2e70bcb773462"
+    },
+    "exl3/model-00004-of-00043.safetensors": {
+      "identity": [
+        55,
+        93850889,
+        5230054628,
+        1792276535626719326
+      ],
+      "digest": "8e68a9e396d958d6645378b44ef3419a4c0b743da0e92b354d2163a4c8bf85ce"
+    },
+    "exl3/model-00005-of-00043.safetensors": {
+      "identity": [
+        55,
+        93851050,
+        5223069939,
+        1792276605965176940
+      ],
+      "digest": "c14a66ba26f57e9577e1a656764b3e5828e09c7630ad7404b80c6e265d03a37d"
+    },
+    "exl3/model-00006-of-00043.safetensors": {
+      "identity": [
+        55,
+        93851278,
+        5223069939,
+        1792276675723644337
+      ],
+      "digest": "2866602c20b535eec3bb1a737f62d5d6d2dfecbf362977d3a4f5f8e701580b6d"
+    },
+    "exl3/model-00007-of-00043.safetensors": {
+      "identity": [
+        55,
+        93851396,
+        5223069939,
+        1792276749684220735
+      ],
+      "digest": "4d12814cd25cf07fe9c6791f0050a8afbc1038bae02fb201243f9c56de8171cd"
+    },
+    "exl3/model-00008-of-00043.safetensors": {
+      "identity": [
+        55,
+        93851446,
+        5223069939,
+        1792276815534639862
+      ],
+      "digest": "cb88f50d0ddd81b98db00a6475c356511c3c21f843b2ccd9845fb4017c3f5d15"
+    },
+    "exl3/model-00009-of-00043.safetensors": {
+      "identity": [
+        55,
+        93851683,
+        5223069939,
+        1792276885837169061
+      ],
+      "digest": "dbebd82073a27f79dd1353d3c309255f46e577eb1c2f9d8a10a52bc38f6d8bc2"
+    },
+    "exl3/model-00010-of-00043.safetensors": {
+      "identity": [
+        55,
+        93851804,
+        5230054628,
+        1792276953675656755
+      ],
+      "digest": "8cde4e4124614502c2950e9f3a643027eceeeedbdf3c54cf786dbf125d3d536e"
+    },
+    "exl3/model-00011-of-00043.safetensors": {
+      "identity": [
+        55,
+        93851864,
+        5223069939,
+        1792277025713247879
+      ],
+      "digest": "c96372d73271d2c59e5a959bb81551aaacb2abe8445f5b9ea9391e2b4a033601"
+    },
+    "exl3/model-00012-of-00043.safetensors": {
+      "identity": [
+        55,
+        93851927,
+        5223074621,
+        1792277094675780657
+      ],
+      "digest": "337345b1ca174aebcff619bbc2c2a6e33881a42ad8f638956e69b5de4fe21d41"
+    },
+    "exl3/model-00013-of-00043.safetensors": {
+      "identity": [
+        55,
+        93851984,
+        5218650941,
+        1792277161576275391
+      ],
+      "digest": "042b4274c48e55d09bfe51ac099915f8bc3bb0c7be9b0f9d5e75a9f5c2045497"
+    },
+    "exl3/model-00014-of-00043.safetensors": {
+      "identity": [
+        55,
+        93852090,
+        5218650941,
+        1792277226823739684
+      ],
+      "digest": "bc27a27e60bebd88ad36f4896aa027911bc5f7fbb30ad9a25f95a59a6374d957"
+    },
+    "exl3/model-00015-of-00043.safetensors": {
+      "identity": [
+        55,
+        93852144,
+        5297522070,
+        1792277290718179112
+      ],
+      "digest": "74d3f0d12e32a658d8f6c5f9a104826e473c53299267519b46d594619756ae66"
+    },
+    "exl3/model-00016-of-00043.safetensors": {
+      "identity": [
+        55,
+        93852201,
+        5225635649,
+        1792277360182749393
+      ],
+      "digest": "0a1b0b3ecb817f448d9fb34ebf0757d4b00042220515ecb13f1b86908cb092f3"
+    },
+    "exl3/model-00017-of-00043.safetensors": {
+      "identity": [
+        55,
+        93852262,
+        5218650941,
+        1792277428617301200
+      ],
+      "digest": "e4b4278a51ce9daf61290d4caba5b953f5a243832ffb5c8d29a0c259807facea"
+    },
+    "exl3/model-00018-of-00043.safetensors": {
+      "identity": [
+        55,
+        93852356,
+        5218650941,
+        1792277494483798749
+      ],
+      "digest": "07e9d048f9cefb94b9a30f41e39b9390b6bf54a763c0b7e1dcd5d81144fc0849"
+    },
+    "exl3/model-00019-of-00043.safetensors": {
+      "identity": [
+        55,
+        93852438,
+        5218650941,
+        1792277555337185364
+      ],
+      "digest": "2c6116ee6f584af8c4027cee8f5069d0d51a4e9b487dd73027127d29f4caf274"
+    },
+    "exl3/model-00020-of-00043.safetensors": {
+      "identity": [
+        55,
+        93852543,
+        3519956829,
+        1792277602332257983
+      ],
+      "digest": "817d948752825a739073b95bc6171a35e4677c095ac617bd6772560ae0e4b5e4"
+    },
+    "exl3/model-00021-of-00043.safetensors": {
+      "identity": [
+        55,
+        93852588,
+        3519956829,
+        1792277650150350811
+      ],
+      "digest": "4bdda16b5a00ac5ee0e39bc81271af6155caacb7c03928876b07344e20a4ba5f"
+    },
+    "exl3/model-00022-of-00043.safetensors": {
+      "identity": [
+        55,
+        93852641,
+        3525291432,
+        1792277697064424254
+      ],
+      "digest": "00afb7bd831cd50added9b809cc2e9cec57ab44963f152f8bc42cd6d22f0a4e4"
+    },
+    "exl3/model-00023-of-00043.safetensors": {
+      "identity": [
+        55,
+        93852685,
+        3519956829,
+        1792277742704469642
+      ],
+      "digest": "28ba9d401e2cd556d0145b31c03ed341f009e2849162e6d9f68438a067d74a59"
+    },
+    "exl3/model-00024-of-00043.safetensors": {
+      "identity": [
+        55,
+        93852774,
+        3519956829,
+        1792277786640476955
+      ],
+      "digest": "1240d8744902914287da94cd8e2a5d9f17e7c39167bfab20c737a34d7605e50c"
+    },
+    "exl3/model-00025-of-00043.safetensors": {
+      "identity": [
+        55,
+        93852815,
+        5218650941,
+        1792277847377870879
+      ],
+      "digest": "a053c3dc54c4ecfe295cfa4bd7fb44f1054ade1d596e46496f6791c87ffb60df"
+    },
+    "exl3/model-00026-of-00043.safetensors": {
+      "identity": [
+        55,
+        93852876,
+        5222266717,
+        1792277920515551321
+      ],
+      "digest": "028c44abbea066c94da7ed0e64f07f8d36ae925a4ff437ef999f5a2b5ec6c9d4"
+    },
+    "exl3/model-00027-of-00043.safetensors": {
+      "identity": [
+        55,
+        93852941,
+        5218650941,
+        1792277992378204266
+      ],
+      "digest": "69cbb8f2f00ddcb7a83b04d34ca9151c61f3319ec742d0ac5f06abf295a91eef"
+    },
+    "exl3/model-00028-of-00043.safetensors": {
+      "identity": [
+        55,
+        93853000,
+        5218650941,
+        1792278058181719186
+      ],
+      "digest": "451c69700eb30a9e47ec80fe219aa537985c6afa3f7391db5699fba50d93e05b"
+    },
+    "exl3/model-00029-of-00043.safetensors": {
+      "identity": [
+        55,
+        93853095,
+        5218650941,
+        1792278129402360101
+      ],
+      "digest": "906a9525cde8176d18066d27ae9d457ff55ee3134438dadea4ee63af8dce45ad"
+    },
+    "exl3/model-00030-of-00043.safetensors": {
+      "identity": [
+        55,
+        93853174,
+        5222266717,
+        1792278200439707972
+      ],
+      "digest": "420ad929c1efa3f90ba4a39d28159d9a29175089cd9bd4fe32f25c6fb7e473f6"
+    },
+    "exl3/model-00031-of-00043.safetensors": {
+      "identity": [
+        55,
+        93853227,
+        5220125501,
+        1792278264493675168
+      ],
+      "digest": "0312eb9c04dbe5f538efd94a21d1f76266a8cac9ea01250084aa6513657fc5df"
+    },
+    "exl3/model-00032-of-00043.safetensors": {
+      "identity": [
+        55,
+        93853254,
+        5223074621,
+        1792278326766666585
+      ],
+      "digest": "4653d193e28120319fe5b3508ffed537d23f57b8d31b20f3f69371fd569e59b2"
+    },
+    "exl3/model-00033-of-00043.safetensors": {
+      "identity": [
+        55,
+        93853287,
+        5223074621,
+        1792278387258672383
+      ],
+      "digest": "3a6bfc60065324e606082ae8ad68ff403285b24e7a720b3b2274e516a247252a"
+    },
+    "exl3/model-00034-of-00043.safetensors": {
+      "identity": [
+        55,
+        93853314,
+        5226690397,
+        1792278452903805958
+      ],
+      "digest": "b1825ddd7016d3cefea0f13ec78aff33637c68e0eb721cdb12f83104c03b3760"
+    },
+    "exl3/model-00035-of-00043.safetensors": {
+      "identity": [
+        55,
+        93853410,
+        5223074621,
+        1792278515869929692
+      ],
+      "digest": "9b513ca99a0e8403d172df623a4c0fe7ecaaa51e09015d9574efa90bd6414a32"
+    },
+    "exl3/model-00036-of-00043.safetensors": {
+      "identity": [
+        55,
+        93853451,
+        5223074621,
+        1792278597549433748
+      ],
+      "digest": "206ca962082e2c4de968ba4cc82cc1837dccb0b8960f493e04891b281bbfe497"
+    },
+    "exl3/model-00037-of-00043.safetensors": {
+      "identity": [
+        55,
+        93853480,
+        5223074621,
+        1792278673741877612
+      ],
+      "digest": "6ed69fdcd3bd32762ddefae671c7fce7f9b5a212cdbe1aaee64adaa5ef0eef2c"
+    },
+    "exl3/model-00038-of-00043.safetensors": {
+      "identity": [
+        55,
+        93853512,
+        5226690397,
+        1792278737194106127
+      ],
+      "digest": "24a61b540656dc210b3bc3215b1713f0b4bee8b724176a4f5968e24b9540035c"
+    },
+    "exl3/model-00039-of-00043.safetensors": {
+      "identity": [
+        55,
+        93853589,
+        5223074621,
+        1792278806226466157
+      ],
+      "digest": "29e5b40a97edcb91ed6a382b39bbb4d16ce40de2d1ddce2f75a8fd75e0ad609f"
+    },
+    "exl3/model-00040-of-00043.safetensors": {
+      "identity": [
+        55,
+        93853640,
+        5223074621,
+        1792278873071803556
+      ],
+      "digest": "5c850a3950ce68a93a24336ccc417ac660fdbdb84bcc494aa6d57ea5c28246be"
+    },
+    "exl3/model-00041-of-00043.safetensors": {
+      "identity": [
+        55,
+        93853677,
+        5719789284,
+        1792278945215266676
+      ],
+      "digest": "5a6f5791d3f5f9635e58db5a693f68c64c6c9e14357e8386a21e5fd232af032d"
+    },
+    "exl3/model-00042-of-00043.safetensors": {
+      "identity": [
+        55,
+        93853706,
+        4854649316,
+        1792279005239497749
+      ],
+      "digest": "2f80f4a44e4608c6da139eccf2483122ac88a240046872965d546b4fa26ded06"
+    },
+    "exl3/model-00043-of-00043.safetensors": {
+      "identity": [
+        55,
+        93853783,
+        3500776125,
+        1792279048521392308
+      ],
+      "digest": "c5b94d519d323921baacb34b6111e518ce2c36309d06c80fe4e42e3aa9662bc5"
+    },
+    "exl3/model.safetensors.index.json": {
+      "identity": [
+        55,
+        93836093,
+        15504210,
+        1792275956150841760
+      ],
+      "digest": "778baeaf9fbcd351800536dc090ff1edddb72d102472b08de0edd9a52cb96656"
+    },
+    "exl3/quantization_config.json": {
+      "identity": [
+        55,
+        93836101,
+        54653012,
+        1792275957767880598
+      ],
+      "digest": "696cdad521cdebea0642a3c22d01c9152dca4e5ccbf209b5e7f2b808f359bd27"
+    },
+    "exl3/tokenizer.json": {
+      "identity": [
+        55,
+        93836110,
+        6367257,
+        1792275958397895730
+      ],
+      "digest": "6a15814dd25c934028034531da744c689f87ff21"
+    },
+    "exl3/tokenizer_config.json": {
+      "identity": [
+        55,
+        93836118,
+        801,
+        1792275958763904520
+      ],
+      "digest": "f3dad388a2bbfd6a8605bd02754acd86d9ca5112"
+    },
+    "engram/LICENSE": {
+      "identity": [
+        55,
+        93836005,
+        1084,
+        1792275951102115124
+      ],
+      "digest": "d62e3bef9f054f21b7fc616365850fbf879a99ff"
+    },
+    "engram/README.md": {
+      "identity": [
+        55,
+        93836013,
+        5231,
+        1792275951409727883
+      ],
+      "digest": "3b2d135a2f20a462d773716575d793dcb0c71e84"
+    },
+    "engram/config.json": {
+      "identity": [
+        55,
+        93836021,
+        3311,
+        1792275951724735450
+      ],
+      "digest": "09917a9139b22d5bf8be52132787f435147b1020"
+    },
+    "engram/model-00047-of-00048.safetensors": {
+      "identity": [
+        55,
+        93836127,
+        101535150936,
+        1792280181223843199
+      ],
+      "digest": "76a05106ece259be83d1bfea0dcb54f23377864ee60fd321690f35e6698a2af5"
+    },
+    "engram/model-00048-of-00048.safetensors": {
+      "identity": [
+        55,
+        93861346,
+        101537926640,
+        1792281402958385472
+      ],
+      "digest": "9dc51433e195bc78b5ad846b68643cc0351d3b174e5e4309222d3b7402c83afd"
+    },
+    "engram/model.safetensors.index.json": {
+      "identity": [
+        55,
+        93836029,
+        7470294,
+        1792275952313749597
+      ],
+      "digest": "54c85064dd92c8550471302e9ae59bedbbf96ca4"
+    },
+    "engram/tokenizer.json": {
+      "identity": [
+        55,
+        93836037,
+        6367257,
+        1792275952815761655
+      ],
+      "digest": "6a15814dd25c934028034531da744c689f87ff21"
+    },
+    "engram/tokenizer_config.json": {
+      "identity": [
+        55,
+        93836046,
+        801,
+        1792275953120768982
+      ],
+      "digest": "f3dad388a2bbfd6a8605bd02754acd86d9ca5112"
+    }
+  }
+}

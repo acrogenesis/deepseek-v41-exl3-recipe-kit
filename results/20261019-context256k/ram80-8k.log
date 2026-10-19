@@ -1,0 +1,47 @@
+ninja: no work to do.
+{"id": "context-8063", "phase": "fresh", "kv_positions": [7936], "output_tokens": 0, "seconds": 71.34377080999911}
+[W1019 17:11:59.050616075 CUDACachingAllocator.cpp:508] expandable_segments: memory mapping failed with OOM on device 0 while trying to map 2097152 bytes (free: 68354048, total: 33763426304).
+[W1019 17:11:59.050664896 CUDACachingAllocator.cpp:508] expandable_segments: memory mapping failed with OOM on device 0 while trying to map 2097152 bytes (free: 68354048, total: 33763426304).
+Saved /recipe/results/20261019-context256k/ram80-8k.json
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/recipe/runtime/runner.py", line 384, in <module>
+    main()
+  File "/recipe/runtime/runner.py", line 359, in main
+    run(case, phase, fixture["output_cap"])
+  File "/recipe/runtime/runner.py", line 247, in run
+    for event in generator.iterate():
+                 ^^^^^^^^^^^^^^^^^^^
+  File "/opt/sglang/lib/python3.12/site-packages/torch/utils/_contextlib.py", line 124, in decorate_context
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/sglang/lib/python3.12/site-packages/exllamav3/generator/generator.py", line 554, in iterate
+    self.iterate_gen(results)
+  File "/recipe/runtime/runner.py", line 237, in iterate_gen
+    return original_iterate_gen(*a, **kw)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/sglang/lib/python3.12/site-packages/exllamav3/generator/generator.py", line 1027, in iterate_gen
+    batch_logits = self.model.forward(
+                   ^^^^^^^^^^^^^^^^^^^
+  File "/opt/sglang/lib/python3.12/site-packages/torch/utils/_contextlib.py", line 124, in decorate_context
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/sglang/lib/python3.12/site-packages/exllamav3/model/model.py", line 234, in forward
+    y = self.forward_ls(x, params)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/sglang/lib/python3.12/site-packages/exllamav3/model/model_ls.py", line 329, in forward_ls
+    x = module.forward(x, params)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/sglang/lib/python3.12/site-packages/exllamav3/modules/dsv41_hc.py", line 87, in forward
+    attn_pre, attn_post, attn_comb = self.attn_hc.mix_full(x)
+                                     ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/recipe/runtime/hc_graphs.py", line 45, in _mix
+    self._recipe_mix_original(source)
+  File "/opt/sglang/lib/python3.12/site-packages/exllamav3/modules/dsv41_hc.py", line 34, in mix_full
+    post, comb, _ = self.mix(streams, {})
+                    ^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/sglang/lib/python3.12/site-packages/exllamav3/modules/hyperconnections.py", line 142, in mix
+    self.fn_h = self.fn.half()
+                ^^^^^^^^^^^^^^
+torch.OutOfMemoryError: CUDA out of memory. Tried to allocate 2.00 MiB. GPU 0 has a total capacity of 31.44 GiB of which 65.19 MiB is free. Including non-PyTorch memory, this process has 29.73 GiB memory in use. Of the allocated memory 28.85 GiB is allocated by PyTorch, with 1.98 MiB allocated in private pools (e.g., CUDA Graphs), and 166.51 MiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://docs.pytorch.org/docs/stable/notes/cuda.html#optimizing-memory-usage-with-pytorch-cuda-alloc-conf)

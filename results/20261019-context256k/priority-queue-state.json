@@ -1,0 +1,22 @@
+{
+  "status": "waiting_baseline",
+  "pid": 516529,
+  "baseline_unit": "deepseek41-context256k-filled-01.service",
+  "snapshot": "/home/archogenesis/Work/deepseek-v41-exl3-recipe-kit/work/context-priority-snapshot",
+  "updated_at": 1792427652.4342477,
+  "baseline_state": {
+    "ActiveState": "active",
+    "SubState": "running",
+    "MainPID": "450416",
+    "ExecMainStatus": "0"
+  },
+  "baseline_progress": {
+    "id": "context-262015",
+    "phase": "repeat",
+    "kv_positions": [
+      106496
+    ],
+    "output_tokens": 0,
+    "seconds": 562.6860089719994
+  }
+}

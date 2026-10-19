@@ -1,0 +1,15 @@
+{
+  "status": "failed",
+  "pid": 593554,
+  "baseline_unit": "deepseek41-context256k-priority-v2-queue.service",
+  "snapshot": "/home/archogenesis/Work/deepseek-v41-exl3-recipe-kit/work/context-engram-v2-snapshot",
+  "updated_at": 1792428566.1165872,
+  "upstream_unit_state": {
+    "ActiveState": "active",
+    "SubState": "running",
+    "MainPID": "593553",
+    "ExecMainStatus": "0"
+  },
+  "upstream_status": "waiting_baseline",
+  "error": "RuntimeError(\"Priority queue terminated without completion: {'ActiveState': 'failed', 'SubState': 'failed', 'MainPID': '0', 'ExecMainStatus': '1'}\")"
+}
