@@ -13,10 +13,14 @@ unchanged. The KV pools occupy 800 MiB at 256K.
 
 ## Measurements
 
+![Generation speed: initial cache versus protected caches, with the same full 256K prompt](results/20261019-context256k/charts/generation-speed.png)
+
 | Full-window configuration | Fresh tok/s | Repeat tok/s | Fresh / repeat time to first token |
 |---|---:|---:|---:|
 | Initial elastic cache, 23 GiB GPU / 84 GiB RAM | 10.01 | 9.09 | 1,463.82 / 1,458.79 s |
 | Protected caches, 22.5 GiB GPU / 80 GiB RAM | **9.51** | **29.94** | 1,532.29 / 1,148.59 s |
+
+![Time to first token, in minutes: 25.54 fresh and 19.14 repeated with protected caches](results/20261019-context256k/charts/time-to-first-token.png)
 
 Both configurations prefill with an 18 GiB expert GPU arena, then expand it
 before generation. Both consume the same 262,015-token fixture and finish at
@@ -97,3 +101,8 @@ it excludes the approximately 19-minute repeated-request prefill.
 The context and cache settings are opt-in. The existing 8K default remains
 available for comparison. The fixture can be rebuilt without a GPU using
 `scripts/prepare_context.py --input-tokens 262015 --output <new-file.json>`.
+
+The charts are generated directly from the audited raw receipts. Rebuild them
+without a GPU using `python scripts/plot_context.py` with matplotlib 3.10.8.
+Their exact values and source hashes are in
+`results/20261019-context256k/charts/measurements.json`.

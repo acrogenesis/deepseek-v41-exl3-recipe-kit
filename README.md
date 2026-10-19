@@ -1,19 +1,19 @@
 # DeepSeek V4.1 Flash 1017 EXL3 on an RTX 5090
 
-**30.68 tok/s on repeated prompts; 15.96 tok/s on fresh prompts**, pooled across
-two complete sweeps with 128 output tokens and an 8K context allocation.
-The opt-in [256K recipe](CONTEXT256K.md) measured **29.94 tok/s repeated / 9.51
-tok/s fresh with 262,015 actual input tokens**. It preserves useful expert and
-Engram cache entries across long prefills; every output token matches the
-full-window baseline. The repeated request still takes about 19 minutes to its
-first token.
+**29.94 tok/s on a warm repeat with a filled 256K context; 9.51 tok/s fresh.**
+Each request consumed 262,015 input tokens and generated 128 output tokens.
+The opt-in [256K recipe](CONTEXT256K.md) protects useful expert and Engram cache
+entries across long prefills. Every output token matches the full-window baseline.
+These are single requests per phase; the repeated request takes about 19 minutes
+to its first token.
+
+![Generation speed with a filled 256K context: 9.51 tok/s fresh and 29.94 tok/s on the warm repeat](results/20261019-context256k/charts/generation-speed.png)
+
 The [Hugging Face bundle](https://huggingface.co/acrogenesis/DeepSeek-V4.1-Flash-1017-EXL3-2.9bpw-5090)
 contains LibertAIDAI's unchanged quant and the required original 1017 Engram
 tables. Our contribution is the bounded streaming runtime and measurements.
 [Publication verification](results/publication.json) records the model revision,
 remote size/hash checks and anonymous downloads.
-
-![Measured generation speed](results/20261018-gguf-comparison/charts/original-speed.png)
 
 An experimental SSD-streaming recipe for one RTX 5090 (32 GB), a Ryzen 9950X3D,
 128 GB RAM, and a Samsung 990 PRO NVMe. It is staged for this machine.
@@ -26,6 +26,17 @@ keeps every expert in pinned RAM. This recipe uses a bounded RAM cache and reads
 misses from the original safetensors files. It does not create another 196 GB expert bank.
 
 ## Measured performance
+
+The [filled-256K report](CONTEXT256K.md) includes generation speed, time to first
+token, cache measurements and the exact command. The benchmarks below use the
+original short prompts with an 8K allocation.
+
+### Original short-prompt benchmarks
+
+**30.68 tok/s repeated / 15.96 tok/s fresh**, pooled across two complete sweeps
+with 128 output tokens. This comparison uses 30/31/31-token prompts.
+
+![Original short-prompt EXL3 and GGUF generation speed with an 8K allocation](results/20261018-gguf-comparison/charts/original-speed.png)
 
 | Configuration | Expert VRAM / RAM | Fresh tok/s | Repeat tok/s |
 |---|---|---:|---:|

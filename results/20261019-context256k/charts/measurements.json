@@ -1,0 +1,53 @@
+{
+  "matplotlib": "3.10.8",
+  "series": [
+    {
+      "label": "Initial cache",
+      "color": "#51d6ed",
+      "rows": {
+        "fresh": {
+          "decode_tok_s": 10.010489415664305,
+          "ttft_seconds": 1463.8217072839998,
+          "input_tokens": 262015,
+          "output_tokens": 128
+        },
+        "repeat": {
+          "decode_tok_s": 9.093245338305922,
+          "ttft_seconds": 1458.7900043459995,
+          "input_tokens": 262015,
+          "output_tokens": 128
+        }
+      },
+      "source": "results/20261019-context256k/filled-01.json",
+      "sha256": "06013adb26d0a567920fc03fc429056a54ad9a1f895691110c851831e9027b3d",
+      "gpu_gib": 23.0,
+      "ram_gib": 84.0
+    },
+    {
+      "label": "Protected caches",
+      "color": "#b2ff68",
+      "rows": {
+        "fresh": {
+          "decode_tok_s": 9.51292540597768,
+          "ttft_seconds": 1532.290253352001,
+          "input_tokens": 262015,
+          "output_tokens": 128
+        },
+        "repeat": {
+          "decode_tok_s": 29.939670100764648,
+          "ttft_seconds": 1148.586006607,
+          "input_tokens": 262015,
+          "output_tokens": 128
+        }
+      },
+      "source": "results/20261019-context256k/filled-desktop.json",
+      "sha256": "d17432a79f6d01c875a24e3f0f9508f768cecd68ff62ea07fc14b9ab8a5ef730",
+      "gpu_gib": 22.5,
+      "ram_gib": 80.0
+    }
+  ],
+  "context_tokens": 262144,
+  "requests_per_bar": 1,
+  "metric": "Streamed output tokens after the first token / time after the first token",
+  "ttft_display_unit": "minutes"
+}
